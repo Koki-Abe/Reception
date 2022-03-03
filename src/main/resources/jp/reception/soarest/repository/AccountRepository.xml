@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.reception.soarest.repository.AccountRepository">
+    <!-- アカウント情報一覧検索 -->
+    <select id="searchAccountList" parameterType="jp.reception.soarest.domain.dto.AccountSearchDto" resultType="jp.reception.soarest.domain.dto.AccountSearchResultDto">
+        SELECT
+            MS.STAFF_ID AS STAFF_ID
+            , MS.STAFF_NAME AS STAFF_NAME
+            , MD.DEP_ID AS DEP_ID
+            , MD.DEP_NAME AS DEP_NAME
+            , MA.AUTH_ID AS AUTH_ID
+            , MA.AUTH_NAME AS AUTH_NAME
+        FROM
+            M_STAFF MS
+        INNER JOIN M_DEPARTMENT MD ON MS.DEP_ID = MD.DEP_ID
+        INNER JOIN M_AUTH MA ON MS.AUTH_ID = MA.AUTH_ID
+        <where>
+            <if test="userId != null and userId != ''">
+                MS.STAFF_ID LIKE CONCAT('%', #{userId}, '%' )
+            </if>
+            <if test="userName != null and userName != ''">
+                AND MS.STAFF_NAME LIKE CONCAT('%', #{userName}, '%' )
+            </if>
+            <if test="depId != null and depId != '' and depId != 999">
+                AND MD.DEP_ID = #{depId}
+            </if>
+            <if test="authId != null and authId != '' and authId != 999">
+                AND MA.AUTH_ID = #{authId}
+            </if>
+            <if test="loginDateStart != null and loginDateStart != ''">
+                AND MS.LAST_LOGIN_DATE <![CDATA[>=]]> #{loginDateStart}
+            </if>
+            <if test="loginDateEnd != null and loginDateEnd != ''">
+                AND MS.LAST_LOGIN_DATE <![CDATA[<=]]> #{loginDateEnd}
+            </if>
+        </where>
+    </select>
+
+</mapper>

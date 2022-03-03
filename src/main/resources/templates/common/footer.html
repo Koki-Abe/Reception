@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <script type="text/javascript" src="./js/common.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <title>ログイン</title>
+</head>
+
+<body>
+    <header>
+        <img src="img/SOAREST_logo.png">
+    
+        <nav>
+            <ul>
+                <li><a href="#">ユーザーID</a></li>
+                <li><a href="#">ログアウト</a></li>
+            </ul>
+        </nav>
+    
+    <!--ここからメニュー-->
+        <div class="hamburger-menu">
+            <input type="checkbox" id="menu-btn-check">
+            <label for="menu-btn-check" class="menu-btn"><span></span></label>
+           
+        <div class="menu-content">
+        <ul>
+        <li><a href="#top">管理画面TOP</a></li>
+        <li><a href="#acount">アカウント管理</a></li>
+        <li><a href="#meeting">打ち合わせ予定管理</a></li>
+      </ul>
+    </div>
+    </div>
+</header>
+
+    <!-- 1 ログイン画面 -->
+  <div id="form">
+        <p class="form-title">ログイン</p>
+        <form action="post">
+          <p>ユーザーID</p>
+            <p class="ユーザーID"></p>
+          <input type="text"   style="text-align: left;"  autocomplete="off" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。" id="ユーザーID" placeholder="必須" >
+         
+          
+          <p>パスワード</p>
+            <p class="パスワード"></p>
+            <input type="password" style="text-align: left;" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。" id="myInput" placeholder="必須">
+            <span class="eye" onclick="myFunction()">
+              <i id="hide1" class="fa fa-eye"></i>
+              <i id="hide2" class="fa fa-eye-slash"></i>
+            </span>
+            
+            <p class="submit"><input type="submit" value="クリア" /></p>
+            <p class="submit"><input type="submit" value="ログイン" /></p>
+          </form>
+    </div>
+
+    <!-- 2TOP画面 -->
+    <h1 id="top">管理画面TOP</h1>    
+    <h2 align="center">ユーザー情報</h2>
+    <div class="contact-form">
+     <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>ロール</th><td><select name="ロール"> </select></td></tr>
+        <tr><th>最終ログイン日時</th><td><input type="datetime-local"></td></tr>
+    </table>
+    </div>
+
+    
+    <!-- 3アカウント登録 -->
+        <h1>アカウント情報登録</h1>
+    <div class="contact-form">
+        <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>ロール</th><td><select name="ロール"> </select></td></tr>
+        <tr><th>パスワード</th><td><input type="password"></td></tr>    
+    </table>
+    
+    </div>
+   <div style="text-align: center;">
+        <a href="#acountinformation" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">クリア</a>
+        <a href="#" class="btn-icon">変更</a>
+        </div>   
+   
+
+    <!-- 4アカウント登録確認 -->
+    <h1>アカウント情報登録確認</h1> 
+    <p align="center">以下の内容で登録しますか？</p>   
+    <div class="contact-form">
+    <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>パスワード</th><td><input type="password"></td></tr>
+    </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">確定</a>
+    </div>
+
+    <!-- 5アカウント登録完了 -->
+    <h1>アカウント情報登録完了</h1> 
+    <p align="center">アカウントの登録が完了しました。</p>   
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">アカウント登録画面へ戻る</a>
+    </div>
+
+    <!-- 6アカウント情報一覧 -->
+    <h1 id="acount">アカウント情報一覧</h1>    
+    <div class="contact-form">
+    <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>ログイン日</th><td><input type="date"></td></tr>
+    </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">クリア</a>
+        <a href="#" class="btn-icon">検索</a>
+    </div>
+    <table border="1">
+    <tr><td>ユーザーID</td><td>ユーザー名</td><td>ロール</td><td></td></tr>
+    <tr><td>123</td><td>456</td><td>789</td><td>削除 変更</td> </tr>
+    <tr><td>123</td><td>456</td><td>789</td><td>削除 変更</td></tr>
+    <tr><td>1111</td><td>2222</td><td>3333</td><td>削除 変更</td></tr>
+    </table>
+
+   
+
+    <!-- 7アカウント変更 -->
+    <h1>アカウント情報変更</h1>    
+    <div class="contact-form">
+    <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>ロール</th><td><select name="ロール"> </select></td></tr>
+        <tr><th>パスワード</th><td><input type="password"></td>
+    </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">クリア</a>
+        <a href="#" class="btn-icon">変更</a>
+    </div>
+
+    <!-- 8アカウント変更確認 -->
+    <h1>アカウント情報登録確認</h1> 
+    <p align="center">以下の内容で変更しますか？</p>   
+    <div class="contact-form">
+    <table>
+        <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>パスワード</th><td><input type="password"></td></tr>
+        
+    </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">確定</a>
+    </div>
+
+    <!-- 9アカウント変更完了 -->
+    <h1>アカウント情報登録完了</h1> 
+    <p align="center">アカウント情報の変更が完了しました。</p>   
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">アカウント変更画面へ戻る</a>
+    </div>
+
+    <!-- 10アカウント削除確認 -->
+    <h1>アカウント情報登録確認</h1> 
+    <p align="center">アカウントを削除しますか？</p>   
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">確定</a>
+    </div>
+
+    <!-- 11アカウント削除完了 -->
+    <h1>アカウント情報登録完了</h1> 
+    <p align="center">アカウント情報の削除が完了しました。</p>   
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">アカウント一覧画面へ戻る</a>
+    </div>
+
+    <!-- 12打ち合わせ情報一覧 -->
+    <h1 id="meeting">打ち合わせ情報一覧</h1>    
+    <div class="contact-form">
+    <table>
+        <tr><th>打ち合わせ担当者名(メイン)</th><td><input type="text"></td></tr>
+        <tr><th>ユーザー名</th><td><input type="text"></td></tr>
+        <tr><th>ログイン日</th><td><input type="date"></td></tr>
+    </table>
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">クリア</a>
+        <a href="#" class="btn-icon">検索</a>
+    </div>
+    <table border="1">
+    <tr><td>ユーザーID</td><td>ユーザー名</td><td>ロール</td><td></td></tr>
+    <tr><td>123</td><td>456</td><td>789</td><td>削除 変更</td> </tr>
+    <tr><td>123</td><td>456</td><td>789</td><td>削除 変更</td></tr>
+    <tr><td>1111</td><td>2222</td><td>3333</td><td>削除 変更</td></tr>
+    </table>
+
+  
+    <!-- 13打ち合わせ情報登録 -->
+    <h1>打ち合わせ情報登録</h1>
+    <div class="contact-form">
+        <table>
+        <tr><th>打ち合わせ担当者 <br>主担当</th><td><input type="text"> </td></tr>
+        <tr><th>副担当</th><td><input type="text"> </td></tr>
+        <tr><th>相手会社名</th><td><input type="text"> </td></tr>
+        <tr><th>相手氏名</th><td><input type="text"> </td></tr>
+        <tr><th>予定日</th><td><input type="date"> </td></tr>
+        <tr><th>予定時刻</th><td><input type="time"> </td></tr>
+        <tr><th>目的</th><td><input type="text"></td></tr>
+        </table>
+    
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">クリア</a>
+        <a href="#" class="btn-icon">変更</a>
+    </div>
+    
+    <!-- 14打ち合わせ登録確認 -->
+    <h1>打ち合わせ情報登録確認</h1>
+    <div class="contact-form">
+        <table>
+        <tr><th>打ち合わせ担当者 <br>主担当</th><td><input type="text"> </td></tr>
+        <tr><th>副担当</th><td><input type="text"> </td></tr>
+        <tr><th>参加メンバー</th><td><input type="text"> </td></tr>
+        <tr><th>相手会社名</th><td><input type="text"> </td></tr>
+        <tr><th>相手指名</th><td><input type="date"> </td></tr>
+        <tr><th>会議室番号</th><td><input type="text"> </td></tr>
+        <tr><th>目的</th><td><input type="text"></td></tr>
+        </table>
+    
+    </div>
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">戻る</a>
+        <a href="#" class="btn-icon">確定</a>
+    </div>
+
+    <!-- 15打ち合わせ登録完了 -->
+    <h1>打ち合わせ情報登録完了</h1> 
+    <p align="center">アカウントの登録が完了しました。</p>   
+    <div style="text-align: center;">
+        <a href="#" class="btn-icon">打ち合わせ情報登録画面へ戻る</a>
+    </div>
+
+
+    <!-- 16  -->
+
+
+    <!-- 17  -->
+    <!-- 18  -->
+    <!-- 19  -->
+
+
+</body>
+</html>

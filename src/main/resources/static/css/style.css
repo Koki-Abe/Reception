@@ -1,0 +1,341 @@
+/*ヘッダー*/
+img {
+    width: 15%;
+    height: auto;
+    margin: 0  0 50px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    }
+
+
+ #form{
+    width: 450px;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #555;
+    }
+  
+ h1 {
+      border-top: 3px dashed #D9E5FF;
+      font-size: 25px;
+    }
+
+h2{
+	font-size: 20px;
+}
+
+/* メニューバー */
+.menu-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  height: 60px;
+  width: 60px;
+  justify-content: center;
+  align-items: center;
+  z-index: 90;
+  background-color: #3584bb;
+}
+
+.menu-btn span,
+.menu-btn span:before,
+.menu-btn span:after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 25px;
+  border-radius: 3px;
+  background-color: #ffffff;
+  position: absolute;
+}
+
+.menu-btn span:before {
+  bottom: 8px;
+}
+.menu-btn span:after {
+  top: 8px;
+}
+ 
+#menu-btn-check:checked ~ .menu-btn span {
+  background-color: rgba(255, 255, 255, 0);/*メニューオープン時は真ん中の線を透明にする*/
+}
+#menu-btn-check:checked ~ .menu-btn span::before {
+  bottom: 0;
+  transform: rotate(45deg);
+}
+#menu-btn-check:checked ~ .menu-btn span::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+#menu-btn-check {
+  display: none;
+}
+
+.menu-content {
+  width: 50%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+}
+
+.menu-content ul {
+  padding: 70px 10px 0;
+}
+
+.menu-content ul li {
+  border-bottom: solid 1px #ffffff;
+  list-style: none;
+}
+
+.menu-content ul li a {
+  display: block;
+  width: 100%;
+  font-size: 15px;
+  box-sizing: border-box;
+  color: black;
+  text-decoration: none;
+  padding: 9px 15px 10px 0;
+  position: relative;
+}
+
+.menu-content ul li a::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-top: solid 2px #ffffff;
+  border-right: solid 2px #ffffff;
+  transform: rotate(45deg);
+  position: absolute;
+  right: 11px;
+  top: 16px;
+}
+
+.menu-content {
+  width: 30%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 100%;/*leftの値を変更してメニューを画面外へ*/
+  z-index: 80;
+  background-color: #3584bb;
+  transition: all 0.5s;/*アニメーション設定*/
+}
+
+
+
+  nav{
+    width: 100%;
+    height: 70px;
+    padding-top: 5px;
+    box-sizing: border-box;
+    }
+    
+    ul{
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      list-style: none;
+    }
+  
+    li{
+      list-style: none;  /*タグの箇条書きの点を消す*/
+    }
+  
+    a{
+      display: block;
+      text-decoration: none;
+      color: skyblue;
+      margin-right: 50px;
+    }
+
+    #menu-btn-check:checked ~ .menu-content {
+      left: 0;/*メニューを画面内へ*/
+  }
+
+    /* 1ログイン画面*/
+
+  /*入力部分*/  
+  input[type="text"],
+  input[type="date"],
+  input[type="password"],
+  input[type="datetime-local"] {
+      font-size: 15px;
+      border: 2px solid lightslategray;
+      color:black;
+      font-family: Arial;
+      padding: 10px 15px ; /*10pxが幅　15pxが長さ*/
+      width: 300px;
+      margin: 0 0 30px 50px;
+      /*border-radius: 30px;  角を丸くする*/
+    }
+    
+    /* テスト */
+    select {
+      font-size: 15px;
+      border: 2px solid lightslategray;
+      color:black;
+      font-family: Arial;
+      padding: 10px 15px ; /*10pxが幅　15pxが長さ*/
+      width: 330px;
+      margin: 10 0 30px 50px;
+      /*border-radius: 30px;  角を丸くする*/
+    
+    }
+  
+    /*ボタン部分*/  
+  .submit {
+    text-align: center;
+    display: inline-block;
+    padding: 15px 30px;
+    width: 100px;
+  }
+  
+    .eye{
+      position: absolute;
+      padding: 8px;
+    }
+  
+  #hide1{
+    display: none;
+  }
+  
+  /* フォント */
+  #form p{
+    font-family: Arial;
+    color:  #5b8bd0	;
+    font-weight: bold;
+    margin: 0 0 0 40px;
+    }
+  
+  /* デザインコピペ */
+ 	
+    
+#form .form-title{
+  border-bottom:solid 2px  #5b8bd0	;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Arial;
+  font-size: 30px;
+  color: #5b8bd0	;
+  text-align: center;
+  
+  }
+  
+.submit input{
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    text-decoration: none;
+    margin: 0 auto;
+}
+.button input{
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    text-decoration: none;
+    margin: 0 auto;
+}
+
+
+/* 2管理画面 */   
+/*ユーザー情報欄*/
+tr,th,td{
+  border: solid 1px #ccc;
+  height: 80px;  
+  width: 150px;
+}
+
+.contact-form th{
+  text-align: center;
+  background-color: #F0F8FF; 
+}
+
+/*入力欄*/
+.contact-form td{
+  background-color:#F0FFFF;
+}
+
+.contact-form input{
+  margin: auto;
+}
+
+ /*menu . ボタン部分(管理画面TOP、アカウント管理、打ち合わせ予定管理)*/  
+  .btn-area{
+    text-align: center;
+  }
+
+  input[type="submit"]{
+    margin: auto; 
+    font-family: Arial;
+    color: #FFF;
+    border: none;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: solid #f5fdff 4px;
+    background-color: #5b8bd0;
+    min-width: 130px;
+  }
+  input[type="button"]{
+    margin: auto; 
+    font-family: Arial;
+    color: #FFF;
+    border: none;
+    font-size: 16px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    border: solid #f5fdff 4px;
+    background-color: #5b8bd0;
+    min-width: 130px;
+  }
+
+.dropdown{
+    width: 100px;
+}
+
+    /* 3・4アカウント登録 */
+    /*戻る、クリア、変更ボタン*/
+.btn-icon {
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+    background-color: 	#4682B4;
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    border-radius: 4px;
+    margin: 10px 5px 10px 5px;
+  }
+
+  /* 6表*/
+td {
+  text-align: center;
+}
+
+table{
+    margin: auto;
+}

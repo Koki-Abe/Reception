@@ -1,0 +1,31 @@
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./js/common.js"></script>
+</head>
+
+<header>
+    <img src="img/SOAREST_logo.png">
+    <nav>
+        <ul>
+            <li><a href="#">ユーザーID</a></li>
+            <li><a href="#">ログアウト</a></li>
+        </ul>
+    </nav>
+
+    <!--ここからメニュー-->
+    <div class="hamburger-menu">
+        <input type="checkbox" id="menu-btn-check">
+        <label for="menu-btn-check" class="menu-btn"><span></span></label>
+        <!--ここからメニュー-->
+        <div class="menu-content">
+            <ul>
+                <li><a href="/top" onclick="toTop();">管理画面TOP</a></li>
+                <li><a href="/account_list" onclick="toAccountList();">アカウント管理</a></li>
+                <li><a href="#">打ち合わせ予定管理</a></li>
+            </ul>
+        </div>
+    </div>
+</header>

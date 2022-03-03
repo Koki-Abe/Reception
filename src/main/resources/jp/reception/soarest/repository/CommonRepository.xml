@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="jp.reception.soarest.repository.CommonRepository">
+     <!-- 部署プルダウン取得 -->
+    <select id="searchDepList" resultType="jp.reception.soarest.domain.dto.DepartmentSearchResultDto">
+        SELECT
+            DEP_ID
+            , DEP_NAME
+        FROM
+            M_DEPARTMENT;
+    </select>
+    <!-- 権限プルダウン取得 -->
+    <select id="searchAuthList" resultType="jp.reception.soarest.domain.dto.AuthSearchResultDto">
+        SELECT
+            AUTH_ID
+            , AUTH_NAME
+        FROM
+            M_AUTH;
+    </select>
+ </mapper>
