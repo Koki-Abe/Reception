@@ -66,7 +66,7 @@
                     <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
                     <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
                     <td id="edit" bgcolor="#F0FFFF">
-                        <!-- 管理者フラグが1(管理者)の場合、変更及び削除リンクを表示 -->
+                        <!-- ログインユーザの管理者フラグが1(管理者)の場合、変更及び削除リンクを表示 -->
                         <!--  <th:block th:if="${account.authFlag == 1}"> -->
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
