@@ -22,11 +22,9 @@ public class AccountSearchForm {
 	private int role;
 	
 	// 最終ログイン日(開始)
-	// TODO 正規表現で日付形式チェック
 	private String loginDateStart;
 	
 	// 最終ログイン日(終了)
-	// TODO 正規表現で日付形式チェック
 	private String loginDateEnd;
 
 }
