@@ -59,8 +59,6 @@ public class LoginController {
 	
 		// 入力値の保持
 		loginService.saveWord(form, redirectAttributes);
-		
-		
 
 		// エラー格納用リスト
 		List<String> errorList = new ArrayList<String>();
