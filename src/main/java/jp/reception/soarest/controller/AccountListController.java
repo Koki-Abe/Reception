@@ -3,9 +3,9 @@ package jp.reception.soarest.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -79,9 +79,16 @@ public class AccountListController {
 	  * @param redirect
 	  */
     @RequestMapping(value = "/account_search", method = RequestMethod.GET)
-    public String searchAccount(@Validated AccountSearchForm form, BindingResult result, 
-    		RedirectAttributes redirectAttributes, Model model) {
-        // TODO ※最初に入力チェック
+    public String searchAccount(@Validated AccountSearchForm form, 
+        RedirectAttributes redirectAttributes, Model model, Pageable pageable) {
+
+        // 検索値を入力欄に保持
+        accountService.saveWord(form, model);
+
+        // 入力チェック
+        if(!accountService.inputCheck(form, model)) {
+            return "forward:/account_list";
+        }
 
         // 検索処理
         accountService.searchAccountList(form, new AccountSearchDto(), model);

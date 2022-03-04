@@ -9,22 +9,39 @@ import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.form.AccountSearchForm;
 
+/*
+ * アカウント情報一覧 サービスインターフェース
+ * 
+ */
 @Service
 public interface AccountService {
 
-//	// マッパー
-//	@Autowired
-//	private TestMapperRepository testMapper;
-//	
-//	
-//	// テスト検索
-//	public List<TestEntity> findRoom() {
-//		return testMapper.findRoom();
-//	}
-	
-//	public List<TestEntity> findRoom();
-	
-	public List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
+	/*
+	 * アカウント情報一覧 検索
+	 * 
+	 * @param form アカウント情報一覧 フォームクラス 
+	 * @param searchDto アカウント情報一覧 検索用DTO
+	 * @param model モデル
+	 * @return 検索結果
+	 */
+	List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
         AccountSearchDto searchDto, Model model);
+	
+	/*
+	 * アカウント情報一覧 入力チェック
+	 * 
+	 * @param form アカウント情報一覧 フォームクラス 
+	 * @param model モデル
+	 * @return 入力チェック結果
+	 */
+	boolean inputCheck(AccountSearchForm form, Model model);
+	
+	/*
+	 * アカウント情報一覧 入力値保持
+	 * 
+	 * @param form アカウント情報一覧 フォームクラス 
+	 * @param model モデル
+	 */
+	void saveWord(AccountSearchForm form, Model model);
 
 }

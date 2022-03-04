@@ -11,11 +11,14 @@
         <h2 align="center">ユーザー情報</h2>
         <div class="contact-form">
             <table>
-                <tr><th>ユーザーID</th><td><input type="text" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
-                <tr><th>ユーザー名</th><td><input type="text"></td></tr>
-                <tr><th>ロール</th><td><select name="ロール"> </select></td></tr>
-                <tr><th>最終ログイン日時</th><td><input type="datetime-local"></td></tr>
+                <tr><th>ユーザーID</th><td><p></p></td></tr>
+                <tr><th>ユーザー名</th><td><p></p></td></tr>
+                <tr><th>ロール</th><td><p></p></td></tr>
+                <tr><th>最終ログイン日時</th><td><p></p></td></tr>
             </table>
         </div>
     </body>
+
+    <!-- ヘッダー読み込み -->
+    <div th:include="common/footer"></div>
 </html>

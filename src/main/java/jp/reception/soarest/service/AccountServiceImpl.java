@@ -14,13 +14,20 @@ import jp.reception.soarest.repository.AccountRepository;
 
 
 @Service
+/*
+ * アカウント情報一覧 サービス実装クラス
+ * 
+ */
 public class AccountServiceImpl implements AccountService {
 	
-	// マッパー
+	// アカウント関連 リポジトリ
 	@Autowired
 	private AccountRepository accountRepository;
-	
 
+	/*
+	 * アカウント情報一覧 検索
+	 * 
+	 */
 	@Override
 	public List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
 			AccountSearchDto searchDto, Model model) {
@@ -37,28 +44,52 @@ public class AccountServiceImpl implements AccountService {
     	// 検索結果が0件の場合
     	if (0 == accList.size()) {
     		// エラーメッセージを画面に返却
-    		// redirectAttributes.addFlashAttribute("errMsg", "検索結果が見つかりませんでした。");
     		model.addAttribute("errMsg", "検索結果が見つかりませんでした。");
     		// 検索結果件数を設定
-    		// redirectAttributes.addFlashAttribute("searchCount", accList.size());
     		model.addAttribute("searchCount", accList.size());
     	} else {
     		// 検索結果を格納
-    		// redirectAttributes.addFlashAttribute("accList", accList);
     		model.addAttribute("accList", accList);
     		// 検索結果件数を設定
-    		// redirectAttributes.addFlashAttribute("searchCount", accList.size());
     		model.addAttribute("searchCount", accList.size());
     	}
-    	// 検索ワードをテキストに保持
-    	model.addAttribute("userId", form.getUserId());
-    	model.addAttribute("userName", form.getUserName());
-    	model.addAttribute("department", form.getDepartment());
-    	model.addAttribute("role", form.getRole());
-    	model.addAttribute("loginDateStart", form.getLoginDateStart());
-    	model.addAttribute("loginDateEnd", form.getLoginDateEnd());
-		
-		return accList;
-		
+        
+        // 検索結果を返却
+	    return accList;
 	}
+
+	
+	/*
+	 * アカウント情報一覧 入力チェック
+	 * 
+	 */
+	@Override
+	public boolean inputCheck(AccountSearchForm form, Model model) {
+		// 日付の相関チェック
+		String start = form.getLoginDateStart();
+		String end = form.getLoginDateEnd();
+
+		// 開始日が終了日より未来日の場合
+		if(start.compareTo(end) > 0) {
+            model.addAttribute("errMsg", "入力された日付の範囲が不正です。");
+	        return false;
+	    }
+
+	    return true;
+	}
+
+	/*
+	 * アカウント情報一覧 入力値保持
+	 * 
+	 */
+	@Override
+	public void saveWord(AccountSearchForm form, Model model) {
+        // 検索値を入力欄に保持
+        model.addAttribute("userId", form.getUserId());
+        model.addAttribute("userName", form.getUserName());
+        model.addAttribute("department", form.getDepartment());
+        model.addAttribute("role", form.getRole());
+        model.addAttribute("loginDateStart", form.getLoginDateStart());
+        model.addAttribute("loginDateEnd", form.getLoginDateEnd());
+    }
 }
