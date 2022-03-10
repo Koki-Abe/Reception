@@ -16,32 +16,39 @@ import jp.reception.soarest.form.AccountSearchForm;
 @Service
 public interface AccountService {
 
-	/*
-	 * アカウント情報一覧 検索
-	 * 
-	 * @param form アカウント情報一覧 フォームクラス 
-	 * @param searchDto アカウント情報一覧 検索用DTO
-	 * @param model モデル
-	 * @return 検索結果
-	 */
-	List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
+    /*
+     * アカウント情報一覧 初期処理
+     * 
+     * @param model モデル
+     */
+    void init(Model model);
+
+    /*
+     * アカウント情報一覧 検索
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param searchDto アカウント情報一覧 検索用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
         AccountSearchDto searchDto, Model model);
-	
-	/*
-	 * アカウント情報一覧 入力チェック
-	 * 
-	 * @param form アカウント情報一覧 フォームクラス 
-	 * @param model モデル
-	 * @return 入力チェック結果
-	 */
-	boolean inputCheck(AccountSearchForm form, Model model);
-	
-	/*
-	 * アカウント情報一覧 入力値保持
-	 * 
-	 * @param form アカウント情報一覧 フォームクラス 
-	 * @param model モデル
-	 */
-	void saveWord(AccountSearchForm form, Model model);
+    
+    /*
+     * アカウント情報一覧 入力チェック
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    boolean inputCheck(AccountSearchForm form, Model model);
+    
+    /*
+     * アカウント情報一覧 入力値保持
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    void saveWord(AccountSearchForm form, Model model);
 
 }

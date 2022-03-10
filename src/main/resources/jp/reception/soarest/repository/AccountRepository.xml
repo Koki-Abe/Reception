@@ -17,7 +17,7 @@
         INNER JOIN M_AUTH MA ON MS.AUTH_ID = MA.AUTH_ID
         <where>
             <if test="userId != null and userId != ''">
-                MS.STAFF_ID LIKE CONCAT('%', #{userId}, '%' )
+                BINARY MS.STAFF_ID LIKE CONCAT('%', #{userId}, '%' )
             </if>
             <if test="userName != null and userName != ''">
                 AND MS.STAFF_NAME LIKE CONCAT('%', #{userName}, '%' )

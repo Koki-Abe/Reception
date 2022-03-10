@@ -11,14 +11,50 @@
         <h2 align="center">ユーザー情報</h2>
         <div class="contact-form">
             <table>
-                <tr><th>ユーザーID</th><td><p></p></td></tr>
-                <tr><th>ユーザー名</th><td><p></p></td></tr>
-                <tr><th>ロール</th><td><p></p></td></tr>
-                <tr><th>最終ログイン日時</th><td><p></p></td></tr>
+                <tr>
+                    <th>
+                        ユーザーID
+                    </th>
+                    <td>
+                        <th:block th:if="${loginUser}">
+                            <p style="color: red;" align="center" th:text="${loginUser.staffId}" id="userId">
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        ユーザー名
+                    </th>
+                    <td>
+                        <th:block th:if="${loginUser}">
+                            <p style="color: red;" align="center" th:text="${loginUser.staffName}" id="userName">
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        ロール
+                    </th>
+                    <td>
+                        <th:block th:if="${loginUser}">
+                            <p style="color: red;" align="center" th:text="${loginUser.authName}" id="role">
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        最終ログイン日時
+                    </th>
+                    <td>
+                        <th:block th:if="${loginUser}">
+                            <p style="color: red;" align="center" th:text="${loginUser.lastLoginDate}" id="lastLoginDate">
+                        </th:block>
+                    </td>
+                </tr>
             </table>
         </div>
     </body>
 
-    <!-- ヘッダー読み込み -->
+    <!-- フッター読み込み -->
     <div th:include="common/footer"></div>
 </html>

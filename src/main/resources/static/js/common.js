@@ -42,3 +42,31 @@
         form.method = 'get';
         form.submit();
     }
+    // ログアウト押下時
+    function logout() {
+        let form = document.createElement('form');
+        form.action = '/logout';
+        form.method = 'get';
+        form.submit();
+    }
+
+    // バーガーメニュー
+    $(function() {
+        $('.hamburger').click(function() {
+            $(this).toggleClass('active');
+ 
+            if ($(this).hasClass('active')) {
+                $('.globalMenuSp').addClass('active');
+            } else {
+                $('.globalMenuSp').removeClass('active');
+            }
+        });
+    });
+    // ブラウザバック無効(※どのページで無効にするか考慮する)
+ //   $(function() {
+  //      history.pushState(null, null, null);
+
+   //     $(window).on("popstate", function(){
+   //         history.pushState(null, null, null);
+   //     });
+   // }); 
