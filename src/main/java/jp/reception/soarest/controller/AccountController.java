@@ -3,6 +3,8 @@ package jp.reception.soarest.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.UrlEnum;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.service.AccountService;
@@ -36,6 +39,8 @@ public class AccountController {
     @Autowired
     HttpSession session;
 
+    // ロガー
+    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
     // アカウント情報一覧URL
     private final String ACCOUNT_LIST = "/account_list";
 
@@ -55,7 +60,6 @@ public class AccountController {
 
         // セッション存在チェック
         session = request.getSession(false);
-        // TODO セッション情報のチェック
         if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
             return "redirect:/";
         }
@@ -67,6 +71,7 @@ public class AccountController {
         accountService.init(model);
 
 //        return "account/account_list";
+        // アカウント情報一覧画面へ遷移
         return UrlEnum.ACCOUNT_LIST.getPass();
     }
 
@@ -85,23 +90,29 @@ public class AccountController {
         if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
             return "redirect:/";
         }
+        // 開始ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
         // 検索値を入力欄に保持
         accountService.saveWord(form, model);
 
         // 入力チェック
         if(!accountService.inputCheck(form, model)) {
-            return "forward:/account_list";
+//            return "forward:/account_list";
+            return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getPass();
         }
 
         // 検索処理
         accountService.searchAccountList(form, new AccountSearchDto(), model);
 
+        // 終了ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
         // ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
         // ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
         // (redirectの場合、redirectAttributesにsetしないと連携できない)
+        // return "redirect:/account_list";
         return "forward:" + UrlEnum.ACCOUNT_LIST.getUrl();
-//      return "redirect:/account_list";
 
    }
 }

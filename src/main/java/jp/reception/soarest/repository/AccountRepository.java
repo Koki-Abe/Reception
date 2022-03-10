@@ -10,7 +10,8 @@ import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 /*
  * アカウント関連 リポジトリインターフェース
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 @Mapper
 public interface AccountRepository {

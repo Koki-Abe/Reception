@@ -10,7 +10,8 @@ import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 /*
  * アカウント関連 リポジトリ実装クラス
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 public class AccountRepositoryImpl implements AccountRepository{
 	

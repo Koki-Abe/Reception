@@ -27,9 +27,9 @@ public class LoginUserSearchResultDto implements Serializable {
 	// 最終ログイン日
 	private String lastLoginDate;
 
-	// 検索取得件数
-	private int searchCount;
-	
-	// エラーメッセージ
-	private String errMsg;
+//	// 検索取得件数
+//	private int searchCount;
+//	
+//	// エラーメッセージ
+//	private String errMsg;
 }

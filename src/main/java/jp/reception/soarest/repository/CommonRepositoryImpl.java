@@ -10,7 +10,8 @@ import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
 /*
  * 共通 リポジトリ実装クラス
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 public class CommonRepositoryImpl implements CommonRepository{
 	
