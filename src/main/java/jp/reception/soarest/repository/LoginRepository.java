@@ -8,7 +8,8 @@ import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 /*
  * ログイン関連 リポジトリインターフェース
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 @Mapper
 public interface LoginRepository {

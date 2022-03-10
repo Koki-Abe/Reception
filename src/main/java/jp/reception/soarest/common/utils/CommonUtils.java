@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -23,9 +22,12 @@ public class CommonUtils {
 
     @Autowired
     HttpSession session;
-	
-    // ロガー
-    private static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
+
+    // ハッシュ化方式
+    private final static String WAY_OF_HASH = "SHA-256";
+    
+    // ハッシュフォーマット
+    private final static String HASH_FORMAT = "%040x";
     
     /*
      * パスワードをハッシュ化した値を返却
@@ -40,14 +42,28 @@ public class CommonUtils {
         
         String hs = new String();
         try {
-            digest = MessageDigest.getInstance("SHA-256");
+            digest = MessageDigest.getInstance(WAY_OF_HASH);
             byte[] toByte = digest.digest(pass.getBytes());
-            hs = String.format("%040x", new BigInteger(1, toByte));
+            hs = String.format(HASH_FORMAT, new BigInteger(1, toByte));
         } catch (NoSuchAlgorithmException e) {
-            // エラーログに出力
-            logger.error(e.getMessage());
+            // 例外をスローする
+            throw new NoSuchAlgorithmException(e);
         }
         return hs;
+    }
+    /*
+     * エラーログ出力
+     * 
+     * @param logger ロガー
+     * @param ex 例外クラス
+     * @param errMsg エラーメッセージ
+     */
+    public static void outputErrLog(Logger logger, Exception ex, String errMsg) {
+
+        // エラー内容を出力
+        logger.error(errMsg);
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
     }
 
 }

@@ -33,11 +33,17 @@ public class AccountServiceImpl implements AccountService {
     // 共通 リポジトリ
     @Autowired
     CommonRepository commonRepository;
+    
+    // 部署リスト
+    private final String DEP_LIST = "depList";
+    // 権限リスト
+    private final String AUTH_LIST = "authList";
 
     
     /*
      * アカウント情報一覧 初期処理
      * 
+     * @param model モデル
      */
     @Override
     public void init(Model model) {
@@ -47,7 +53,6 @@ public class AccountServiceImpl implements AccountService {
         // 権限プルダウンの取得
         List<AuthSearchResultDto> authList = commonRepository.searchAuthList();
 
-        /* 画面返却値の設定 */
         // 部署プルダウンの初めにブランクを設定
         DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
         dep.setDepId(999);
@@ -64,13 +69,16 @@ public class AccountServiceImpl implements AccountService {
         authList.add(0, auth);
         
         // 画面返却値の設定
-        model.addAttribute("depList", depList);
-        model.addAttribute("authList", authList);
+        model.addAttribute(DEP_LIST, depList);
+        model.addAttribute(AUTH_LIST, authList);
     }
 
     /*
      * アカウント情報一覧 検索
      * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param searchDto アカウント情報一覧 検索用DTO
+     * @param model モデル
      */
     @Override
     public List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
@@ -106,6 +114,8 @@ public class AccountServiceImpl implements AccountService {
     /*
      * アカウント情報一覧 入力チェック
      * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
      */
     @Override
     public boolean inputCheck(AccountSearchForm form, Model model) {
@@ -125,6 +135,8 @@ public class AccountServiceImpl implements AccountService {
     /*
      * アカウント情報一覧 入力値保持
      * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
      */
     @Override
     public void saveWord(AccountSearchForm form, Model model) {

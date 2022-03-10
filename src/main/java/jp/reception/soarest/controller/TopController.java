@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.enums.UrlEnum;
 
 /*
  * 管理画面TOPコントローラー
@@ -37,13 +38,12 @@ public class TopController {
         if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
             return "redirect:/";
         }
-//    	if(!CommonUtils.isLogin(request, session)) {
-//    		return "redirect:/";
-//    	}
+
         // セッションから表示情報を取得
         model.addAttribute("loginUser", session.getAttribute("loginUser"));
 
-        return "top/top";
+        // return "top/top";
+        return UrlEnum.TOP.getPass();
     }
 
 }

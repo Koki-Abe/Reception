@@ -1,6 +1,7 @@
 package jp.reception.soarest.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,7 +11,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jp.reception.soarest.domain.dto.LoginUserSearchDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.form.LoginForm;
-
+/*
+ * ログイン サービスインターフェース
+ * 
+ * @author k.abe
+ * @version 1.0
+ */
 @Service
 public interface LoginService {
 
@@ -30,19 +36,18 @@ public interface LoginService {
      * ログインユーザー 検索
      * 
      * @param form アカウント情報一覧 フォームクラス
-     * @param result 入力チェック結果
      * @param redirectAttributes リダイレクトアトリビュート
      * @param errorList エラーメッセージ格納リスト
      * @return ログインユーザー
      */
     public LoginUserSearchResultDto searchLoginUser(LoginForm form, LoginUserSearchDto searchDto, 
-        RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException;
+        RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException , SQLException;
     
     /*
      * ログイン 入力値保持
      * 
      * @param form ログイン用フォームクラス 
-     * @param model モデル
+     * @param redirectAttributes リダイレクトアトリビュート
      */
     void saveWord(LoginForm form, RedirectAttributes redirectAttributes);
 

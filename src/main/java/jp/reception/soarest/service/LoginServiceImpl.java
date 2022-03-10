@@ -1,8 +1,12 @@
 package jp.reception.soarest.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -15,12 +19,27 @@ import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.form.LoginForm;
 import jp.reception.soarest.repository.LoginRepository;
 
+/*
+ * ログイン サービス実装クラス
+ * 
+ * @author k.abe
+ * @version 1.0
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
     
     // アカウント関連 リポジトリ
     @Autowired
     private LoginRepository loginRepository;
+    
+    // エラーリスト
+    private final String ERROR_LIST = "errorList";
+    
+    // ユーザーID
+    private final String USER_ID = "userId";
+
+    // ロガー
+    private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     /*
      * ログイン 入力チェック
@@ -41,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
             }
             //model.addAttribute("validationError", errorList);
             // ※リダイレクトにしないとURLが変わってしまうため
-            redirectAttributes.addFlashAttribute("errorList", errorList);
+            redirectAttributes.addFlashAttribute(ERROR_LIST, errorList);
 
             return false;
         }
@@ -57,16 +76,30 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public LoginUserSearchResultDto searchLoginUser(LoginForm form, LoginUserSearchDto searchDto, 
-        RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException {
+        RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException, SQLException {
 
-        // パスワードをハッシュ化し、検索条件に設定
-        String pass = CommonUtils.makeHash(form.getPassword());
-        searchDto.setUserId(form.getUserId());
-        searchDto.setPassword(pass);
+        // 検索結果格納用DTO
+        LoginUserSearchResultDto loginUser = new LoginUserSearchResultDto();
+        try {
+            // パスワードをハッシュ化し、検索条件に設定
+            String pass = CommonUtils.makeHash(form.getPassword());
+            searchDto.setUserId(form.getUserId());
+            searchDto.setPassword(pass);
+            // 検索処理を実行
+            loginUser = loginRepository.searchLoginUser(searchDto);
+        // 例外処理
+        } catch (Exception e) {
+           // ハッシュ生成時の例外の場合
+           if (e.getCause() instanceof NoSuchAlgorithmException) {
+               throw new NoSuchAlgorithmException(e);
+           // SQLの例外の場合
+           } else if (e.getCause() instanceof SQLSyntaxErrorException) {
+               throw new SQLException(e);
+           } else {
+               throw e;
+           }
+        }
 
-        // 検索処理を実行
-        LoginUserSearchResultDto loginUser = loginRepository.searchLoginUser(searchDto);
-        
         // ログインユーザーの情報を返却
         return loginUser;
     }
@@ -75,13 +108,13 @@ public class LoginServiceImpl implements LoginService {
      * ログイン 入力値保持
      * 
      * @param form ログイン用フォームクラス 
-     * @param model モデル
+     * @param redirectAttributes リダイレクトアトリビュート
      */
     @Override
     public void saveWord(LoginForm form, RedirectAttributes redirectAttributes) {
 
         // 入力値を保持(※addFlashAttributeにしないと、何故かURLにパラメータが付与される)
-        redirectAttributes.addFlashAttribute("userId", form.getUserId());
+        redirectAttributes.addFlashAttribute(USER_ID, form.getUserId());
         // ※パスワードは保存しない
 //        redirectAttributes.addFlashAttribute("password", form.getPassword());
     }

@@ -10,7 +10,8 @@ import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
 /*
  * 共通 リポジトリインターフェース
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 @Mapper
 public interface CommonRepository {

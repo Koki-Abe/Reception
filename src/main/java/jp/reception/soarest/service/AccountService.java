@@ -12,6 +12,8 @@ import jp.reception.soarest.form.AccountSearchForm;
 /*
  * アカウント情報一覧 サービスインターフェース
  * 
+ * @author k.abe
+ * @version 1.0
  */
 @Service
 public interface AccountService {

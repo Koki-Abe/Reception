@@ -3,8 +3,10 @@ package jp.reception.soarest.form;
 import lombok.Data;
 
 /* 
- * アカウント情報一覧 フォームクラス 
+ * アカウント情報一覧 フォーム
  * 
+ * @author k.abe
+ * @version 1.0
  */
 @Data
 public class AccountSearchForm {
