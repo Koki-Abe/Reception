@@ -1,14 +1,17 @@
 package jp.reception.soarest.domain.dto;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /*
- * アカウント情報一覧 検索結果格納用DTO
+ * ログインユーザー 検索結果格納用DTO
  * 
- * 
+ * @author k.abe
+ * @version 1.0
  */
 @Data
-public class AccountSearchResultDto {
+public class LoginUserSearchResultDto implements Serializable {
 	// 担当者ID
 	private String staffId;
 		
@@ -18,18 +21,15 @@ public class AccountSearchResultDto {
 	// 部署名
 	private String depName;
 	
-	// 権限ID
-	private int authId;
-	
 	// 権限名
 	private String authName;
 	
-	// 最終ログイン日(開始)
-	private String loginDateStart;
-	
-	// 最終ログイン日(終了)
-	private String loginDateEnd;
-	
+	// 最終ログイン日
+	private String lastLoginDate;
+
 	// 検索取得件数
 	private int searchCount;
+	
+	// エラーメッセージ
+	private String errMsg;
 }

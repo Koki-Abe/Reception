@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.reception.soarest.repository.LoginRepository">
+    <!-- ログインユーザー検索 -->
+    <select id="searchLoginUser" parameterType="jp.reception.soarest.domain.dto.LoginUserSearchDto" resultType="jp.reception.soarest.domain.dto.LoginUserSearchResultDto">
+        SELECT
+            MS.STAFF_ID AS STAFF_ID
+            , MS.STAFF_NAME AS STAFF_NAME
+            , MS.LAST_LOGIN_DATE AS LAST_LOGIN_DATE
+            , MA.AUTH_NAME AS AUTH_NAME
+        FROM
+            M_STAFF MS
+        INNER JOIN M_AUTH MA ON MS.AUTH_ID = MA.AUTH_ID
+        <where>
+            <if test="userId != null and userId != ''">
+                BINARY MS.STAFF_ID = #{userId}
+            </if>
+            <if test="password != null and password != ''">
+                AND MS.PASSWORD = #{password}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,23 +1,48 @@
 package jp.reception.soarest.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 
-@PropertySource("classpath:properties/message.properties")
+/*
+ * 管理画面TOPコントローラー
+ * 
+ * @author k.abe
+ * @version 1.0
+ */
 @Controller
 public class TopController {
 
-    @Value("${MSG-A01-W-001}")	
-    public String msg;
-    
+    @Autowired
+    HttpServletRequest request;
+
+    @Autowired
+    HttpSession session; 
+
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public String init(Model model) {
-    	System.out.println(model.getAttribute("name"));
+
+        // セッションの取得
+        session = request.getSession(false);
+
+        // TODO セッション情報のチェック
+        if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
+            return "redirect:/";
+        }
+//    	if(!CommonUtils.isLogin(request, session)) {
+//    		return "redirect:/";
+//    	}
+        // セッションから表示情報を取得
+        model.addAttribute("loginUser", session.getAttribute("loginUser"));
+
         return "top/top";
     }
 
