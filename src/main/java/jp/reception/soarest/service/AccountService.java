@@ -1,5 +1,6 @@
 package jp.reception.soarest.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public interface AccountService {
      * @return 検索結果
      */
     List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
-        AccountSearchDto searchDto, Model model);
+        AccountSearchDto searchDto, Model model) throws SQLException;
     
     /*
      * アカウント情報一覧 入力チェック

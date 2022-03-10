@@ -1,25 +1,25 @@
 /*ヘッダー*/
 img {
-    width: 15%;
+    width: 20%;
     height: auto;
     margin: 0  0 50px 0;
     position: fixed;
     top: 0;
     left: 0;
-    }
+}
 
 
- #form{
+ #form {
     width: 450px;
     margin: auto;
     padding: 30px;
     border: 1px solid #555;
-    }
+}
   
- h1 {
-      border-top: 3px dashed #D9E5FF;
-      font-size: 25px;
-    }
+h1 {
+    border-top: 3px dashed #D9E5FF;
+    font-size: 25px;
+}
 
 h2{
 	font-size: 20px;
@@ -340,7 +340,6 @@ table{
     margin: auto;
 }
 
-/* ここからテスト*/
 /*　ハンバーガーボタン　*/
 .hamburger {
   display : block;

@@ -43,14 +43,18 @@
                 </table>
             </div>
             <!-- ボタンエリア -->
-            <div style="text-align: center;">  
+            <div style="text-align: center;"> 
                 <input type="button" value="クリア" onclick="clearText()" />
                 <input type="submit" value="検索">
             </div>
         </form>
         <div style="text-align: center;">
-            <p align="left">検索結果</p>
-            <th:block th:if="${searchCount}"><p th:text="${searchCount}">件</th:block>
+            <div align="left" style="margin-left: 370px;">
+	            <th:block th:if="${searchCount}">
+	                <b>検索結果</b>
+	                <font th:text="${searchCount}"></font> 件
+	            </th:block>
+            </div>
             <!-- 検索結果表示欄 -->
             <table>
                 <tr th:if="${accList}">
