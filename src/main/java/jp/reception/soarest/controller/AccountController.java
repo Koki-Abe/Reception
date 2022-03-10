@@ -1,5 +1,7 @@
 package jp.reception.soarest.controller;
 
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
@@ -41,6 +44,7 @@ public class AccountController {
 
     // ロガー
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     // アカウント情報一覧URL
     private final String ACCOUNT_LIST = "/account_list";
 
@@ -93,18 +97,26 @@ public class AccountController {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
-        // 検索値を入力欄に保持
-        accountService.saveWord(form, model);
+        try {
+            // 検索値を入力欄に保持
+            accountService.saveWord(form, model);
 
-        // 入力チェック
-        if(!accountService.inputCheck(form, model)) {
-//            return "forward:/account_list";
-            return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getPass();
+            // 入力チェック
+            if(!accountService.inputCheck(form, model)) {
+    //            return "forward:/account_list";
+                return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
+            }
+            // 検索処理
+            accountService.searchAccountList(form, new AccountSearchDto(), model);
+        } catch (SQLException e) {
+            CommonUtils.outputErrLog(logger, e, "アカウント情報一覧の検索処理にて、例外が発生しました。");
+            // session.invalidate(); ←セッションを破棄するかは要相談
+            return "error";
+        } catch (Exception e) {
+            CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
+            // session.invalidate(); ←セッションを破棄するかは要相談
+            return "error";
         }
-
-        // 検索処理
-        accountService.searchAccountList(form, new AccountSearchDto(), model);
-
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 

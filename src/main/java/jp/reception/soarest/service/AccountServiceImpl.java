@@ -1,5 +1,7 @@
 package jp.reception.soarest.service;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -11,7 +13,9 @@ import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.domain.dto.AuthSearchResultDto;
 import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
+import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.enums.NumEnum;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.repository.AccountRepository;
 import jp.reception.soarest.repository.CommonRepository;
@@ -33,13 +37,39 @@ public class AccountServiceImpl implements AccountService {
     // 共通 リポジトリ
     @Autowired
     CommonRepository commonRepository;
-    
+
     // 部署リスト
     private final String DEP_LIST = "depList";
+
     // 権限リスト
     private final String AUTH_LIST = "authList";
 
-    
+    // エラーメッセージ
+    private final String ERR_MSG = "errMsg";
+
+    // 検索結果件数
+    private final String SEARCH_COUNT = "searchCount";
+
+    // アカウントリスト
+    private final String ACC_LIST = "accList";
+
+    // ユーザーID
+    private final String USER_ID = "userId";
+
+    // ユーザー名
+    private final String USER_NAME = "userName";
+
+    // 部署
+    private final String DEPARTMENT = "department";
+
+    // ロール
+    private final String ROLE = "role";
+    // ログイン日(開始)
+    private final String LOGIN_DATE_START = "loginDateStart";
+
+    // ログイン日(終了)
+    private final String LOGIN_DATE_END = "loginDateEnd";
+
     /*
      * アカウント情報一覧 初期処理
      * 
@@ -55,19 +85,19 @@ public class AccountServiceImpl implements AccountService {
 
         // 部署プルダウンの初めにブランクを設定
         DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
-        dep.setDepId(999);
-        dep.setDepName("");
+        dep.setDepId(NumEnum.PULLDOWN.getNum());
+        dep.setDepName(CharEnum.BLANK.getChar());
         // 最初にブランクを表示させるため、要素の最初に挿入
         depList.add(0, dep);
 
         // 権限プルダウンの初めにブランクを設定
         AuthSearchResultDto auth = new AuthSearchResultDto();
-        auth.setAuthId(999);
-        auth.setAuthName("");
-        
+        auth.setAuthId(NumEnum.PULLDOWN.getNum());
+        auth.setAuthName(CharEnum.BLANK.getChar());
+
         // 最初にブランクを表示させるため、要素の最初に挿入
         authList.add(0, auth);
-        
+
         // 画面返却値の設定
         model.addAttribute(DEP_LIST, depList);
         model.addAttribute(AUTH_LIST, authList);
@@ -79,33 +109,42 @@ public class AccountServiceImpl implements AccountService {
      * @param form アカウント情報一覧 フォームクラス 
      * @param searchDto アカウント情報一覧 検索用DTO
      * @param model モデル
+     * @return accList 検索結果
      */
     @Override
     public List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
-            AccountSearchDto searchDto, Model model) {
+            AccountSearchDto searchDto, Model model) throws SQLException {
         
         // beanの内容を詰め替え
         BeanUtils.copyProperties(form, searchDto);
         // プロパティ名が異なるものは別途設定
         searchDto.setDepId(form.getDepartment());
         searchDto.setAuthId(form.getRole());
-
-        // 検索処理を実行
-        List<AccountSearchResultDto> accList = accountRepository.searchAccountList(searchDto);
-        
-        // 検索結果が0件の場合
-        if (0 == accList.size()) {
-            // エラーメッセージを画面に返却
-            model.addAttribute("errMsg", MessageEnum.MSG_C01_W_002.getMsg("validation"));
-            // 検索結果件数を設定
-            model.addAttribute("searchCount", accList.size());
-        } else {
-            // 検索結果を格納
-            model.addAttribute("accList", accList);
-            // 検索結果件数を設定
-            model.addAttribute("searchCount", accList.size());
+        List<AccountSearchResultDto> accList = new ArrayList<AccountSearchResultDto>();
+        try {
+            // 検索処理を実行
+            accList = accountRepository.searchAccountList(searchDto);
+            
+            // 検索結果が0件の場合
+            if (0 == accList.size()) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
+                // 検索結果件数を設定
+                model.addAttribute(SEARCH_COUNT, accList.size());
+            } else {
+                // 検索結果を格納
+                model.addAttribute(ACC_LIST, accList);
+                // 検索結果件数を設定
+                model.addAttribute(SEARCH_COUNT, accList.size());
+            }
+        } catch (Exception e) {
+            if (e.getCause() instanceof SQLException) {
+                
+                throw new SQLException(e);
+            } else {
+                throw e;
+            }
         }
-
         // 検索結果を返却
         return accList;
     }
@@ -125,7 +164,7 @@ public class AccountServiceImpl implements AccountService {
 
         // 開始日が終了日より未来日の場合
         if(start.compareTo(end) > 0) {
-            model.addAttribute("errMsg", MessageEnum.MSG_C01_W_001.getMsg("validation"));
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_001.getMsg(CharEnum.VALIDATION.getChar()));
             return false;
         }
 
@@ -141,12 +180,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void saveWord(AccountSearchForm form, Model model) {
         // 検索値を入力欄に保持
-        model.addAttribute("userId", form.getUserId());
-        model.addAttribute("userName", form.getUserName());
-        model.addAttribute("department", form.getDepartment());
-        model.addAttribute("role", form.getRole());
-        model.addAttribute("loginDateStart", form.getLoginDateStart());
-        model.addAttribute("loginDateEnd", form.getLoginDateEnd());
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(USER_NAME, form.getUserName());
+        model.addAttribute(DEPARTMENT, form.getDepartment());
+        model.addAttribute(ROLE, form.getRole());
+        model.addAttribute(LOGIN_DATE_START, form.getLoginDateStart());
+        model.addAttribute(LOGIN_DATE_END, form.getLoginDateEnd());
     }
 
 }

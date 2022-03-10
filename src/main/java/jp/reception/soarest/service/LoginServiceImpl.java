@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -37,9 +35,6 @@ public class LoginServiceImpl implements LoginService {
     
     // ユーザーID
     private final String USER_ID = "userId";
-
-    // ロガー
-    private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
     /*
      * ログイン 入力チェック
@@ -87,12 +82,13 @@ public class LoginServiceImpl implements LoginService {
             searchDto.setPassword(pass);
             // 検索処理を実行
             loginUser = loginRepository.searchLoginUser(searchDto);
+
         // 例外処理
         } catch (Exception e) {
            // ハッシュ生成時の例外の場合
            if (e.getCause() instanceof NoSuchAlgorithmException) {
                throw new NoSuchAlgorithmException(e);
-           // SQLの例外の場合
+           // SQL例外の場合
            } else if (e.getCause() instanceof SQLSyntaxErrorException) {
                throw new SQLException(e);
            } else {
