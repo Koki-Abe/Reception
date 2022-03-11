@@ -42,6 +42,15 @@
         form.method = 'get';
         form.submit();
     }
+    
+        // 打ち合わせ予定管理押下時
+    function toMtgList() {
+        let form = document.createElement('form');
+        form.action = '/mtg_list';
+        form.method = 'get';
+        form.submit();
+    }
+    
     // ログアウト押下時
     function logout() {
         let form = document.createElement('form');
