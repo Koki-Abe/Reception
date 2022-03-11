@@ -83,7 +83,7 @@ public class LoginController {
         // 入力チェック
         if(!loginService.inputCheck(form, result, redirectAttributes, errorList)) {
             // 終了ログ
-            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+            logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
             // ログイン画面へ遷移("redirect:/")
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
