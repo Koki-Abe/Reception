@@ -10,7 +10,9 @@
         <h1>システムエラーが発生しました。</h1> 
         <p align="center">大変お手数ですがサイト管理者までご連絡ください。</p>   
         <div style="text-align: center;">
-            <input type="button" onclick="location.href='login.html'"value="ログインページへ戻る">
+        <form th:action="@{/}" method="get">
+            <input type="submit"  value="ログインページへ戻る">
+        </form>
         </div>
     </body>
 
