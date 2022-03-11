@@ -8,6 +8,7 @@
             MS.STAFF_ID AS STAFF_ID
             , MS.STAFF_NAME AS STAFF_NAME
             , MS.LAST_LOGIN_DATE AS LAST_LOGIN_DATE
+            , MA.AUTH_ID AS AUTH_ID
             , MA.AUTH_NAME AS AUTH_NAME
         FROM
             M_STAFF MS

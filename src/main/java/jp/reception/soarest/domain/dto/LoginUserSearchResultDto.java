@@ -12,24 +12,22 @@ import lombok.Data;
  */
 @Data
 public class LoginUserSearchResultDto implements Serializable {
-	// 担当者ID
-	private String staffId;
-		
-	// 担当者名
-	private String staffName;
-	
-	// 部署名
-	private String depName;
-	
-	// 権限名
-	private String authName;
-	
-	// 最終ログイン日
-	private String lastLoginDate;
+    // 担当者ID
+    private String staffId;
 
-//	// 検索取得件数
-//	private int searchCount;
-//	
-//	// エラーメッセージ
-//	private String errMsg;
+    // 担当者名
+    private String staffName;
+    
+    // 部署名
+    private String depName;
+
+    // 権限ID
+    private int authId;
+
+    // 権限名
+    private String authName;
+    
+    // 最終ログイン日(ログアウト時に更新する際に使用)
+    private String lastLoginDate;
+
 }
