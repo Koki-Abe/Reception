@@ -34,8 +34,8 @@ public class TopController {
         // セッションの取得
         session = request.getSession(false);
 
-        // TODO セッション情報のチェック
-        if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
+        // セッション情報のチェック
+        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute("loginUser")) {
             return "redirect:/";
         }
 

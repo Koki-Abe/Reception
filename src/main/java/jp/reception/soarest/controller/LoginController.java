@@ -74,46 +74,26 @@ public class LoginController {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
+        // 入力値の保持
+        loginService.saveWord(form, redirectAttributes);
+
+        // エラー格納用リスト
+        List<String> errorList = new ArrayList<String>();
+
+        // 入力チェック
+        if(!loginService.inputCheck(form, result, redirectAttributes, errorList)) {
+            // 終了ログ
+            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
+            // ログイン画面へ遷移("redirect:/")
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+        }
+        // 検索結果格納用DTO
+        LoginUserSearchResultDto loginUser = new LoginUserSearchResultDto();
+
         try {
-            // 入力値の保持
-            loginService.saveWord(form, redirectAttributes);
-
-            // エラー格納用リスト
-            List<String> errorList = new ArrayList<String>();
-
-            // 入力チェック
-            if(!loginService.inputCheck(form, result, redirectAttributes, errorList)) {
-                // 終了ログ
-                logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
-
-                // ログイン画面へ遷移("redirect:/")
-                return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
-            }
-            // ログインユーザー検索
-             LoginUserSearchResultDto loginUser=  loginService.searchLoginUser(form, new LoginUserSearchDto(), redirectAttributes);
-
-            // 検索結果が0件の場合
-            if (Objects.isNull(loginUser)) {
-                errorList.add(MessageEnum.MSG_A01_W_008.getMsg("validation"));
-                // ※flashAttributeにすると、URLにパラメータが表示されない
-                redirectAttributes.addFlashAttribute("errorList", errorList);
-
-                // 終了ログ
-                logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
-
-                // ログイン画面へ遷移
-                return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
-            } else {
-                // セッション開始(引数がtrueの場合、sessionがないと生成して返却する)
-                session = request.getSession();
-                // 日時のハイフンをスラッシュに置換
-                loginUser.setLastLoginDate(loginUser.getLastLoginDate()
-                    .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
-
-                redirectAttributes.addFlashAttribute(LOGIN_USER, loginUser);
-                // セッション情報の保持
-                session.setAttribute(LOGIN_USER, loginUser);
-            }
+            // ログインユーザー検索処理
+            loginUser=  loginService.searchLoginUser(form, new LoginUserSearchDto(), redirectAttributes);
         } catch (NoSuchAlgorithmException e) {
             CommonUtils.outputErrLog(logger, e, "ハッシュ生成処理にて例外が発生しました。");
             return "error";
@@ -124,6 +104,30 @@ public class LoginController {
             CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
             return "error";
         }
+
+        // 検索結果が0件の場合
+        if (Objects.isNull(loginUser)) {
+            errorList.add(MessageEnum.MSG_A01_W_008.getMsg("validation"));
+            // ※flashAttributeにすると、URLにパラメータが表示されない
+            redirectAttributes.addFlashAttribute("errorList", errorList);
+
+            // 終了ログ
+            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
+            // ログイン画面へ遷移
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+        } else {
+            // セッション開始(引数がtrueの場合、sessionがないと生成して返却する)
+            session = request.getSession();
+            // 日時のハイフンをスラッシュに置換
+            loginUser.setLastLoginDate(loginUser.getLastLoginDate()
+                    .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
+
+            redirectAttributes.addFlashAttribute(LOGIN_USER, loginUser);
+            // セッション情報の保持
+            session.setAttribute(LOGIN_USER, loginUser);
+        }
+
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 

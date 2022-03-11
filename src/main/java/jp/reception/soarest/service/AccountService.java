@@ -24,7 +24,7 @@ public interface AccountService {
      * 
      * @param model モデル
      */
-    void init(Model model);
+    void init(Model model) throws SQLException;
 
     /*
      * アカウント情報一覧 検索

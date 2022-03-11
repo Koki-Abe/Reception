@@ -51,6 +51,8 @@ public class AccountController {
     // アカウント情報検索結果URL
     private final String ACCOUNT_SEARCH = "/account_search";
 
+    // ログインユーザー
+    private final String LOGIN_USER = "loginUser";
 
      /*
       * アカウント情報一覧 初期表示
@@ -64,7 +66,7 @@ public class AccountController {
 
         // セッション存在チェック
         session = request.getSession(false);
-        if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
+        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             return "redirect:/";
         }
 
@@ -72,9 +74,15 @@ public class AccountController {
         model.addAttribute("loginUser", session.getAttribute("loginUser"));
 
         // 初期処理
-        accountService.init(model);
-
-//        return "account/account_list";
+        try {
+            accountService.init(model);
+        } catch (SQLException e) {
+            CommonUtils.outputErrLog(logger, e, "アカウント情報一覧の初期表示処理にて、例外が発生しました。");
+            return "error";
+        } catch (Exception e) {
+            CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
+            return "error";
+        }
         // アカウント情報一覧画面へ遷移
         return UrlEnum.ACCOUNT_LIST.getPass();
     }
@@ -89,23 +97,23 @@ public class AccountController {
     @RequestMapping(value = ACCOUNT_SEARCH, method = RequestMethod.GET)
     public String searchAccountList(@Validated AccountSearchForm form, Model model) {
 
-        // セッション存在チェック
-        session = request.getSession(false);
-        if (session == null || (LoginUserSearchResultDto)session.getAttribute("loginUser") == null) {
-            return "redirect:/";
-        }
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
-        try {
-            // 検索値を入力欄に保持
-            accountService.saveWord(form, model);
+        // セッション存在チェック
+        session = request.getSession(false);
+        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+            return "redirect:/";
+        }
+        // 検索値を入力欄に保持
+        accountService.saveWord(form, model);
 
-            // 入力チェック
-            if(!accountService.inputCheck(form, model)) {
-    //            return "forward:/account_list";
-                return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
-            }
+        // 入力チェック
+        if(!accountService.inputCheck(form, model)) {
+            return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
+        }
+
+        try {
             // 検索処理
             accountService.searchAccountList(form, new AccountSearchDto(), model);
         } catch (SQLException e) {
@@ -124,7 +132,7 @@ public class AccountController {
         // ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
         // (redirectの場合、redirectAttributesにsetしないと連携できない)
         // return "redirect:/account_list";
-        return "forward:" + UrlEnum.ACCOUNT_LIST.getUrl();
+        return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
 
    }
 }
