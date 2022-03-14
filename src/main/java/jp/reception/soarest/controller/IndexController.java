@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.UrlEnum;
 
 /*
@@ -30,6 +31,9 @@ public class IndexController {
     
     // 初期画面URL
     private final String INIT = "";
+    
+    // ログインユーザー
+    private final String LOGIN_USER = "loginUser";
 
 //    @Value("${MSG-A01-W-001}")
 //    public String msg;
@@ -43,17 +47,15 @@ public class IndexController {
     @RequestMapping(value = INIT, method = RequestMethod.GET)
     public String init(Model model) {
 
-        /* ※ここをコメントアウトにすると、ログアウト後にログイン処理が走り、管理画面TOPに遷移しない*/
-        // →判定条件にloginUser有無を加え、解決
         session = request.getSession(false);
 
         // セッション情報が存在する場合、管理画面TOPへ遷移する
-        if (session != null && (LoginUserSearchResultDto)session.getAttribute("loginUser") != null) {
+        if (session != null && (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER) != null) {
             // セッションから表示情報を取得(最初この処理が無かったので、タブを閉じてもログイン情報が画面に出なかった)
-            model.addAttribute("loginUser", session.getAttribute("loginUser"));
+            model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
             // 管理画面TOPへ遷移
-            return UrlEnum.TOP.getPass();
+            return  CharEnum.REDIRECT.getChar() + UrlEnum.TOP.getUrl();
         }
 
         // ログイン画面へ遷移

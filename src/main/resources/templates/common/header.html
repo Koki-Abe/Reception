@@ -27,23 +27,21 @@
             </ul>
         </nav>
 
-		
-		<th:block th:if="${loginUser}">
-       
-        <!-- バーガーメニュー -->
-        <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        </th:block>
         
-        <nav class="globalMenuSp">
-            <ul>
-                <li><a href="/top" onclick="toTop();"><b>管理画面TOP</b></a></li>
-                <li><a href="/account_list" onclick="toAccountList();"><b>アカウント管理</b></a></li>
-                <li><a href="/mtg_list" onclick="toMtgList();"><b>打ち合わせ予定管理</b></a></li>
-            </ul>
-        </nav>
+        <th:block th:if="${loginUser}">
+            <!-- バーガーメニュー -->
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav class="globalMenuSp">
+                <ul>
+                    <li><a href="/top" onclick="toTop();"><b>管理画面TOP</b></a></li>
+                    <li><a href="/account_list" onclick="toAccountList();"><b>アカウント管理</b></a></li>
+                    <li><a href="/mtg_list" onclick="toMtgList();"><b>打ち合わせ予定管理</b></a></li>
+                </ul>
+            </nav>
+        </th:block>
     </header>
 </html>

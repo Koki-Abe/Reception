@@ -40,10 +40,20 @@
         let form = document.createElement('form');
         form.action = '/top';
         form.method = 'get';
+        // ※下記がないと、formが無いと怒られる
+        //$("body").append(form);
         form.submit();
     }
-    
-        // 打ち合わせ予定管理押下時
+    // ログイン画面へリダイレクト
+    function redirectToLogin() {
+        location.href = '/';
+    }
+    // 管理画面TOPへリダイレクト
+    function redirectToTop() {
+        location.href = '/top';
+    }
+
+    // 打ち合わせ予定管理押下時
     function toMtgList() {
         let form = document.createElement('form');
         form.action = '/mtg_list';
@@ -56,6 +66,15 @@
         let form = document.createElement('form');
         form.action = '/logout';
         form.method = 'get';
+        form.submit();
+    }
+    // ログインページへ戻る押下時
+    function toLogin() {
+        let form = document.createElement('form');
+        form.action = '/';
+        form.method = 'get';
+        // ※下記がないと、formが無いと怒られる
+        $("body").append(form);
         form.submit();
     }
 

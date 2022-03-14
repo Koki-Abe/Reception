@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
  * @version 1.0
  */
 public enum MessageEnum {
+	MSG_E_001,
+	MSG_E_002,
     MSG_A01_W_001,
     MSG_A01_W_002,
     MSG_A01_W_003,
@@ -19,11 +21,14 @@ public enum MessageEnum {
     MSG_A01_W_005,
     MSG_A01_W_006,
     MSG_A01_W_007,
+    MSG_A01_E_001,
     MSG_A01_W_008,
     MSG_C01_W_001,
     MSG_C01_W_002,
     MSG_C01_W_003,
     MSG_C01_W_004,
+    MSG_C01_E_001,
+    MSG_C01_E_002,
     MSG_C02_W_001,
     MSG_C02_W_002,
     MSG_C02_W_003,
@@ -113,7 +118,7 @@ public enum MessageEnum {
             ResourceBundle valiRb = ResourceBundle.getBundle("ValidationMessages");
             return valiRb.getString(key);
         } else {
-            ResourceBundle infRb = ResourceBundle.getBundle("properties/message");
+            ResourceBundle infRb = ResourceBundle.getBundle("messages");
             return infRb.getString(key);
         }
     }
