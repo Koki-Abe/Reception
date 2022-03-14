@@ -8,12 +8,19 @@
     <body>
         <!-- エラーメッセージ -->
         <h1>システムエラーが発生しました。</h1> 
-        <p align="center">大変お手数ですがサイト管理者までご連絡ください。</p>   
-        <div style="text-align: center;">
-        <form th:action="@{/}" method="get">
-            <input type="submit"  value="ログインページへ戻る">
-        </form>
-        </div>
+        <p align="center">大変お手数ですがサイト管理者までご連絡ください。</p>
+        <!-- ログインの場合 -->
+        <th:block th:if="${session['loginUser']}">
+            <div style="text-align: center;">
+                <input type="submit" value="管理画面TOPへ戻る" onclick="redirectToTop();">
+            </div>
+        </th:block>
+        <!-- 未ログインの場合 -->
+        <th:block th:if = "${session['loginUser'] == null}">
+            <div style="text-align: center;">
+                <input type="submit" value="ログインページへ戻る" onclick="redirectToLogin();">
+            </div>
+        </th:block>
     </body>
 
     <!-- フッター読み込み -->

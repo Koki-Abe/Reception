@@ -77,31 +77,31 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void init(Model model) throws SQLException {
-    	try {
-	        // 部署プルダウンの取得
-	        List<DepartmentSearchResultDto> depList = commonRepository.searchDepList();
-	
-	        // 権限プルダウンの取得
-	        List<AuthSearchResultDto> authList = commonRepository.searchAuthList();
-	
-	        // 部署プルダウンの初めにブランクを設定
-	        DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
-	        dep.setDepId(NumEnum.PULLDOWN.getNum());
-	        dep.setDepName(CharEnum.BLANK.getChar());
-	        // 最初にブランクを表示させるため、要素の最初に挿入
-	        depList.add(0, dep);
-	
-	        // 権限プルダウンの初めにブランクを設定
-	        AuthSearchResultDto auth = new AuthSearchResultDto();
-	        auth.setAuthId(NumEnum.PULLDOWN.getNum());
-	        auth.setAuthName(CharEnum.BLANK.getChar());
-	
-	        // 最初にブランクを表示させるため、要素の最初に挿入
-	        authList.add(0, auth);
-	
-	        // 画面返却値の設定
-	        model.addAttribute(DEP_LIST, depList);
-	        model.addAttribute(AUTH_LIST, authList);
+        try {
+            // 部署プルダウンの取得
+            List<DepartmentSearchResultDto> depList = commonRepository.searchDepList();
+
+            // 権限プルダウンの取得
+            List<AuthSearchResultDto> authList = commonRepository.searchAuthList();
+
+            // 部署プルダウンの初めにブランクを設定
+            DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
+            dep.setDepId(NumEnum.PULLDOWN.getNum());
+            dep.setDepName(CharEnum.BLANK.getChar());
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            depList.add(0, dep);
+
+            // 権限プルダウンの初めにブランクを設定
+            AuthSearchResultDto auth = new AuthSearchResultDto();
+            auth.setAuthId(NumEnum.PULLDOWN.getNum());
+            auth.setAuthName(CharEnum.BLANK.getChar());
+
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            authList.add(0, auth);
+
+            // 画面返却値の設定
+            model.addAttribute(DEP_LIST, depList);
+            model.addAttribute(AUTH_LIST, authList);
         } catch (Exception e) {
             if (e.getCause() instanceof SQLException) {
                 throw new SQLException(e);

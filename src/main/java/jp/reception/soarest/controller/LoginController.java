@@ -59,6 +59,9 @@ public class LoginController {
     
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
+    
+    // エラーリスト
+    private final String ERROR_LIST = "errorList";
 
      /*
       * ログイン処理
@@ -95,21 +98,21 @@ public class LoginController {
             // ログインユーザー検索処理
             loginUser=  loginService.searchLoginUser(form, new LoginUserSearchDto(), redirectAttributes);
         } catch (NoSuchAlgorithmException e) {
-            CommonUtils.outputErrLog(logger, e, "ハッシュ生成処理にて例外が発生しました。");
-            return "error";
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_002.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
         } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, "ログインの検索処理にて例外が発生しました。");
-            return "error";
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_A01_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
         } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
-            return "error";
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
         }
 
         // 検索結果が0件の場合
         if (Objects.isNull(loginUser)) {
-            errorList.add(MessageEnum.MSG_A01_W_008.getMsg("validation"));
+            errorList.add(MessageEnum.MSG_A01_W_008.getMsg(CharEnum.VALIDATION.getChar()));
             // ※flashAttributeにすると、URLにパラメータが表示されない
-            redirectAttributes.addFlashAttribute("errorList", errorList);
+            redirectAttributes.addFlashAttribute(ERROR_LIST, errorList);
 
             // 終了ログ
             logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -132,7 +135,8 @@ public class LoginController {
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
         // 管理画面TOPに遷移
-        return "redirect:/top";
+        // return "redirect:/top";
+        return CharEnum.REDIRECT.getChar() + UrlEnum.TOP.getUrl();
     }
 
     /*
@@ -152,6 +156,7 @@ public class LoginController {
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
         // ログインページへ遷移
-        return "redirect:/";
+        return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+        // return "redirect:/";
     }
 }

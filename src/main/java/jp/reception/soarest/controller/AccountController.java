@@ -18,6 +18,7 @@ import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
+import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.enums.UrlEnum;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.service.AccountService;
@@ -67,21 +68,21 @@ public class AccountController {
         // セッション存在チェック
         session = request.getSession(false);
         if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
-            return "redirect:/";
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
 
         // セッションから表示情報を取得
-        model.addAttribute("loginUser", session.getAttribute("loginUser"));
+        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
         // 初期処理
         try {
             accountService.init(model);
         } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, "アカウント情報一覧の初期表示処理にて、例外が発生しました。");
-            return "error";
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
         } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
-            return "error";
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
         }
         // アカウント情報一覧画面へ遷移
         return UrlEnum.ACCOUNT_LIST.getPass();
@@ -103,7 +104,7 @@ public class AccountController {
         // セッション存在チェック
         session = request.getSession(false);
         if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
-            return "redirect:/";
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
         // 検索値を入力欄に保持
         accountService.saveWord(form, model);
@@ -119,13 +120,13 @@ public class AccountController {
             // 検索処理
             accountService.searchAccountList(form, new AccountSearchDto(), model);
         } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, "アカウント情報一覧の検索処理にて、例外が発生しました。");
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_002.getMsg(null));
             // session.invalidate(); ←セッションを破棄するかは要相談
-            return "error";
+            return UrlEnum.SYSTEM_ERROR.getPass();
         } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, "予期せぬ例外が発生しました。");
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
             // session.invalidate(); ←セッションを破棄するかは要相談
-            return "error";
+            return UrlEnum.SYSTEM_ERROR.getPass();
         }
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());

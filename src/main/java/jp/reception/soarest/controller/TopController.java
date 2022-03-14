@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.UrlEnum;
 
 /*
@@ -27,6 +28,9 @@ public class TopController {
 
     @Autowired
     HttpSession session; 
+    
+    // ログインユーザー
+    private final String LOGIN_USER = "loginUser";
 
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public String init(Model model) {
@@ -35,12 +39,13 @@ public class TopController {
         session = request.getSession(false);
 
         // セッション情報のチェック
-        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute("loginUser")) {
-            return "redirect:/";
+        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+            // ログイン画面へリダイレクト
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
 
         // セッションから表示情報を取得
-        model.addAttribute("loginUser", session.getAttribute("loginUser"));
+        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
         // return "top/top";
         return UrlEnum.TOP.getPass();
