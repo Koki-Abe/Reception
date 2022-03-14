@@ -59,6 +59,9 @@ public class LoginController {
     
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
+
+    // 更新用 最終ログイン日時
+    private final String UPD_LAST_LOGIN_DATE = "forUpdLoginDate";
     
     // エラーリスト
     private final String ERROR_LIST = "errorList";
@@ -91,15 +94,18 @@ public class LoginController {
             // ログイン画面へ遷移("redirect:/")
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
+
         // 検索結果格納用DTO
         LoginUserSearchResultDto loginUser = new LoginUserSearchResultDto();
 
         try {
             // ログインユーザー検索処理
             loginUser=  loginService.searchLoginUser(form, new LoginUserSearchDto(), redirectAttributes);
+            // ハッシュ生成時の例外
         } catch (NoSuchAlgorithmException e) {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_002.getMsg(null));
             return UrlEnum.SYSTEM_ERROR.getPass();
+            // SQLの例外
         } catch (SQLException e) {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_A01_E_001.getMsg(null));
             return UrlEnum.SYSTEM_ERROR.getPass();
@@ -110,7 +116,7 @@ public class LoginController {
 
         // 検索結果が0件の場合
         if (Objects.isNull(loginUser)) {
-            errorList.add(MessageEnum.MSG_A01_W_008.getMsg(CharEnum.VALIDATION.getChar()));
+            errorList.add(MessageEnum.MSG_A01_W_008.getMsg(null));
             // ※flashAttributeにすると、URLにパラメータが表示されない
             redirectAttributes.addFlashAttribute(ERROR_LIST, errorList);
 
@@ -122,13 +128,21 @@ public class LoginController {
         } else {
             // セッション開始(引数がtrueの場合、sessionがないと生成して返却する)
             session = request.getSession();
+
+            // システム日時を設定
+            String sysDate = CommonUtils.getSysdate();
+            redirectAttributes.addFlashAttribute(UPD_LAST_LOGIN_DATE, sysDate);
+
             // 日時のハイフンをスラッシュに置換
             loginUser.setLastLoginDate(loginUser.getLastLoginDate()
                     .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
 
+            // ログインユーザー情報を設定
             redirectAttributes.addFlashAttribute(LOGIN_USER, loginUser);
+
             // セッション情報の保持
             session.setAttribute(LOGIN_USER, loginUser);
+            session.setAttribute(UPD_LAST_LOGIN_DATE, sysDate);
         }
 
         // 終了ログ
@@ -143,11 +157,22 @@ public class LoginController {
      * ログアウト
      * 
      * @return ログイン画面
-     */    
+     * @throws Exception
+     */
     @RequestMapping(value = LOGOUT_URL, method = RequestMethod.GET)
-    public String logout() {
+    public String logout() throws Exception {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+        // セッションより情報を取得
+        String lastLoginDate = (String) session.getAttribute(UPD_LAST_LOGIN_DATE);
+        LoginUserSearchResultDto loginUser = (LoginUserSearchResultDto)session.getAttribute("loginUser");
+
+        // 最終ログイン日時更新処理
+        if(0 == loginService.updLastLoginDate(lastLoginDate, loginUser)) {
+            CommonUtils.outputErrLog(logger, new Exception(), MessageEnum.MSG_E_001.getMsg(null));
+            throw new Exception();
+        }
 
         // セッションを破棄
         session.invalidate();
@@ -157,6 +182,5 @@ public class LoginController {
 
         // ログインページへ遷移
         return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
-        // return "redirect:/";
     }
 }

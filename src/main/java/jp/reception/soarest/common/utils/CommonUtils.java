@@ -3,6 +3,8 @@ package jp.reception.soarest.common.utils;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -51,6 +53,21 @@ public class CommonUtils {
         }
         return hs;
     }
+
+    /*
+     * システム日時取得
+     * 
+     * @return sysDate システム日時
+     */
+    public static String getSysdate() {
+        // システム日時を設定
+        LocalDateTime nowDate = LocalDateTime.now();
+        DateTimeFormatter java8Format = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String sysDate = nowDate.format(java8Format);
+        
+        return sysDate;
+    }
+
     /*
      * エラーログ出力
      * 

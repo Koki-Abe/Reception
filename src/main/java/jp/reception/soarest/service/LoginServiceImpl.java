@@ -3,10 +3,13 @@ package jp.reception.soarest.service;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -35,6 +38,9 @@ public class LoginServiceImpl implements LoginService {
     
     // ユーザーID
     private final String USER_ID = "userId";
+
+    // 最終ログイン日時
+    private final String LAST_LOGIN_DATE = "lastLoginDate";
 
     /*
      * ログイン 入力チェック
@@ -80,6 +86,7 @@ public class LoginServiceImpl implements LoginService {
             String pass = CommonUtils.makeHash(form.getPassword());
             searchDto.setUserId(form.getUserId());
             searchDto.setPassword(pass);
+
             // 検索処理を実行
             loginUser = loginRepository.searchLoginUser(searchDto);
 
@@ -99,7 +106,27 @@ public class LoginServiceImpl implements LoginService {
         // ログインユーザーの情報を返却
         return loginUser;
     }
-    
+
+    /*
+     * ログイン 最終ログイン日時更新
+     * 
+     * @param lastLoginDate 最終ログイン日時
+     * @param loginUser ログインユーザー 検索結果格納用DTO
+     * @return upd 更新件数
+     */
+    @Override
+    @Transactional(rollbackFor=Exception.class) // 検査例外でもロールバックしてくれる
+    public int updLastLoginDate(String lastLoginDate, LoginUserSearchResultDto loginUser) {
+        // 更新用Mapの設定
+        Map<String, String> loginInfo = new LinkedHashMap<String, String>();
+        String userId = loginUser.getStaffId();
+        loginInfo.put(USER_ID, userId);
+        loginInfo.put(LAST_LOGIN_DATE, lastLoginDate);
+
+        // 最終ログイン日時更新
+        return loginRepository.updLastLoginDate(loginInfo);
+    }
+
     /*
      * ログイン 入力値保持
      * 
@@ -114,4 +141,5 @@ public class LoginServiceImpl implements LoginService {
         // ※パスワードは保存しない
 //        redirectAttributes.addFlashAttribute("password", form.getPassword());
     }
+
 }

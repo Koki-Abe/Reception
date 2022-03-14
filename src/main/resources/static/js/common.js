@@ -63,10 +63,10 @@
     
     // ログアウト押下時
     function logout() {
-        let form = document.createElement('form');
-        form.action = '/logout';
-        form.method = 'get';
-        form.submit();
+        //let form = document.createElement('form');
+        //form.action = '/logout';
+        //form.method = 'get';
+        document.logout.submit();
     }
     // ログインページへ戻る押下時
     function toLogin() {

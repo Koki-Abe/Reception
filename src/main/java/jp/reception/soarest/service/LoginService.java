@@ -44,6 +44,14 @@ public interface LoginService {
         RedirectAttributes redirectAttributes) throws NoSuchAlgorithmException , SQLException;
     
     /*
+     * 最終ログイン日時 更新
+     * 
+     * @param userId ユーザーID
+     * @param lastLoginDate 最終ログイン日時
+     */
+    public int updLastLoginDate(String lastLoginDate, LoginUserSearchResultDto loginUser);
+    
+    /*
      * ログイン 入力値保持
      * 
      * @param form ログイン用フォームクラス 
