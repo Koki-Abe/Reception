@@ -71,14 +71,16 @@
                     <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
                     <td id="edit" bgcolor="#F0FFFF">
                         <!-- ログインユーザの管理者フラグが1(管理者)の場合、変更及び削除リンクを表示 -->
-                        <!--  <th:block th:if="${account.authFlag == 1}"> -->
+                        <th:block th:if="${loginUser.authId == 100}">
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
-                        <!--</th:block>-->
+                        </th:block>
                     </td>
                 </tr>
             </table>
-            <input type="submit" onclick="location.href=' account_reg.html'"value="新規登録">
+            <th:block th:if="${loginUser.authId == 100}">
+                <input type="submit" onclick="location.href=' account_reg.html'"value="新規登録">
+            </th:block>
         </div>
         <!-- フッター読み込み -->
         <div th:include="common/footer"></div>

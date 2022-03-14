@@ -13,7 +13,7 @@
         <nav>
             <ul>
                 <li><a href="#">
-                        <!-- ユーザーID -->                     
+                        <!-- ユーザーID -->
                         <th:block th:if="${loginUser}">
                             <p align="center" th:text="${loginUser.staffId}" id="userId">
                         </th:block>
@@ -21,12 +21,13 @@
                 </li>
                 <li>
                     <th:block th:if="${loginUser}">
+                    <form th:action="@{/logout}" name="logout" method="get">
                         <a href="/logout" onclick="logout();">ログアウト</a>
+                    </form>
                     </th:block>
                 </li>
             </ul>
         </nav>
-
         
         <th:block th:if="${loginUser}">
             <!-- バーガーメニュー -->

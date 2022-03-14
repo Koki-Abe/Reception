@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
 
     // ロール
     private final String ROLE = "role";
+
     // ログイン日(開始)
     private final String LOGIN_DATE_START = "loginDateStart";
 
@@ -103,6 +104,7 @@ public class AccountServiceImpl implements AccountService {
             model.addAttribute(DEP_LIST, depList);
             model.addAttribute(AUTH_LIST, authList);
         } catch (Exception e) {
+            // SQLの例外の場合
             if (e.getCause() instanceof SQLException) {
                 throw new SQLException(e);
             } else {

@@ -32,7 +32,10 @@ public class TopController {
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
 
-    @RequestMapping(value = "/top", method = RequestMethod.GET)
+    // 管理画面TOPURL
+    private final String TOP_URL = "/top";
+
+    @RequestMapping(value = TOP_URL, method = RequestMethod.GET)
     public String init(Model model) {
 
         // セッションの取得

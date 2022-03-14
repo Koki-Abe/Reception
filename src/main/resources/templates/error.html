@@ -16,7 +16,7 @@
             </div>
         </th:block>
         <!-- 未ログインの場合 -->
-        <th:block th:if = "${session['loginUser'] == null}">
+        <th:block th:if="${session['loginUser'] == null}">
             <div style="text-align: center;">
                 <input type="submit" value="ログインページへ戻る" onclick="redirectToLogin();">
             </div>

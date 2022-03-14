@@ -17,9 +17,12 @@ public class LoginUserSearchResultDto implements Serializable {
 
     // 担当者名
     private String staffName;
-    
-    // 部署名
-    private String depName;
+
+//    // 部署ID
+//    private String depId;
+//
+//    // 部署名
+//    private String depName;
 
     // 権限ID
     private int authId;

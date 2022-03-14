@@ -22,4 +22,16 @@
             </if>
         </where>
     </select>
+
+    <!-- 最終ログイン日時更新 -->
+    <update id="updLastLoginDate" parameterType="java.util.Map">
+        UPDATE
+            M_STAFF
+        SET
+            LAST_LOGIN_DATE = #{lastLoginDate}
+            , UPDATED_USER = #{userId}
+            , UPDATED_DATE = CURRENT_TIMESTAMP()
+        WHERE
+            STAFF_ID = #{userId}
+    </update>
 </mapper>
