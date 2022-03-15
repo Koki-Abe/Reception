@@ -3,11 +3,18 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="./css/style.css">
+
         <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="./js/common.js"></script>
+        <!-- テストSTART -->
+        	<!--  <script src="js/paginathing.min.js"></script> -->
+        	<!-- <script src="js/PaginateMyTable.js"></script> -->
+        	<!-- <link rel="stylesheet" href="./css/PaginateMyTable.css"> -->
+        <!-- テストEND -->
+        
     </head>
-    
+
     <header>
         <img src="img/SOAREST_logo.png">
         <nav>
@@ -28,7 +35,8 @@
                 </li>
             </ul>
         </nav>
-        
+
+        <!-- ログイン状態の場合、バーガーメニューを表示 -->
         <th:block th:if="${loginUser}">
             <!-- バーガーメニュー -->
             <div class="hamburger">

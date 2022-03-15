@@ -28,7 +28,7 @@ public class TopController {
 
     @Autowired
     HttpSession session; 
-    
+
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
 
@@ -50,7 +50,7 @@ public class TopController {
         // セッションから表示情報を取得
         model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
-        // return "top/top";
+        // 管理画面TOPへ遷移
         return UrlEnum.TOP.getPass();
     }
 

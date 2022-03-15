@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.domain.dto.AuthSearchResultDto;
 import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
-import jp.reception.soarest.enums.NumEnum;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.repository.AccountRepository;
 import jp.reception.soarest.repository.CommonRepository;
@@ -38,11 +38,11 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     CommonRepository commonRepository;
 
-    // 部署リスト
-    private final String DEP_LIST = "depList";
-
-    // 権限リスト
-    private final String AUTH_LIST = "authList";
+//    // 部署リスト
+//    private final String DEP_LIST = "depList";
+//
+//    // 権限リスト
+//    private final String AUTH_LIST = "authList";
 
     // エラーメッセージ
     private final String ERR_MSG = "errMsg";
@@ -85,24 +85,8 @@ public class AccountServiceImpl implements AccountService {
             // 権限プルダウンの取得
             List<AuthSearchResultDto> authList = commonRepository.searchAuthList();
 
-            // 部署プルダウンの初めにブランクを設定
-            DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
-            dep.setDepId(NumEnum.PULLDOWN.getNum());
-            dep.setDepName(CharEnum.BLANK.getChar());
-            // 最初にブランクを表示させるため、要素の最初に挿入
-            depList.add(0, dep);
-
-            // 権限プルダウンの初めにブランクを設定
-            AuthSearchResultDto auth = new AuthSearchResultDto();
-            auth.setAuthId(NumEnum.PULLDOWN.getNum());
-            auth.setAuthName(CharEnum.BLANK.getChar());
-
-            // 最初にブランクを表示させるため、要素の最初に挿入
-            authList.add(0, auth);
-
-            // 画面返却値の設定
-            model.addAttribute(DEP_LIST, depList);
-            model.addAttribute(AUTH_LIST, authList);
+            // プルダウン生成
+            CommonUtils.makePulldown(model, depList, authList);
         } catch (Exception e) {
             // SQLの例外の場合
             if (e.getCause() instanceof SQLException) {

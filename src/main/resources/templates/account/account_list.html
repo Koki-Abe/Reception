@@ -64,13 +64,15 @@
                     <th bgcolor="#F0F8FF">ロール</th>
                     <th bgcolor="#F0F8FF">編集</th>
                 </tr>
-                <tr th:if="${accList}" th:each="account : ${accList}">
+            </table>
+            <table id="search-result">
+                <tr  th:if="${accList}" th:each="account : ${accList}">
                     <td id="userId" bgcolor="#F0FFFF" th:text="${account.staffId}"></td>
                     <td id="userName" bgcolor="#F0FFFF"  th:text="${account.staffName}"></td>
                     <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
                     <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
                     <td id="edit" bgcolor="#F0FFFF">
-                        <!-- ログインユーザの管理者フラグが1(管理者)の場合、変更及び削除リンクを表示 -->
+                        <!-- ログインユーザの権限が100(管理者)の場合、変更及び削除リンクを表示 -->
                         <th:block th:if="${loginUser.authId == 100}">
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
@@ -78,6 +80,7 @@
                     </td>
                 </tr>
             </table>
+            <!-- ログインユーザの権限が100(管理者)の場合、新規登録ボタンを表示 -->
             <th:block th:if="${loginUser.authId == 100}">
                 <input type="submit" onclick="location.href=' account_reg.html'"value="新規登録">
             </th:block>

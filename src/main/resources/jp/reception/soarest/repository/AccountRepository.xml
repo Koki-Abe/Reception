@@ -35,6 +35,7 @@
                 AND MS.LAST_LOGIN_DATE <![CDATA[<=]]> #{loginDateEnd}
             </if>
         </where>
+        ORDER BY MS.STAFF_ID
     </select>
 
 </mapper>
