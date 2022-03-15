@@ -53,16 +53,16 @@ public class LoginController {
 
     // ログインURL
     private final String LOGIN_URL = "/login";
-    
+
     // ログアウトURL
     private final String LOGOUT_URL = "/logout";
-    
+
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
 
     // 更新用 最終ログイン日時
     private final String UPD_LAST_LOGIN_DATE = "forUpdLoginDate";
-    
+
     // エラーリスト
     private final String ERROR_LIST = "errorList";
 
@@ -134,9 +134,11 @@ public class LoginController {
             redirectAttributes.addFlashAttribute(UPD_LAST_LOGIN_DATE, sysDate);
 
             // 日時のハイフンをスラッシュに置換
-            loginUser.setLastLoginDate(loginUser.getLastLoginDate()
-                    .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
-
+            String lastLoginDate = loginUser.getLastLoginDate();
+            if (null != lastLoginDate) {
+                loginUser.setLastLoginDate(loginUser.getLastLoginDate()
+                        .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
+            }
             // ログインユーザー情報を設定
             redirectAttributes.addFlashAttribute(LOGIN_USER, loginUser);
 
@@ -148,8 +150,7 @@ public class LoginController {
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
-        // 管理画面TOPに遷移
-        // return "redirect:/top";
+        // 管理画面TOPへ遷移
         return CharEnum.REDIRECT.getChar() + UrlEnum.TOP.getUrl();
     }
 

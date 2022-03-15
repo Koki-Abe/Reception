@@ -84,6 +84,7 @@ public class AccountController {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
             return UrlEnum.SYSTEM_ERROR.getPass();
         }
+
         // アカウント情報一覧画面へ遷移
         return UrlEnum.ACCOUNT_LIST.getPass();
     }
@@ -104,8 +105,12 @@ public class AccountController {
         // セッション存在チェック
         session = request.getSession(false);
         if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+            // 終了ログ
+            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+            // ログイン画面へリダイレクト
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
+
         // 検索値を入力欄に保持
         accountService.saveWord(form, model);
 

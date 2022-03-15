@@ -90,6 +90,7 @@
             }
         });
     });
+
     // ブラウザバック無効(※どのページで無効にするか考慮する)
  //   $(function() {
   //      history.pushState(null, null, null);
