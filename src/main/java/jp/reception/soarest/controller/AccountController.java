@@ -63,7 +63,7 @@ public class AccountController {
       * @return アカウント情報一覧画面
       */
     @RequestMapping(value = ACCOUNT_LIST, method = RequestMethod.GET)
-    public String init(Model model) {
+    private String init(Model model) {
 
         // セッション存在チェック
         session = request.getSession(false);
@@ -97,7 +97,7 @@ public class AccountController {
       * @return アカウント情報一覧画面
       */
     @RequestMapping(value = ACCOUNT_SEARCH, method = RequestMethod.GET)
-    public String searchAccountList(@Validated AccountSearchForm form, Model model) {
+    private String searchAccountList(@Validated AccountSearchForm form, Model model) {
 
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());

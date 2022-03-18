@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +69,7 @@ public class CommonUtils {
     }
 
     /*
-     * システム日時取得
+     * システム日時取得(yyyy/MM/dd HH:mm:ss)
      * 
      * @return sysDate システム日時
      */
@@ -76,6 +77,34 @@ public class CommonUtils {
         // システム日時を設定
         LocalDateTime nowDate = LocalDateTime.now();
         DateTimeFormatter java8Format = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        String sysDate = nowDate.format(java8Format);
+        
+        return sysDate;
+    }
+    
+    /*
+     * システム日時取得(yyyy/MM/dd)
+     * 
+     * @return sysDate システム日時
+     */
+    public static String getSysDay() {
+        // システム日時を設定
+        LocalDateTime nowDate = LocalDateTime.now();
+        DateTimeFormatter java8Format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String sysDate = nowDate.format(java8Format);
+        
+        return sysDate;
+    }
+
+    /*
+     * システム日時取得(HH:mm)
+     * 
+     * @return sysDate システム日時
+     */
+    public static String getSysTime() {
+        // システム日時を設定
+        LocalDateTime nowDate = LocalDateTime.now();
+        DateTimeFormatter java8Format = DateTimeFormatter.ofPattern("HH:mm");
         String sysDate = nowDate.format(java8Format);
         
         return sysDate;
@@ -96,35 +125,75 @@ public class CommonUtils {
         ex.printStackTrace();
     }
 
+//    /*
+//     * プルダウン成形
+//     * 
+//     * @param logger ロガー
+//     * @param ex 例外クラス
+//     * @param errMsg エラーメッセージ
+//     */
+//    public static void makePulldown(Model model, List<DepartmentSearchResultDto> depList,
+//        List<AuthSearchResultDto> authList) {
+//        // 部署プルダウンの初めにブランクを設定
+//        DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
+//        dep.setDepId(NumEnum.PULLDOWN.getNum());
+//        dep.setDepName(CharEnum.BLANK.getChar());
+//        // 最初にブランクを表示させるため、要素の最初に挿入
+//        depList.add(0, dep);
+//
+//        // 権限プルダウンの初めにブランクを設定
+//        AuthSearchResultDto auth = new AuthSearchResultDto();
+//        auth.setAuthId(NumEnum.PULLDOWN.getNum());
+//        auth.setAuthName(CharEnum.BLANK.getChar());
+//
+//        // 最初にブランクを表示させるため、要素の最初に挿入
+//        authList.add(0, auth);
+//
+//        // 画面返却値の設定
+//        model.addAttribute(DEP_LIST, depList);
+//        model.addAttribute(AUTH_LIST, authList);
+//    }
+
     /*
      * プルダウン成形
      * 
-     * @param logger ロガー
-     * @param ex 例外クラス
-     * @param errMsg エラーメッセージ
+     * @param model モデル
+     * @param list 呼び元のリスト
+     * @param obj リストの型
      */
-    public static void makePulldown(Model model, List<DepartmentSearchResultDto> depList,
-        List<AuthSearchResultDto> authList) {
-        // 部署プルダウンの初めにブランクを設定
-        DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
-        dep.setDepId(NumEnum.PULLDOWN.getNum());
-        dep.setDepName(CharEnum.BLANK.getChar());
-        // 最初にブランクを表示させるため、要素の最初に挿入
-        depList.add(0, dep);
+    @SuppressWarnings("unchecked")
+    public static <E> void makePulldown(Model model, List<E> list, E obj) {
+        
+        // 部署プルダウンの場合
+        if (obj instanceof DepartmentSearchResultDto) {
+            // リストの作成
+            List<E> depList = new ArrayList<>();
+            depList.addAll(list);
 
-        // 権限プルダウンの初めにブランクを設定
-        AuthSearchResultDto auth = new AuthSearchResultDto();
-        auth.setAuthId(NumEnum.PULLDOWN.getNum());
-        auth.setAuthName(CharEnum.BLANK.getChar());
+            // 部署プルダウンの初めにブランクを設定
+            DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
+            dep.setDepId(NumEnum.PULLDOWN.getNum());
+            dep.setDepName(CharEnum.BLANK.getChar());
 
-        // 最初にブランクを表示させるため、要素の最初に挿入
-        authList.add(0, auth);
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            depList.add(0, (E)dep);
 
-        // 画面返却値の設定
-        model.addAttribute(DEP_LIST, depList);
-        model.addAttribute(AUTH_LIST, authList);
+            model.addAttribute(DEP_LIST, depList);
+        // 権限プルダウンの場合
+        } else if (obj instanceof AuthSearchResultDto) {
+            List<E> authList = new ArrayList<>();
+            authList.addAll(list);
+            
+            // 部署プルダウンの初めにブランクを設定
+            AuthSearchResultDto auth = new AuthSearchResultDto();
+            auth.setAuthId(NumEnum.PULLDOWN.getNum());
+            auth.setAuthName(CharEnum.BLANK.getChar());
 
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            authList.add(0, (E)auth);
+            
+            model.addAttribute(AUTH_LIST, authList);
+        }
     }
-    
 
 }

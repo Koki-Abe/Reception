@@ -86,7 +86,9 @@ public class AccountServiceImpl implements AccountService {
             List<AuthSearchResultDto> authList = commonRepository.searchAuthList();
 
             // プルダウン生成
-            CommonUtils.makePulldown(model, depList, authList);
+            CommonUtils.makePulldown(model, depList, new DepartmentSearchResultDto());
+            CommonUtils.makePulldown(model, authList, new AuthSearchResultDto());
+//            CommonUtils.makePulldown(model, depList, authList);
         } catch (Exception e) {
             // SQLの例外の場合
             if (e.getCause() instanceof SQLException) {

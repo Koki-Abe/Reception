@@ -36,7 +36,7 @@ public class TopController {
     private final String TOP_URL = "/top";
 
     @RequestMapping(value = TOP_URL, method = RequestMethod.GET)
-    public String init(Model model) {
+    private String init(Model model) {
 
         // セッションの取得
         session = request.getSession(false);

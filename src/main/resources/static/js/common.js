@@ -17,7 +17,7 @@
     }
     // クリアボタン押下時
     function clearText() {
-	    // input属性の値をクリア
+        // input属性の値をクリア
         $('#clearForm').find('input').each(function(index, element ){
             element.value = ''
         });
@@ -91,11 +91,21 @@
         });
     });
 
-    // ブラウザバック無効(※どのページで無効にするか考慮する)
- //   $(function() {
-  //      history.pushState(null, null, null);
+	// 5秒ごとに処理を実行する
+	//$(function(){
+	
+	//  setInterval(function(){
+	 //   console.log("処理を実行する");
+	 // }, 5000);
+	  
+	//});
 
-   //     $(window).on("popstate", function(){
-   //         history.pushState(null, null, null);
-   //     });
-   // }); 
+
+    // ブラウザバック無効(※どのページで無効にするか考慮する)
+    $(function() {
+        history.pushState(null, null, null);
+
+        $(window).on("popstate", function(){
+            history.pushState(null, null, null);
+        });
+    }); 
