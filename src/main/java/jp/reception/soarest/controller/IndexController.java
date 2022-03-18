@@ -45,7 +45,7 @@ public class IndexController {
      *         未ログイン状態：ログイン画面
      */
     @RequestMapping(value = INIT, method = RequestMethod.GET)
-    public String init(Model model) {
+    private String init(Model model) {
 
         session = request.getSession(false);
 

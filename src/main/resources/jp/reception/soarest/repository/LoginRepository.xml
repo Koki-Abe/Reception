@@ -30,7 +30,7 @@
         SET
             LAST_LOGIN_DATE = #{lastLoginDate}
             , UPDATED_USER = #{userId}
-            , UPDATED_DATE = CURRENT_TIMESTAMP()
+            , UPDATED_DATE = #{updatedDate}
         WHERE
             STAFF_ID = #{userId}
     </update>

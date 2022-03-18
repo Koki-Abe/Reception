@@ -28,7 +28,7 @@ public class MeetingController {
     HttpSession session; 
 
     @RequestMapping(value = "/mtg_list", method = RequestMethod.GET)
-    public String init(Model model) {
+    private String init(Model model) {
 
         // セッションの取得
         session = request.getSession(false);

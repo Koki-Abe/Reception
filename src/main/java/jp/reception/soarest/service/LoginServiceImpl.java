@@ -42,6 +42,9 @@ public class LoginServiceImpl implements LoginService {
     // 最終ログイン日時
     private final String LAST_LOGIN_DATE = "lastLoginDate";
 
+    // 最終更新日時
+    private final String UPDATED_DATE = "updatedDate";
+
     /*
      * ログイン 入力チェック
      * 
@@ -122,6 +125,7 @@ public class LoginServiceImpl implements LoginService {
         String userId = loginUser.getStaffId();
         loginInfo.put(USER_ID, userId);
         loginInfo.put(LAST_LOGIN_DATE, lastLoginDate);
+        loginInfo.put(UPDATED_DATE, CommonUtils.getSysdate());
 
         // 最終ログイン日時更新
         return loginRepository.updLastLoginDate(loginInfo);

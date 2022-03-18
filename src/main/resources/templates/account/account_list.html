@@ -66,14 +66,14 @@
                 </tr>
             </table>
             <table id="search-result">
-                <tr  th:if="${accList}" th:each="account : ${accList}">
+                <tr th:if="${accList}" th:each="account : ${accList}">
                     <td id="userId" bgcolor="#F0FFFF" th:text="${account.staffId}"></td>
                     <td id="userName" bgcolor="#F0FFFF"  th:text="${account.staffName}"></td>
                     <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
                     <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
                     <td id="edit" bgcolor="#F0FFFF">
-                        <!-- ログインユーザの権限が100(管理者)の場合、変更及び削除リンクを表示 -->
-                        <th:block th:if="${loginUser.authId == 100}">
+                        <!-- ログインユーザーの権限が100(管理者)、またはログインユーザーのアカウント以外の場合、変更及び削除リンクを表示 -->
+                        <th:block th:if="${loginUser.authId == 100 && loginUser.staffId != account.staffId}">
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
                             <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
                         </th:block>

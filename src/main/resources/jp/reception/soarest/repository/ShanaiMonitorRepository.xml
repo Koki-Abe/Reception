@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.reception.soarest.repository.ShanaiMonitorRepository">
+
+    <!-- 開始10分前 打ち合わせ情報取得 -->
+    <select id="searchMtgList" parameterType="java.util.Map" resultType="jp.reception.soarest.domain.dto.MeetingSearchResultDto">
+        SELECT
+            STAFF_ID
+            , SUB_STAFF_ID
+            , CLIENT_NAME
+            , CLIENT_COMP_NAME
+        FROM
+            MTG_SCHEDULE
+        WHERE
+            SCHEDULED_DATE = #{scheduledDate}
+        AND
+            SCHEDULED_TIME = DATE_ADD(CAST(#{scheduledTime} AS TIME), INTERVAL 10 Minute)
+    </select>
+</mapper>

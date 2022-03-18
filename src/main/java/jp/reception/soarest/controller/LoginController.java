@@ -74,7 +74,7 @@ public class LoginController {
       * @param redirectAttributes リダイレクトアトリビュート
       */
     @RequestMapping(value = LOGIN_URL, method = RequestMethod.POST)
-    public String login(@Validated LoginForm form, BindingResult result, 
+    private String login(@Validated LoginForm form, BindingResult result, 
         RedirectAttributes redirectAttributes) {
 
         // 開始ログ
@@ -161,7 +161,7 @@ public class LoginController {
      * @throws Exception
      */
     @RequestMapping(value = LOGOUT_URL, method = RequestMethod.GET)
-    public String logout() throws Exception {
+    private String logout() throws Exception {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
