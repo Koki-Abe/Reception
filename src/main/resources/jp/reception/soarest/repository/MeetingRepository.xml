@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.reception.soarest.repository.MeetingRepository">
+    <!-- 打ち合わせ情報一覧検索 -->    
+    <select id="searchMtgList" parameterType="jp.reception.soarest.domain.dto.MeetingSearchDto" resultType="jp.reception.soarest.domain.dto.MeetingSearchResultDto">
+        SELECT
+            MTG.SCHEDULE_ID AS SCHEDULE_ID
+            , MTG.STAFF_ID AS STAFF_ID
+            , MTG.SUB_STAFF_ID AS SUB_STAFF_ID
+            , MTG.STAFF_NAME AS STAFF_NAME
+            , MTG.SUB_STAFF_NAME AS SUB_STAFF_NAME
+            , MTG.CLIENT_COMP_NAME AS CLIENT_COMP_NAME
+            , MTG.CLIENT_NAME AS CLIENT_NAME
+            , MTG.SCHEDULED_DATE AS SCHEDULED_DATE
+            , MTG.SCHEDULED_TIME AS SCHEDULED_TIME
+            , MTG.MTG_PLACE AS MTG_PLACE
+            , MTG.MTG_NAME AS MTG_NAME
+            , MTG.COMMENT AS COMMENT
+        FROM (
+            SELECT
+                MSC.SCHEDULE_ID AS SCHEDULE_ID
+                , MSC.STAFF_ID AS STAFF_ID
+                , MSC.SUB_STAFF_ID AS SUB_STAFF_ID
+                , (SELECT MS.STAFF_NAME WHERE MSC.STAFF_ID = MS.STAFF_ID) AS STAFF_NAME
+                , (SELECT MS2.STAFF_NAME WHERE MSC.SUB_STAFF_ID = MS2.STAFF_ID) AS SUB_STAFF_NAME
+                , MSC.CLIENT_COMP_NAME AS CLIENT_COMP_NAME
+                , MSC.CLIENT_NAME AS CLIENT_NAME
+                , MSC.SCHEDULED_DATE AS SCHEDULED_DATE
+                , MSC.SCHEDULED_TIME AS SCHEDULED_TIME
+                , MMR.ROOM_ID AS ROOM_ID
+                , CASE WHEN MSC.ROOM_ID != '' AND MSC.ROOM_ID IS NOT NULL
+                      THEN MMR.ROOM_NAME
+                      ELSE MSC.MTG_PLACE
+                  END AS MTG_PLACE
+                , MM.MTG_ID AS MTG_ID
+                , MM.MTG_NAME AS MTG_NAME
+                , MSC.COMMENT AS COMMENT
+            FROM
+                MTG_SCHEDULE MSC
+            INNER JOIN M_STAFF MS ON MSC.STAFF_ID = MS.STAFF_ID
+            INNER JOIN M_STAFF MS2 ON MSC.SUB_STAFF_ID = MS2.STAFF_ID
+            LEFT OUTER JOIN M_MTG_ROOM MMR ON MSC.ROOM_ID = MMR.ROOM_ID
+            INNER JOIN M_MEETING MM ON MSC.MTG_ID = MM.MTG_ID
+        ) AS MTG
+        <where>
+            <if test="userId != null and userId != ''">
+                MTG.STAFF_ID = #{userId}
+            </if>  
+            <if test="subUserId != null and subUserId != ''">
+                AND MTG.SUB_STAFF_ID = #{subUserId}
+            </if>  
+            <if test="clientName != null and clientName != ''">
+                AND MTG.CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
+            </if>  
+            <if test="clientCompName != null and clientCompName != ''">
+                AND MTG.CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
+            </if>  
+            <if test="scheduledDate != null and scheduledDate != ''">
+                AND MTG.SCHEDULED_DATE = #{scheduledDate}
+            </if>  
+            <if test="scheduledTime != null and scheduledTime != ''">
+                AND MTG.SCHEDULED_TIME = #{scheduledTime}
+            </if>  
+            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
+                AND MTG.ROOM_ID = #{roomId}
+            </if>  
+            <if test="mtgPlace != null and mtgPlace != ''">
+                AND MTG.MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
+            </if>  
+            <if test="mtgId != null and mtgId != '' and mtgId != 999">
+                AND MTG.MTG_ID = #{mtgId}
+            </if>  
+            <if test="comment != null and comment != ''">
+                AND MTG.COMMENT LIKE CONCAT('%', #{comment}, '%' )
+            </if> 
+        </where>
+        ORDER BY MTG.SCHEDULE_ID
+    </select>
+
+</mapper>

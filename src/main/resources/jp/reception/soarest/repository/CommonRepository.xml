@@ -18,4 +18,28 @@
         FROM
             M_AUTH;
     </select>
+    <!-- 担当者取得 -->
+    <select id="searchStaffList" resultType="jp.reception.soarest.domain.dto.StaffSearchResultDto">
+        SELECT
+            STAFF_ID
+            , STAFF_NAME
+        FROM
+            M_STAFF;
+    </select>
+    <!-- 会議室プルダウン取得 -->
+    <select id="searchRoomList" resultType="jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto">
+        SELECT
+            ROOM_ID
+            , ROOM_NAME
+        FROM
+            M_MTG_ROOM;
+    </select>
+    <!-- 目的プルダウン取得 -->
+    <select id="searchPurposeList" resultType="jp.reception.soarest.domain.dto.PurposeSearchResultDto">
+        SELECT
+            MTG_ID
+            , MTG_NAME
+        FROM
+            M_MEETING;
+    </select>
  </mapper>

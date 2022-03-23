@@ -77,7 +77,8 @@
 		    	        },
 		    	        success : function(data) {
 		    	        	console.log("success!!");
-		    	        	console.log(data[0].clientName);
+		    	        	new Audio("jan.mp3").play();
+
 		    	        	for(let i=0; i<data.length; i++){
 		    	        		console.log('iの値' + i);
 			    	        	$('#search-result').append('<tr id="test' + cnt + '">')
@@ -94,10 +95,12 @@
 			    	        	$('#search-result').append('</tr>');
 			    	        	++cnt;
 		    	        	}
-		    	        	
+
 		    	        }
-		    	        
 		    	    });
+		    	    
+		    	    
+		    	    
 			}, 5000);
         });
         </script>

@@ -88,7 +88,6 @@ public class AccountServiceImpl implements AccountService {
             // プルダウン生成
             CommonUtils.makePulldown(model, depList, new DepartmentSearchResultDto());
             CommonUtils.makePulldown(model, authList, new AuthSearchResultDto());
-//            CommonUtils.makePulldown(model, depList, authList);
         } catch (Exception e) {
             // SQLの例外の場合
             if (e.getCause() instanceof SQLException) {
@@ -122,13 +121,13 @@ public class AccountServiceImpl implements AccountService {
         try {
             // 検索処理を実行
             accList = accountRepository.searchAccountList(searchDto);
-            
+
             // 検索結果が0件の場合
             if (0 == accList.size()) {
                 // エラーメッセージを画面に返却
                 model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
                 // 検索結果件数を設定
-                model.addAttribute(SEARCH_COUNT, accList.size());
+                // model.addAttribute(SEARCH_COUNT, accList.size());
             } else {
                 // 検索結果を格納
                 model.addAttribute(ACC_LIST, accList);

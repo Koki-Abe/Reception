@@ -162,6 +162,7 @@ h2{
   /*入力部分*/  
   input[type="text"],
   input[type="date"],
+  input[type="time"],
   input[type="password"],
   input[type="datetime-local"] {
       font-size: 15px;
@@ -181,7 +182,7 @@ h2{
       color:black;
       font-family: Arial;
       padding: 10px 15px ; /*10pxが幅　15pxが長さ*/
-      width: 330px;
+      width: 334px;
       margin: 10 0 30px 50px;
       /*border-radius: 30px;  角を丸くする*/
     
@@ -258,6 +259,7 @@ tr,th,td{
   height: 80px;  
   width: 150px;
 }
+
 
 .contact-form th{
   text-align: center;
@@ -434,4 +436,13 @@ nav.globalMenuSp ul li a {
 /* このクラスを、jQueryで付与・削除する */
 nav.globalMenuSp.active {
   transform: translateY(0%);
+}
+
+textarea {
+  resize: none;
+}
+/*利用不可時*/
+:disabled{
+    color: #FFF;
+    background: #AAA;
 }

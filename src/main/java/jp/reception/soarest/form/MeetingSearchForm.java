@@ -1,15 +1,16 @@
-package jp.reception.soarest.domain.dto;
+package jp.reception.soarest.form;
 
 import lombok.Data;
 
-/*
- * 打ち合わせ情報検索用DTO
+/* 
+ * 打ち合わせ情報一覧 フォーム
  * 
- * author k.abe
- * version 1.0
+ * @author k.abe
+ * @version 1.0
  */
 @Data
-public class MeetingSearchDto {
+public class MeetingSearchForm {
+
     // ユーザーID
     private String userId;
 
@@ -35,9 +36,8 @@ public class MeetingSearchDto {
     private String mtgPlace;
 
     // 目的
-    private int mtgId;
+    private int purpose;
     
     // コメント
     private String comment;
-
 }

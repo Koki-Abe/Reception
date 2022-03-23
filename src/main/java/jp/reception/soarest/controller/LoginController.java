@@ -165,19 +165,21 @@ public class LoginController {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
-        // セッションより情報を取得
-        String lastLoginDate = (String) session.getAttribute(UPD_LAST_LOGIN_DATE);
-        LoginUserSearchResultDto loginUser = (LoginUserSearchResultDto)session.getAttribute("loginUser");
+        // セッション存在チェック
+        session = request.getSession(false);
+        if (null != session) {
+            // セッションより情報を取得
+            String lastLoginDate = (String) session.getAttribute(UPD_LAST_LOGIN_DATE);
+            LoginUserSearchResultDto loginUser = (LoginUserSearchResultDto)session.getAttribute("loginUser");
 
-        // 最終ログイン日時更新処理
-        if(0 == loginService.updLastLoginDate(lastLoginDate, loginUser)) {
-            CommonUtils.outputErrLog(logger, new Exception(), MessageEnum.MSG_E_001.getMsg(null));
-            throw new Exception();
+            // 最終ログイン日時更新処理
+            if(0 == loginService.updLastLoginDate(lastLoginDate, loginUser)) {
+                CommonUtils.outputErrLog(logger, new Exception(), MessageEnum.MSG_E_001.getMsg(null));
+                throw new Exception();
+            }
+            // セッションを破棄
+            session.invalidate();
         }
-
-        // セッションを破棄
-        session.invalidate();
-
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 

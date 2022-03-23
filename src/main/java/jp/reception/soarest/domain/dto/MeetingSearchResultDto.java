@@ -3,22 +3,44 @@ package jp.reception.soarest.domain.dto;
 import lombok.Data;
 
 /*
- * 社内モニター 打ち合わせ情報検索結果格納用DTO
+ * 打ち合わせ情報検索結果格納用DTO
  * 
- * 
+ * author k.abe
+ * version 1.0
  */
 @Data
 public class MeetingSearchResultDto {
-	// ユーザーID
-	private String staffId;
-		
-	// サブユーザーID
-	private String subStaffId;
-	
-	// 相手会社名
-	private String clientCompName;
-	
-	// 相手氏名
-	private String clientName;
 
+    // ユーザーID
+    private String staffId;
+
+    // サブユーザーID
+    private String subStaffId;
+
+    // ユーザー名
+    private String staffName;
+
+    // サブユーザー名
+    private String subStaffName;
+
+    // 相手会社名
+    private String clientCompName;
+
+    // 相手氏名
+    private String clientName;
+
+    // 予定日
+    private String scheduledDate;
+
+    // 予定時刻
+    private String scheduledTime;
+
+    // その他打ち合わせ場所
+    private String mtgPlace;
+
+    // 打ち合わせ名称
+    private String mtgName;
+
+    // コメント
+    private String comment;
 }
