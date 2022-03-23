@@ -25,6 +25,10 @@
         $('#clearForm').find('select').each(function(index, element ){
             element.value = ''
         });
+        // textareaの値をクリア
+        $('#clearForm').find('textarea').each(function(index, element ){
+            element.value = ''
+        });
     }
 
     /* ヘッダーリンク */

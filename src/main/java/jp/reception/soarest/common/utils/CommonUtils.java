@@ -17,6 +17,9 @@ import org.springframework.ui.Model;
 
 import jp.reception.soarest.domain.dto.AuthSearchResultDto;
 import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
+import jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto;
+import jp.reception.soarest.domain.dto.PurposeSearchResultDto;
+import jp.reception.soarest.domain.dto.StaffSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.NumEnum;
 
@@ -44,6 +47,15 @@ public class CommonUtils {
 
     // 権限リスト
     private final static String AUTH_LIST = "authList";
+
+    // 担当者リスト
+    private final static String STAFF_LIST = "staffList";
+
+    // 会議室リスト
+    private final static String ROOM_LIST = "roomList";
+
+    // 目的リスト
+    private final static String PURPOSE_LIST = "purposeList";
 
     /*
      * パスワードをハッシュ化した値を返却
@@ -184,7 +196,7 @@ public class CommonUtils {
             List<E> authList = new ArrayList<>();
             authList.addAll(list);
             
-            // 部署プルダウンの初めにブランクを設定
+            // 権限プルダウンの初めにブランクを設定
             AuthSearchResultDto auth = new AuthSearchResultDto();
             auth.setAuthId(NumEnum.PULLDOWN.getNum());
             auth.setAuthName(CharEnum.BLANK.getChar());
@@ -193,6 +205,54 @@ public class CommonUtils {
             authList.add(0, (E)auth);
             
             model.addAttribute(AUTH_LIST, authList);
+        // 主担当、副担当プルダウンの場合
+        } else if(obj instanceof StaffSearchResultDto) {
+            List<E> staffList = new ArrayList<>();
+            staffList.addAll(list);
+            
+            // 主担当、副担当プルダウンの初めにブランクを設定
+            StaffSearchResultDto staff = new StaffSearchResultDto();
+            staff.setStaffId("");
+            staff.setStaffName(CharEnum.BLANK.getChar());
+
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            staffList.add(0, (E)staff);
+            
+            model.addAttribute(STAFF_LIST, staffList);
+        // 会議室プルダウンの場合
+        } else if(obj instanceof MeetingRoomSearchResultDto) {
+            List<E> roomList = new ArrayList<>();
+            roomList.addAll(list);
+            
+            // 会議室プルダウンの初めにブランクを設定
+            MeetingRoomSearchResultDto room = new MeetingRoomSearchResultDto();
+            room.setRoomId(NumEnum.PULLDOWN.getNum());
+            room.setRoomName(CharEnum.BLANK.getChar());
+
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            roomList.add(0, (E)room);
+            
+            // 会議室プルダウンの最後にその他(9999)を設定
+            room = new MeetingRoomSearchResultDto();
+            room.setRoomId(9999);
+            room.setRoomName("その他");
+            roomList.add(roomList.size(), (E)room);
+            
+            model.addAttribute(ROOM_LIST, roomList);
+        // 目的プルダウンの場合
+        } else if(obj instanceof PurposeSearchResultDto) {
+            List<E> purposeList = new ArrayList<>();
+            purposeList.addAll(list);
+                
+            // 目的プルダウンの初めにブランクを設定
+            PurposeSearchResultDto purpose = new PurposeSearchResultDto();
+            purpose.setMtgId(NumEnum.PULLDOWN.getNum());
+            purpose.setMtgName(CharEnum.BLANK.getChar());
+
+            // 最初にブランクを表示させるため、要素の最初に挿入
+            purposeList.add(0, (E)purpose);
+                
+            model.addAttribute(PURPOSE_LIST, purposeList);
         }
     }
 

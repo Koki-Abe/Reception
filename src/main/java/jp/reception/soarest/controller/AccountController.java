@@ -33,8 +33,8 @@ import jp.reception.soarest.service.AccountService;
 @Controller
 public class AccountController {
 
-    @Autowired
     // アカウント関連サービスクラス
+    @Autowired
     AccountService accountService;
 
     @Autowired
@@ -44,7 +44,7 @@ public class AccountController {
     HttpSession session;
 
     // ロガー
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     // アカウント情報一覧URL
     private final String ACCOUNT_LIST = "/account_list";
@@ -59,15 +59,15 @@ public class AccountController {
       * アカウント情報一覧 初期表示
       * 
       * @param model モデル
-      * @param session セッション
       * @return アカウント情報一覧画面
       */
     @RequestMapping(value = ACCOUNT_LIST, method = RequestMethod.GET)
     private String init(Model model) {
-
+        // 開始ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
         // セッション存在チェック
         session = request.getSession(false);
-        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
 
@@ -84,6 +84,8 @@ public class AccountController {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
             return UrlEnum.SYSTEM_ERROR.getPass();
         }
+        // 終了ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
         // アカウント情報一覧画面へ遷移
         return UrlEnum.ACCOUNT_LIST.getPass();
@@ -104,7 +106,7 @@ public class AccountController {
 
         // セッション存在チェック
         session = request.getSession(false);
-        if (null == session|| null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             // 終了ログ
             logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
             // ログイン画面へリダイレクト
@@ -126,11 +128,9 @@ public class AccountController {
             accountService.searchAccountList(form, new AccountSearchDto(), model);
         } catch (SQLException e) {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_002.getMsg(null));
-            // session.invalidate(); ←セッションを破棄するかは要相談
             return UrlEnum.SYSTEM_ERROR.getPass();
         } catch (Exception e) {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-            // session.invalidate(); ←セッションを破棄するかは要相談
             return UrlEnum.SYSTEM_ERROR.getPass();
         }
         // 終了ログ
@@ -141,6 +141,5 @@ public class AccountController {
         // (redirectの場合、redirectAttributesにsetしないと連携できない)
         // return "redirect:/account_list";
         return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
-
    }
 }

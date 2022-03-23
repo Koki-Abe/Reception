@@ -5,7 +5,8 @@ import lombok.Data;
 /*
  * ログインユーザー情報 検索用DTO
  * 
- * 
+ * author k.abe
+ * version 1.0
  */
 @Data
 public class LoginUserSearchDto {

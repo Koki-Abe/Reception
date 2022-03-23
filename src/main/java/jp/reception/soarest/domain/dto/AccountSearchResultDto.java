@@ -5,7 +5,8 @@ import lombok.Data;
 /*
  * アカウント情報一覧 検索結果格納用DTO
  * 
- * 
+ * author k.abe
+ * version 1.0
  */
 @Data
 public class AccountSearchResultDto {
