@@ -121,7 +121,9 @@
                     <td id="mtgName" bgcolor="#F0FFFF" th:text="${mtg.mtgName}"></td>
                     <!-- <td id="comment" bgcolor="#F0FFFF" th:utext="${mtg.comment}"></td> -->
                     <td id="comment" bgcolor="#F0FFFF">
-                        <a href="javascript:void(0)" th:onclick="|showComment('__${mtg.comment}__')|">コメント表示</a>
+                        <th:block th:if="${mtg.comment!=''}">
+                            <a href="javascript:void(0)" th:onclick="|showComment('__${mtg.comment}__')|">コメント表示</a>
+                        </th:block>
                     </td>
                     <td id="edit" bgcolor="#F0FFFF">
                         <!-- ログインユーザーの権限が100(管理者)の場合、変更及び削除リンクを表示 -->
