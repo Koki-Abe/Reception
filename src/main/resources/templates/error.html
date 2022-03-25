@@ -7,8 +7,14 @@
     <title>システムエラー</title>
     <body>
         <!-- エラーメッセージ -->
-        <h1>システムエラーが発生しました。</h1> 
-        <p align="center">大変お手数ですがサイト管理者までご連絡ください。</p>
+        <th:block th:if="${status == 500}">
+            <h1>システムエラーが発生しました。</h1>
+        </th:block>
+        <th:block th:if="${status == 404}">
+            <h1>ページが見つかりませんでした。</h1>
+            <p align="center">お探しのページは、移動または削除された可能性があります。</p>
+        </th:block>
+        <p align="center">大変お手数ですが、サイト管理者までご連絡ください。</p>
         <!-- ログインの場合 -->
         <th:block th:if="${session['loginUser']}">
             <div style="text-align: center;">

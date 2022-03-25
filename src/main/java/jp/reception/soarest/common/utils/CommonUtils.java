@@ -137,35 +137,6 @@ public class CommonUtils {
         ex.printStackTrace();
     }
 
-//    /*
-//     * プルダウン成形
-//     * 
-//     * @param logger ロガー
-//     * @param ex 例外クラス
-//     * @param errMsg エラーメッセージ
-//     */
-//    public static void makePulldown(Model model, List<DepartmentSearchResultDto> depList,
-//        List<AuthSearchResultDto> authList) {
-//        // 部署プルダウンの初めにブランクを設定
-//        DepartmentSearchResultDto dep = new DepartmentSearchResultDto();
-//        dep.setDepId(NumEnum.PULLDOWN.getNum());
-//        dep.setDepName(CharEnum.BLANK.getChar());
-//        // 最初にブランクを表示させるため、要素の最初に挿入
-//        depList.add(0, dep);
-//
-//        // 権限プルダウンの初めにブランクを設定
-//        AuthSearchResultDto auth = new AuthSearchResultDto();
-//        auth.setAuthId(NumEnum.PULLDOWN.getNum());
-//        auth.setAuthName(CharEnum.BLANK.getChar());
-//
-//        // 最初にブランクを表示させるため、要素の最初に挿入
-//        authList.add(0, auth);
-//
-//        // 画面返却値の設定
-//        model.addAttribute(DEP_LIST, depList);
-//        model.addAttribute(AUTH_LIST, authList);
-//    }
-
     /*
      * プルダウン成形
      * 

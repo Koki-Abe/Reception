@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.h2.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,12 +38,6 @@ public class AccountServiceImpl implements AccountService {
     // 共通 リポジトリ
     @Autowired
     CommonRepository commonRepository;
-
-//    // 部署リスト
-//    private final String DEP_LIST = "depList";
-//
-//    // 権限リスト
-//    private final String AUTH_LIST = "authList";
 
     // エラーメッセージ
     private final String ERR_MSG = "errMsg";
@@ -126,8 +121,6 @@ public class AccountServiceImpl implements AccountService {
             if (0 == accList.size()) {
                 // エラーメッセージを画面に返却
                 model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
-                // 検索結果件数を設定
-                // model.addAttribute(SEARCH_COUNT, accList.size());
             } else {
                 // 検索結果を格納
                 model.addAttribute(ACC_LIST, accList);
@@ -154,16 +147,19 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public boolean inputCheck(AccountSearchForm form, Model model) {
-        // 日付の相関チェック
-        String start = form.getLoginDateStart();
-        String end = form.getLoginDateEnd();
+        // ログイン日時(開始)、ログイン日時(終了)がNULLまたは空文字でない場合
+        if (StringUtils.isNullOrEmpty(form.getLoginDateStart()) 
+                && StringUtils.isNullOrEmpty(form.getLoginDateEnd())) {
+            // 日付の相関チェック
+            String start = form.getLoginDateStart();
+            String end = form.getLoginDateEnd();
 
-        // 開始日が終了日より未来日の場合
-        if(start.compareTo(end) > 0) {
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_001.getMsg(CharEnum.VALIDATION.getChar()));
-            return false;
+            // 開始日が終了日より未来日の場合
+            if(start.compareTo(end) > 0) {
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_001.getMsg(CharEnum.VALIDATION.getChar()));
+                return false;
+            }
         }
-
         return true;
     }
 

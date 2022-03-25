@@ -10,7 +10,7 @@ img {
 
 
  #form {
-    width: 450px;
+    width: 600px;
     margin: auto;
     padding: 30px;
     border: 1px solid #555;
@@ -150,7 +150,7 @@ h2{
       display: block;
       text-decoration: none;
       color: skyblue;
-      margin-right: 50px;
+      margin-right: 30px;
     }
 
     #menu-btn-check:checked ~ .menu-content {
@@ -170,10 +170,10 @@ h2{
       color:black;
       font-family: Arial;
       padding: 10px 15px ; /*10pxが幅　15pxが長さ*/
-      width: 300px;
+      width: 360px;
       margin: 0 0 30px 50px;
       /*border-radius: 30px;  角を丸くする*/
-    }
+  }
     
     /* テスト */
     select {
@@ -182,7 +182,7 @@ h2{
       color:black;
       font-family: Arial;
       padding: 10px 15px ; /*10pxが幅　15pxが長さ*/
-      width: 334px;
+      width: 395px;
       margin: 10 0 30px 50px;
       /*border-radius: 30px;  角を丸くする*/
     
@@ -213,9 +213,7 @@ h2{
     margin: 0 0 0 40px;
     }
   
-  /* デザインコピペ */
- 	
-    
+/* デザインコピペ */
 #form .form-title{
   border-bottom:solid 2px  #5b8bd0	;
   margin-bottom: 20px;
@@ -256,8 +254,8 @@ h2{
 /*ユーザー情報欄*/
 tr,th,td{
   border: solid 1px #ccc;
-  height: 80px;  
-  width: 150px;
+  height: 70px;  
+  width: 130px;
 }
 
 
@@ -440,6 +438,12 @@ nav.globalMenuSp.active {
 
 textarea {
   resize: none;
+}
+input[type="submit"]:hover{
+    opacity: 0.7;
+}
+input[type="button"]:hover{
+    opacity: 0.7;
 }
 /*利用不可時*/
 :disabled{

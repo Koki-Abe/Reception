@@ -56,7 +56,6 @@
     function redirectToTop() {
         location.href = '/top';
     }
-
     // 打ち合わせ予定管理押下時
     function toMtgList() {
         let form = document.createElement('form');

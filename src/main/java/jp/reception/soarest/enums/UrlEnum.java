@@ -21,41 +21,41 @@ public enum UrlEnum {
     // アカウント情報一覧 検索結果
     ACCOUNT_SEARCH("/account_search", "", ""),
     // アカウント情報登録
-    ACCOUNT_REGISTER("/account_reg", "account/account_reg", "RECEP_C_02"),
+    ACCOUNT_REGISTER("/account_register", "account/account_reg", "RECEP_C_02"),
     // アカウント情報登録確認
-    ACCOUNT_REGISTER_CONFIRM("/account_reg_conf", "", ""),
+    ACCOUNT_REGISTER_CONFIRM("/account_register_conf", "account/account_reg_conf", "RECEP_C_03"),
     // アカウント情報登録完了
-    ACCOUNT_REGISTER_COMPLETE("/account_reg_comp", "", ""),
+    ACCOUNT_REGISTER_COMPLETE("/account_register_comp", "account/account_reg_comp", "RECEP_C_04"),
     // アカウント情報変更
-    ACCOUNT_UPDATE("/account_upd", "", ""),
+    ACCOUNT_UPDATE("/account_update", "account/account_upd", "RECEP_C_05"),
     // アカウント情報変更確認
-    ACCOUNT_UPDATE_CONFIRM("/account_upd_conf", "", ""),
+    ACCOUNT_UPDATE_CONFIRM("/account_update_conf", "account/account_reg_conf", "RECEP_C_06"),
     // アカウント情報変更完了
-    ACCOUNT_UPDATE_COMPLETE("/account_upd_comp", "", ""),
+    ACCOUNT_UPDATE_COMPLETE("/account_update_comp", "account/account_reg_comp", "RECEP_C_07"),
     // アカウント情報削除確認
-    ACCOUNT_DELETE_CONFIRM("/account_del_conf", "", ""),
+    ACCOUNT_DELETE_CONFIRM("/account_delete_conf", "account/account_del_conf", "RECEP_C_08"),
     // アカウント情報削除完了
-    ACCOUNT_DELETE_COMPLETE("/account_del_comp", "", ""),
+    ACCOUNT_DELETE_COMPLETE("/account_delete_comp", "account/account_del_comp", "RECEP_C_09"),
     // 打ち合わせ情報一覧
-    MEETING_LIST("/mtg_list", "", ""),
+    MEETING_LIST("/mtg_list", "meeting/mtg_list", "RECEP_D_01"),
     // 打ち合わせ情報登録
-    MEETING_REGISTER("/mtg_reg", "", ""),
+    MEETING_REGISTER("/mtg_register", "meeting/mtg_reg", "RECEP_D_02"),
     // 打ち合わせ情報登録確認
-    MEETING_REGISTER_CONFIRM("/mtg_reg_conf", "", ""),
+    MEETING_REGISTER_CONFIRM("/mtg_register_conf", "meeting/mtg_reg_conf", "RECEP_D_03"),
     // 打ち合わせ情報登録完了
-    MEETING_REGISTER_COMPLETE("/mtg_reg_comp", "", ""),
+    MEETING_REGISTER_COMPLETE("/mtg_register_comp", "meeting/mtg_reg_comp", "RECEP_D_04"),
     // 打ち合わせ情報変更
-    MEETING_UPDATE("/mtg_upd", "", ""),
+    MEETING_UPDATE("/mtg_upd", "meeting/mtg_upd", "RECEP_D_05"),
     // 打ち合わせ情報変更確認
-    MEETING_UPDATE_CONFIRM("/mtg_upd_conf", "", ""),
+    MEETING_UPDATE_CONFIRM("/mtg_update_conf", "meeting/mtg_upd_conf", "RECEP_D_06"),
     // 打ち合わせ情報変更完了
-    MEETING_UPDATE_COMPLETE("/mtg_upd_comp", "", ""),
+    MEETING_UPDATE_COMPLETE("/mtg_update_comp", "meeting/mtg_reg_comp", "RECEP_D_07"),
     // 打ち合わせ情報削除確認
-    MEETING_DELETE_CONFIRM("/mtg_del_conf", "", ""),
+    MEETING_DELETE_CONFIRM("/mtg_delete_conf", "meeting/mtg_del_conf", "RECEP_D_08"),
     // 打ち合わせ情報削除完了
-    MEETING_DELETE_COMPLETE("/mtg_del_comp", "", ""),
+    MEETING_DELETE_COMPLETE("/mtg_delete_comp", "meeting/mtg_del_comp", "RECEP_D_09"),
     // システムエラー
-    SYSTEM_ERROR("/syserr", "error", "");
+    SYSTEM_ERROR("/syserr", "error", "RECEP_E_01");
     
     // URL
     private final String url;

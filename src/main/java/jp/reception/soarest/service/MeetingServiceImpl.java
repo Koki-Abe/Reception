@@ -127,7 +127,6 @@ public class MeetingServiceImpl implements MeetingService {
         BeanUtils.copyProperties(form, searchDto);
         // プロパティ名が異なるものは別途設定
         searchDto.setMtgId(form.getPurpose());
-//        searchDto.setAuthId(form.getRole());
 
         // 検索結果格納用リスト
         List<MeetingSearchResultDto> mtgList = new ArrayList<MeetingSearchResultDto>();
@@ -151,6 +150,9 @@ public class MeetingServiceImpl implements MeetingService {
 
                     // 時間の秒を削除
                     mtgList.get(cnt).setScheduledTime(rs.getScheduledTime().substring(0,5));
+                    
+                    // コメントの改行を置換
+                    mtgList.get(cnt).setComment(rs.getComment().replaceAll("\r\n|\r|\n", "<br>"));
 
                     ++cnt;
                 }
@@ -169,8 +171,7 @@ public class MeetingServiceImpl implements MeetingService {
         // 検索結果を返却
         return mtgList;
     }
-//
-//    
+
     /*
      * 打ち合わせ情報一覧 入力チェック
      * 
