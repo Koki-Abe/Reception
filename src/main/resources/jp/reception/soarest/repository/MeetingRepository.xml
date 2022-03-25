@@ -14,7 +14,9 @@
             , MTG.CLIENT_NAME AS CLIENT_NAME
             , MTG.SCHEDULED_DATE AS SCHEDULED_DATE
             , MTG.SCHEDULED_TIME AS SCHEDULED_TIME
+            , MTG.ROOM_ID AS ROOM_ID
             , MTG.MTG_PLACE AS MTG_PLACE
+            , MTG.MTG_ID AS MTG_ID
             , MTG.MTG_NAME AS MTG_NAME
             , MTG.COMMENT AS COMMENT
         FROM (
@@ -75,7 +77,7 @@
                 AND MTG.COMMENT LIKE CONCAT('%', #{comment}, '%' )
             </if> 
         </where>
-        ORDER BY MTG.SCHEDULE_ID
+        ORDER BY CAST(MTG.SCHEDULE_ID AS SIGNED) ASC
     </select>
 
 </mapper>

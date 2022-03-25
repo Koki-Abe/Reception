@@ -12,49 +12,59 @@
         <th:block th:if="${errMsg}">
             <p style="color: red;" align="center" th:text="${errMsg}" id="errmsg">
         </th:block>
-
-        <form th:action="@{/account_search}" method="get">
-            <div class="contact-form" id="clearForm">
-            <!-- 検索フォーム -->
-                <table>
-                    <tr><th>ユーザーID</th><td><input type="text" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
-                    <tr><th>ユーザー名</th><td><input type="text" name="userName" th:value="${userName}"></td></tr>
-                    <tr><th>部署</th><td>
-                        <select id="department" name="department" th:value="${department}">
-                            <option
-                                th:each="dep : ${depList}"
-                                th:value="${dep.depId}"
-                                th:text="${dep.depName}"
-                                th:selected="${dep.depId == department}">
-                           </option>
-                        </select>
-                    </td></tr>
-                    <tr><th>ロール</th><td>
-                        <select id="role" name="role">
-                            <option
-                                th:each="auth : ${authList}"
-                                th:value="${auth.authId}"
-                                th:text="${auth.authName}"
-                                th:selected="${auth.authId == role}">
-                           </option>
-                        </select>
-                    </td></tr>
-                    <tr><th>ログイン日</th><td><input type="date" name="loginDateStart" th:value="${loginDateStart}">～<input type="date" name="loginDateEnd" th:value="${loginDateEnd}"></td></tr>
-                </table>
-            </div>
-            <!-- ボタンエリア -->
-            <div style="text-align: center;"> 
-                <input type="button" value="クリア" onclick="clearText()" />
-                <input type="submit" value="検索">
-            </div>
-        </form>
+        <div id="form">
+            <form th:action="@{/account_search}" method="get">
+                <div class="contact-form" id="clearForm">
+                <!-- 検索フォーム -->
+                    <table>
+                        <tr><th>ユーザーID</th><td><input type="text" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
+                        <tr><th>ユーザー名</th><td><input type="text" name="userName" th:value="${userName}"></td></tr>
+                        <tr><th>部署</th><td>
+                            <select id="department" name="department" th:value="${department}">
+                                <option
+                                    th:each="dep : ${depList}"
+                                    th:value="${dep.depId}"
+                                    th:text="${dep.depName}"
+                                    th:selected="${dep.depId == department}">
+                               </option>
+                            </select>
+                        </td></tr>
+                        <tr><th>ロール</th><td>
+                            <select id="role" name="role">
+                                <option
+                                    th:each="auth : ${authList}"
+                                    th:value="${auth.authId}"
+                                    th:text="${auth.authName}"
+                                    th:selected="${auth.authId == role}">
+                               </option>
+                            </select>
+                        </td></tr>
+                        <tr>
+                            <th>ログイン日</th>
+                            <td>
+                                <input type="date" name="loginDateStart" style="width:150px;" th:value="${loginDateStart}">
+                                ～
+                                <input type="date" name="loginDateEnd" style="width:150px;" th:value="${loginDateEnd}">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- ボタンエリア -->
+                <div style="text-align: center;"> 
+                    <input type="button" value="クリア" style="margin-top:20px;" onclick="clearText()" />
+                    <input type="submit" value="検索" style="margin-top:20px;">
+                </div>
+            </form>
+        </div>
         <div style="text-align: center;">
-            <div align="left" style="margin-left: 450px;">
-                <th:block th:if="${searchCount}">
-                    <b>検索結果</b>
-                    <font th:text="${searchCount}"></font> 件
-                </th:block>
-            </div>
+            <th:block th:if="${searchCount}">
+                <b>検索結果</b>
+                <font th:text="${searchCount}"></font> 件
+            </th:block>
+
+            <th:block th:if="${loginUser.authId == 100}">
+	            <input type="submit" onclick="location.href=' account_reg.html'"value="新規登録">
+	        </th:block>
             <!-- 検索結果表示欄 -->
             <table>
                 <tr th:if="${accList}">

@@ -4,7 +4,6 @@
     <!-- ヘッダー読み込み -->
     <div th:include="common/header"></div>
     <title>打ち合わせ情報一覧</title>
-
     <body>
         <!-- 打ち合わせ情報一覧 -->
         <h1 id="mtg_lsit">打ち合わせ情報一覧</h1>
@@ -13,77 +12,80 @@
         <th:block th:if="${errMsg}">
             <p style="color: red;" align="center" th:text="${errMsg}" id="errmsg">
         </th:block>
+        <div id="form">
+            <form th:action="@{/mtg_search}" method="get">
+                <div class="contact-form" id="clearForm">
+                    <table>
+                        <tr>
+                            <th>主担当</th>
+                            <td>
+                                <select id="userId" name="userId" th:value="${userId}">
+                                    <option
+                                        th:each="staff : ${staffList}"
+                                        th:value="${staff.staffId}"
+                                        th:text="${staff.staffName}"
+                                        th:selected="${staff.staffId == userId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>副担当</th>
+                            <td>
+                                <select id="subUserId" name="subUserId" th:value="${subUserId}">
+                                    <option
+                                        th:each="staff : ${staffList}"
+                                        th:value="${staff.staffId}"
+                                        th:text="${staff.staffName}"
+                                        th:selected="${staff.staffId == subUserId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><th>相手会社名</th><td><input type="text" name="clientCompName" th:value="${clientCompName}"></td></tr>
+                        <tr><th>相手氏名</th><td><input type="text" name="clientName" th:value="${clientName}"></td></tr>
+                        <tr><th>予定日</th><td><input type="date" name="scheduledDate" th:value="${scheduledDate}"></td></tr>
+                        <tr><th>予定時刻</th><td>
+                            <input type="time" name="scheduledTime" th:value="${scheduledTime}">
+                        </td></tr>
+                        <tr>
+                            <th>会議室名</th>
+                            <td>
+                                <select id="roomId" name="roomId" th:value="${roomId}">
+                                   <option
+                                        th:each="room : ${roomList}"
+                                        th:value="${room.roomId}"
+                                        th:text="${room.roomName}"
+                                        th:selected="${room.roomId == roomId}">
+                                   </option>
+                                </select>
+                                ※その他を選択された場合は、打ち合わせ場所を入力してください
+                                <input type="text" id="mtgPlace" name="mtgPlace" th:value="${mtgPlace}" disabled="disabled">
+                            </td>
+                        </tr>
+                        <tr><th>目的</th>
+                            <td>
+                                <select id="purpose" name="purpose" th:value="${purpose}">
+                                   <option
+                                        th:each="purpose : ${purposeList}"
+                                        th:value="${purpose.mtgId}"
+                                        th:text="${purpose.mtgName}"
+                                        th:selected="${purpose.mtgId == mtgId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><th>コメント</th><td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td></tr>
+                    </table>
+                </div>
 
-        <form th:action="@{/mtg_search}" method="get">
-            <div class="contact-form" id="clearForm">
-                <table>
-                    <tr><th>主担当</th>
-                        <td>
-                            <select id="userId" name="userId" th:value="${userId}">
-                                <option
-                                    th:each="staff : ${staffList}"
-                                    th:value="${staff.staffId}"
-                                    th:text="${staff.staffName}"
-                                    th:selected="${staff.staffId == userId}">
-                               </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr><th>副担当</th>
-                        <td>
-                            <select id="subUserId" name="subUserId" th:value="${subUserId}">
-                                <option
-                                    th:each="staff : ${staffList}"
-                                    th:value="${staff.staffId}"
-                                    th:text="${staff.staffName}"
-                                    th:selected="${staff.staffId == subUserId}">
-                               </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr><th>相手会社名</th><td><input type="text" name="clientCompName" th:value="${clientCompName}"></td></tr>
-                    <tr><th>相手氏名</th><td><input type="text" name="clientName" th:value="${clientName}"></td></tr>
-                    <tr><th>予定日</th><td><input type="date" name="scheduledDate" th:value="${scheduledDate}"></td></tr>
-                    <tr><th>予定時刻</th><td>
-                        <input type="time" name="scheduledTime" th:value="${scheduledTime}">
-                    </td></tr>
-                    <tr>
-                        <th>会議室名</th>
-                        <td>
-                            <select id="roomId" name="roomId">
-                               <option
-                                    th:each="room : ${roomList}"
-                                    th:value="${room.roomId}"
-                                    th:text="${room.roomName}"
-                                    th:selected="${room.roomId == roomId}">
-                               </option>
-                            </select>
-                            <p align="left">※その他を選択された場合は、打ち合わせ場所を入力してください</p>
-                            <input type="text" id="mtgPlace" name="mtgPlace" th:value="${mtgPlace}" disabled="disabled">
-                        </td>
-                    </tr>
-                    <tr><th>目的</th>
-                        <td>
-                            <select id="purpose" name="purpose" th:value="${purpose}">
-                               <option
-                                    th:each="purpose : ${purposeList}"
-                                    th:value="${purpose.mtgId}"
-                                    th:text="${purpose.mtgName}"
-                                    th:selected="${purpose.mtgId == mtgId}">
-                               </option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr><th>コメント</th><td><textarea name="comment" rows="10" cols="45" maxlength="200" th:text="${comment}"></textarea></td></tr>
-                </table>
-            </div>
-
-            <!-- ボタンエリア -->
-            <div style="text-align: center;"> 
-                <input type="button" value="クリア" onclick="clearText()" />
-                <input type="submit" value="検索">
-            </div>
-        </form>
+                <!-- ボタンエリア -->
+                <div style="text-align: center;"> 
+                    <input type="button" value="クリア" style="margin-top:20px;" onclick="clearText()" />
+                    <input type="submit" value="検索" style="margin-top:20px;">
+                </div>
+            </form>
+        </div>
         <div style="text-align: center;">
             <div align="left" style="margin-left: 175px;">
                 <th:block th:if="${searchCount}">
@@ -106,8 +108,9 @@
                     <th bgcolor="#F0F8FF">編集</th>
                 </tr>
             </table>
-            <table id="search-result">
+            <table class="search-result">
                 <tr th:if="${mtgList}" th:each="mtg : ${mtgList}">
+                    <td hidden="true" id="scheduleId"></td>
                     <td id="userId" bgcolor="#F0FFFF" th:text="${mtg.staffName}"></td>
                     <td id="subUserId" bgcolor="#F0FFFF"  th:text="${mtg.subStaffName}"></td>
                     <td id="clientCompName" bgcolor="#F0FFFF"  th:text="${mtg.clientCompName}"></td>
@@ -116,12 +119,43 @@
                     <td id="scheduledTime" bgcolor="#F0FFFF" th:text="${mtg.scheduledTime}"></td>
                     <td id="mtgPlace" bgcolor="#F0FFFF" th:text="${mtg.mtgPlace}"></td>
                     <td id="mtgName" bgcolor="#F0FFFF" th:text="${mtg.mtgName}"></td>
-                    <td id="comment" bgcolor="#F0FFFF" th:text="${mtg.comment}"></td>
+                    <!-- <td id="comment" bgcolor="#F0FFFF" th:utext="${mtg.comment}"></td> -->
+                    <td id="comment" bgcolor="#F0FFFF">
+                        <a href="javascript:void(0)" th:onclick="|showComment('__${mtg.comment}__')|">コメント表示</a>
+                    </td>
                     <td id="edit" bgcolor="#F0FFFF">
-                        <form name="account" th:action="@{/mtg_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
-                        <!-- ログインユーザーの権限が100(管理者)、またはログインユーザーのアカウント以外の場合、削除リンクを表示 -->
+                        <!-- ログインユーザーの権限が100(管理者)の場合、変更及び削除リンクを表示 -->
                         <th:block th:if="${loginUser.authId == 100}">
-                            <form name="account" th:action="@{/mtg_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
+                            <!-- 変更 -->
+                            <form name="isUpdateMtg" th:action="@{/mtg_update}" method="post">
+                                <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
+                                <input type="hidden" name="userId" th:value="${mtg.staffId}">
+                                <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
+                                <input type="hidden" name="clientCompName" th:value="${mtg.clientCompName}">
+                                <input type="hidden" name="clientName" th:value="${mtg.clientName}">
+                                <input type="hidden" name="scheduledDate" th:value="${mtg.scheduledDate}">
+                                <input type="hidden" name="scheduledTime" th:value="${mtg.scheduledTime}">
+                                <input type="hidden" name="roomId" th:value="${mtg.roomId}">
+                                <input type="hidden" name="mtgPlace" th:value="${mtg.mtgPlace}">
+                                <input type="hidden" name="purpose" th:value="${mtg.mtgId}">
+                                <input type="hidden" name="comment" th:value="${mtg.comment}">
+                                <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
+                            </form>
+                            <!-- 削除 -->
+                            <form name="isDeleteMtg" th:action="@{/mtg_delete}" method="post">
+                                <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
+                                <input type="hidden" name="userId" th:value="${mtg.staffId}">
+                                <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
+                                <input type="hidden" name="clientCompName" th:value="${mtg.clientCompName}">
+                                <input type="hidden" name="clientName" th:value="${mtg.clientName}">
+                                <input type="hidden" name="scheduledDate" th:value="${mtg.scheduledDate}">
+                                <input type="hidden" name="scheduledTime" th:value="${mtg.scheduledTime}">
+                                <input type="hidden" name="roomId" th:value="${mtg.roomId}">
+                                <input type="hidden" name="mtgPlace" th:value="${mtg.mtgPlace}">
+                                <input type="hidden" name="purpose" th:value="${mtg.mtgId}">
+                                <input type="hidden" name="comment" th:value="${mtg.comment}">
+                                <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
+                            </form>
                         </th:block>
                     </td>
                 </tr>
@@ -150,8 +184,19 @@
                 } else {
                     $('#mtgPlace').prop("disabled", true);
                 }
+                // ページング付与
+                $(".search-result").paginate({
+                    jqueryui: false,
+                    position: "bottom",
+                });
             });
-            
+            // コメント表示
+            function showComment(comment) {
+                // let comment = $('input[name="comment"]').val();
+                console.log(comment);
+                let url =  encodeURI("/comment?comment=" + comment)
+                window.open(url, null, 'width=500 ,height=500, toolbar=yes, menubar=yes, scrollbars=yes');
+            }
         </script>
     </body>
 </html>

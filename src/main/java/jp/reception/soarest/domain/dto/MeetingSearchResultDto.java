@@ -10,6 +10,9 @@ import lombok.Data;
  */
 @Data
 public class MeetingSearchResultDto {
+    
+    // 打ち合わせID
+    private String scheduleId;
 
     // ユーザーID
     private String staffId;
@@ -35,8 +38,14 @@ public class MeetingSearchResultDto {
     // 予定時刻
     private String scheduledTime;
 
+    // 会議室番号
+    private String roomId;
+
     // その他打ち合わせ場所
     private String mtgPlace;
+
+    // 打ち合わせID
+    private String mtgId;
 
     // 打ち合わせ名称
     private String mtgName;
