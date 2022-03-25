@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
@@ -165,23 +166,6 @@ public class MeetingController {
           return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
       }
 
-//      // 入力チェック
-//      if(!meetingService.inputCheck(form, model)) {
-//          // 終了ログ
-//          logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
-//          return CharEnum.FORWARD.getChar() + UrlEnum.MEETING_LIST.getUrl();
-//      }
-//
-//      try {
-//          // 検索処理
-//          meetingService.searchMtgList(form, new MeetingSearchDto(), model);
-//      } catch (SQLException e) {
-//          CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_002.getMsg(null));
-//          return UrlEnum.SYSTEM_ERROR.getPass();
-//      } catch (Exception e) {
-//          CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-//          return UrlEnum.SYSTEM_ERROR.getPass();
-//      }
       // 終了ログ
       logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
@@ -192,17 +176,15 @@ public class MeetingController {
       return CharEnum.FORWARD.getChar() + UrlEnum.MEETING_LIST.getUrl();
    }
 
-  /*
-   * コメント表示
-   * 
-   * @param model モデル
-   * @return コメント表示画面
-   */
-  @RequestMapping(value = "/comment", method = RequestMethod.GET)
-  public String showComment(Model model){
-	  model.addAttribute("comment", request.getParameter("comment"));
-	  System.out.println(request.getParameter("comment"));
-	  System.out.println(request.getRequestURL());
-	  return "meeting/comment";
-  }
+    /*
+     * コメント表示
+     * 
+     * @param model モデル
+     * @return コメント表示画面
+     */
+    @RequestMapping(value = "/comment", method = RequestMethod.GET)
+    public String showComment(Model model, @RequestParam("comment") String comment){
+        model.addAttribute("comment", comment);
+        return "meeting/comment";
+    }
 }

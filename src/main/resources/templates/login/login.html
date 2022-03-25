@@ -16,12 +16,10 @@
 
             <form th:action="@{/login}" method="post">
                 <div id="clearForm">
-                    <p>ユーザーID</p>
-                    <p class="userId"></p>
-                    <input type="text" id="userId" name="userId" th:value="${userId}" style="text-align: left;"  autocomplete="off" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"  placeholder="必須" >
-                    <p>パスワード</p>
-                    <p class="password"></p>
-                    <input type="password" id="password" name="password" th:value="${password}" style="text-align: left;" pattern="^(?=.*[A-Z])[a-zA-Z0-9!-/:-@¥[-`{-~]{8,20}$" title="半角英数字で入力して下さい。" placeholder="必須">
+                    <p style="margin-left:100px;">ユーザーID</p>
+                    <input type="text" id="userId" name="userId" th:value="${userId}" style="text-align:left;margin-left:100px;"  autocomplete="off" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"  placeholder="必須" >
+                    <p style="margin-left:100px;">パスワード</p>
+                    <input type="password" id="password" name="password" th:value="${password}" style="text-align:left;margin-left:100px" pattern="^(?=.*[A-Z])[a-zA-Z0-9!-/:-@¥[-`{-~]{8,20}$" title="半角英数字で入力して下さい。" placeholder="必須">
                     <span class="eye" onclick="myFunction()">
                         <i id="hide1" class="fa fa-eye"></i>
                         <i id="hide2" class="fa fa-eye-slash"></i>
@@ -29,9 +27,8 @@
                 </div>
                 <!-- ボタンエリア -->
                 <div style="text-align: center;">
-                    <p class="submit"><input type="button" id="clear" value="クリア" onclick="clearText()" />
-                    <!--  <p class="submit"><input type="button" onclick="location.href='account_list.html'"value="ログイン">-->
-                    <p class="submit"><input type="submit" id="login" value="ログイン">
+                    <input type="button" id="clear" value="クリア" onclick="clearText()" />
+                    <input type="submit" id="login" value="ログイン">
                 </div>
              </form>
         </div>
