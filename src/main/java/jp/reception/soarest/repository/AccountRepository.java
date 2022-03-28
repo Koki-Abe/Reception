@@ -15,7 +15,12 @@ import jp.reception.soarest.domain.dto.AccountSearchResultDto;
  */
 @Mapper
 public interface AccountRepository {
-	
+	/*
+	 * アカウント情報一覧 検索
+	 * 
+	 * @param searchDto アカウント情報一覧 検索用DTO
+	 * @return アカウント情報一覧
+	 */
 	List<AccountSearchResultDto> searchAccountList(AccountSearchDto searchDto);
 
 }

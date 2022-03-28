@@ -4,17 +4,52 @@
 <mapper namespace="jp.reception.soarest.repository.ShanaiMonitorRepository">
 
     <!-- 開始10分前 打ち合わせ情報取得 -->
-    <select id="searchMtgList" parameterType="java.util.Map" resultType="jp.reception.soarest.domain.dto.MeetingSearchResultDto">
+    <select id="searchMtgList" parameterType="java.util.Map"
+        resultType="jp.reception.soarest.domain.dto.MeetingSearchResultDto">
         SELECT
-            STAFF_ID
-            , SUB_STAFF_ID
-            , CLIENT_NAME
-            , CLIENT_COMP_NAME
-        FROM
-            MTG_SCHEDULE
+        MTG.SCHEDULE_ID AS SCHEDULE_ID
+        , MTG.STAFF_ID AS STAFF_ID
+        , MTG.SUB_STAFF_ID AS SUB_STAFF_ID
+        , MTG.STAFF_NAME AS STAFF_NAME
+        , MTG.SUB_STAFF_NAME AS SUB_STAFF_NAME
+        , MTG.CLIENT_COMP_NAME AS CLIENT_COMP_NAME
+        , MTG.CLIENT_NAME AS CLIENT_NAME
+        , MTG.SCHEDULED_DATE AS SCHEDULED_DATE
+        , MTG.SCHEDULED_TIME AS SCHEDULED_TIME
+        , MTG.ROOM_ID AS ROOM_ID
+        , MTG.MTG_PLACE AS MTG_PLACE
+        , MTG.MTG_ID AS MTG_ID
+        , MTG.MTG_NAME AS MTG_NAME
+        , MTG.COMMENT AS COMMENT
+        FROM (
+            SELECT
+                MSC.SCHEDULE_ID AS SCHEDULE_ID
+                , MSC.STAFF_ID AS STAFF_ID
+                , MSC.SUB_STAFF_ID AS SUB_STAFF_ID
+                , (SELECT MS.STAFF_NAME WHERE MSC.STAFF_ID = MS.STAFF_ID) AS STAFF_NAME
+                , (SELECT MS2.STAFF_NAME WHERE MSC.SUB_STAFF_ID = MS2.STAFF_ID) AS SUB_STAFF_NAME
+                , MSC.CLIENT_COMP_NAME AS CLIENT_COMP_NAME
+                , MSC.CLIENT_NAME AS CLIENT_NAME
+                , MSC.SCHEDULED_DATE AS SCHEDULED_DATE
+                , MSC.SCHEDULED_TIME AS SCHEDULED_TIME
+                , MMR.ROOM_ID AS ROOM_ID
+                , CASE WHEN MSC.ROOM_ID != '' AND MSC.ROOM_ID IS NOT NULL
+                    THEN MMR.ROOM_NAME
+                    ELSE MSC.MTG_PLACE
+                  END AS MTG_PLACE
+                , MM.MTG_ID AS MTG_ID
+                , MM.MTG_NAME AS MTG_NAME
+                , MSC.COMMENT AS COMMENT
+            FROM
+                MTG_SCHEDULE MSC
+                INNER JOIN M_STAFF MS ON MSC.STAFF_ID = MS.STAFF_ID
+                INNER JOIN M_STAFF MS2 ON MSC.SUB_STAFF_ID = MS2.STAFF_ID
+                LEFT OUTER JOIN M_MTG_ROOM MMR ON MSC.ROOM_ID = MMR.ROOM_ID
+                INNER JOIN M_MEETING MM ON MSC.MTG_ID = MM.MTG_ID
+        ) AS MTG
         WHERE
-            SCHEDULED_DATE = #{scheduledDate}
+            MTG.SCHEDULED_DATE = #{scheduledDate}
         AND
-            SCHEDULED_TIME = DATE_ADD(CAST(#{scheduledTime} AS TIME), INTERVAL 10 Minute)
+            MTG.SCHEDULED_TIME = DATE_ADD(CAST(#{scheduledTime} AS TIME), INTERVAL 10 Minute)
     </select>
 </mapper>

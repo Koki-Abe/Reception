@@ -48,13 +48,31 @@ public class MeetingController {
     // ロガー
     private final Logger logger = LoggerFactory.getLogger(MeetingController.class);
 
+    // 打ち合わせ情報一覧URL
+    private final String MTG_LIST_URL = "/mtg_list";
+
+    // 打ち合わせ情報一覧 検索URL
+    private final String MTG_SEARCH_URL = "/mtg_search";
+
+    // 打ち合わせ情報一覧 更新確認URL
+    private final String MTG_UPDATE_URL = "/mtg_update";
+
+    // コメントURL
+    private final String COMMENT_URL = "/comment";
+
+    // ログインユーザー
+    private final String LOGIN_USER = "loginUser";
+
+    // コメント
+    private final String COMMENT = "comment";
+
     /*
      * 打ち合わせ情報一覧 初期表示
      * 
      * @param model モデル
      * @return 打ち合わせ情報一覧画面
      */
-    @RequestMapping(value = "/mtg_list", method = RequestMethod.GET)
+    @RequestMapping(value = MTG_LIST_URL, method = RequestMethod.GET)
     private String init(Model model) {
         // 開始ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
@@ -63,7 +81,7 @@ public class MeetingController {
         session = request.getSession(false);
 
         // セッション情報のチェック
-        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute("loginUser")) {
+        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             // 終了ログ
             logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
             // ログイン画面へリダイレクト
@@ -71,7 +89,7 @@ public class MeetingController {
         }
 
         // セッションから表示情報を取得
-        model.addAttribute("loginUser", session.getAttribute("loginUser"));
+        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
         
         // 初期処理
         try {
@@ -83,13 +101,12 @@ public class MeetingController {
             CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
             return UrlEnum.SYSTEM_ERROR.getPass();
         }
-        
 
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
         // return "mtg_list";
-        return "meeting/mtg_list";
+        return UrlEnum.MEETING_LIST.getPass();
     }
 
     /*
@@ -99,7 +116,7 @@ public class MeetingController {
      * @param model モデル
      * @return 打ち合わせ情報一覧画面
      */
-   @RequestMapping(value = "/mtg_search", method = RequestMethod.GET)
+   @RequestMapping(value = MTG_SEARCH_URL, method = RequestMethod.GET)
    private String searchMeetingList(@Validated MeetingSearchForm form, Model model) {
 
        // 開始ログ
@@ -107,7 +124,7 @@ public class MeetingController {
 
        // セッション存在チェック
        session = request.getSession(false);
-       if (null == session || null == (LoginUserSearchResultDto)session.getAttribute("loginUser")) {
+       if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
            // 終了ログ
            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
            // ログイン画面へリダイレクト
@@ -151,7 +168,7 @@ public class MeetingController {
     * @param model モデル
     * @return 打ち合わせ情報更新確認画面
     */
-  @RequestMapping(value = "/mtg_update", method = RequestMethod.POST)
+  @RequestMapping(value = MTG_UPDATE_URL, method = RequestMethod.POST)
   private String isUpdateMtg(MeetingUpdateForm form, Model model) {
 
       // 開始ログ
@@ -159,7 +176,7 @@ public class MeetingController {
 
       // セッション存在チェック
       session = request.getSession(false);
-      if (null == session || null == (LoginUserSearchResultDto)session.getAttribute("loginUser")) {
+      if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
           // 終了ログ
           logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
           // ログイン画面へリダイレクト
@@ -182,9 +199,10 @@ public class MeetingController {
      * @param model モデル
      * @return コメント表示画面
      */
-    @RequestMapping(value = "/comment", method = RequestMethod.GET)
-    public String showComment(Model model, @RequestParam("comment") String comment){
-        model.addAttribute("comment", comment);
-        return "meeting/comment";
+    @RequestMapping(value = COMMENT_URL, method = RequestMethod.GET)
+    public String showComment(Model model, @RequestParam(COMMENT) String comment){
+        model.addAttribute(COMMENT, comment);
+        return UrlEnum.MEETING_COMMENT.getPass();
+        // return "meeting/comment";
     }
 }

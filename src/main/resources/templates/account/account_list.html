@@ -82,10 +82,12 @@
                     <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
                     <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
                     <td id="edit" bgcolor="#F0FFFF">
-                        <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>
+                        <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
+                        <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>-->
                         <!-- ログインユーザーの権限が100(管理者)、またはログインユーザーのアカウント以外の場合、削除リンクを表示 -->
                         <th:block th:if="${loginUser.authId == 100 && loginUser.staffId != account.staffId}">
-                            <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form>
+                            <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form> -->
+                            <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
                         </th:block>
                     </td>
                 </tr>
