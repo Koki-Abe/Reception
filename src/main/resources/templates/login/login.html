@@ -5,7 +5,7 @@
     <div th:include="common/header"></div>
 
     <title>ログイン</title>
-    <body>
+
         <!-- ログイン画面 -->
         <div id="form">
             <p class="form-title">ログイン</p>
@@ -24,6 +24,17 @@
                         <i id="hide1" class="fa fa-eye"></i>
                         <i id="hide2" class="fa fa-eye-slash"></i>
                     </span>
+                    <!-- ツールチップ -->
+                    <div class="tooltip">
+                        <p class="help_button" style="color:black;background-color:white;">？</p>
+                        <div class="description">
+                            　※8桁以上20桁以下<br>
+                            　※特殊記号を含める<br>
+                            　※最低1文字は大文字を入れる<br>
+                            　※最低1文字は小文字を入れる<br>
+                            　※アルファベットと数字の両方を入れる
+                         </div>
+                    </div>
                 </div>
                 <!-- ボタンエリア -->
                 <div style="text-align: center;">
@@ -35,4 +46,5 @@
         <!-- フッター読み込み -->
         <div th:include="common/footer"></div>
     </body>
+
 </html>

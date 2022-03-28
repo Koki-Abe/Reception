@@ -450,3 +450,52 @@ input[type="button"]:hover{
     color: #FFF;
     background: #AAA;
 }
+/* ツールチップ */
+.tooltip{
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+.tooltip p{
+    margin:0;
+    padding:0;
+}
+.description {
+    display: none;
+    position: absolute;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.6em;
+    color: #fff;
+    border-radius: 5px;
+    background: #000;
+    width: 300px;
+}
+.description:before {
+    content: "";
+    position: absolute;
+    top: 0%;
+    right: 95%;
+    border: 15px solid transparent;
+    border-top: 15px solid #000;
+    margin-left: -15px;
+    transform: rotateZ(90deg);
+}
+.tooltip:hover .description{
+    display: inline-block;
+    top: 0px;
+    left: 80px;
+}
+
+/* ヘルプボタン */
+.help_button {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 1.4;
+  color: black;
+  border: solid;
+  font-weight: bold
+}

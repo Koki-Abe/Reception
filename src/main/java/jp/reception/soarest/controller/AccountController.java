@@ -49,7 +49,7 @@ public class AccountController {
     // アカウント情報一覧URL
     private final String ACCOUNT_LIST = "/account_list";
 
-    // アカウント情報検索結果URL
+    // アカウント情報一覧 検索URL
     private final String ACCOUNT_SEARCH = "/account_search";
 
     // ログインユーザー

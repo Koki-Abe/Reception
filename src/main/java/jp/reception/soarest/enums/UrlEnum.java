@@ -54,6 +54,8 @@ public enum UrlEnum {
     MEETING_DELETE_CONFIRM("/mtg_delete_conf", "meeting/mtg_del_conf", "RECEP_D_08"),
     // 打ち合わせ情報削除完了
     MEETING_DELETE_COMPLETE("/mtg_delete_comp", "meeting/mtg_del_comp", "RECEP_D_09"),
+    // 打ち合わせ情報一覧 コメント表示
+    MEETING_COMMENT("/comment", "meeting/comment", ""),
     // システムエラー
     SYSTEM_ERROR("/syserr", "error", "RECEP_E_01");
     

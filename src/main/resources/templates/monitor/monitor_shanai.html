@@ -27,6 +27,7 @@
                     <th>目的</th>
                     <th>コメント</th>
                 </tr>
+                <!-- 
                 <tr th:if="${mtgList}" th:each="mtg : ${mtgList}">
                     <td><input type="checkbox"></input></td>
                     <td id="userId" bgcolor="#F0FFFF" th:text="${mtg.staffId}"></td>
@@ -39,6 +40,7 @@
                     <td id="clientName" bgcolor="#F0FFFF"  th:text="${mtg.clientName + ' 様'}"></td>
                     <td id="clientName" bgcolor="#F0FFFF"  th:text="${mtg.clientName + ' 様'}"></td>
                 </tr>
+                 -->
             </table>
 
         </div>
@@ -83,15 +85,15 @@
 		    	        		console.log('iの値' + i);
 			    	        	$('#search-result').append('<tr id="test' + cnt + '">')
 			    	        	$('#test' + cnt).append('<td><input type="checkbox"></input></td>')
-			    	        	$('#test' + cnt).append('<td id="test-id' + data[i].staffId + '">' + data[i].staffId + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].subStaffId + '</td>')
+			    	        	$('#test' + cnt).append('<td id="test-id' + data[i].staffName + '">' + data[i].staffName + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].subStaffName + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].clientCompName + '</td>')
 			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	            $('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
-			    	        	$('#test' + cnt).append('<td>' + data[i].clientName + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].scheduledDate + '</td>')
+			    	            $('#test' + cnt).append('<td>' + data[i].scheduledTime + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].mtgPlace + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].mtgName + '</td>')
+			    	        	$('#test' + cnt).append('<td>' + data[i].comment + '</td>')
 			    	        	$('#search-result').append('</tr>');
 			    	        	++cnt;
 		    	        	}

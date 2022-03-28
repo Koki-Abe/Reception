@@ -32,10 +32,10 @@ public class LoginServiceImpl implements LoginService {
     // アカウント関連 リポジトリ
     @Autowired
     private LoginRepository loginRepository;
-    
+
     // エラーリスト
     private final String ERROR_LIST = "errorList";
-    
+
     // ユーザーID
     private final String USER_ID = "userId";
 

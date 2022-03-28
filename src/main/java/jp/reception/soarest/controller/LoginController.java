@@ -137,7 +137,7 @@ public class LoginController {
             String lastLoginDate = loginUser.getLastLoginDate();
             if (null != lastLoginDate) {
                 loginUser.setLastLoginDate(loginUser.getLastLoginDate()
-                        .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
+                        .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()).substring(0,16));
             }
             // ログインユーザー情報を設定
             redirectAttributes.addFlashAttribute(LOGIN_USER, loginUser);
