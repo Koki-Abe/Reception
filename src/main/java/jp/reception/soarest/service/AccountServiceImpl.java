@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.h2.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -147,9 +146,9 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public boolean inputCheck(AccountSearchForm form, Model model) {
-        // ログイン日時(開始)、ログイン日時(終了)がNULLまたは空文字でない場合
-        if (StringUtils.isNullOrEmpty(form.getLoginDateStart()) 
-                && StringUtils.isNullOrEmpty(form.getLoginDateEnd())) {
+        // ログイン日時(開始)、ログイン日時(終了)がNULLまたは空文字の場合
+        if ((null != form.getLoginDateStart() || "" != form.getLoginDateStart())
+                && (null != form.getLoginDateEnd() || "" != form.getLoginDateEnd())) {
             // 日付の相関チェック
             String start = form.getLoginDateStart();
             String end = form.getLoginDateEnd();

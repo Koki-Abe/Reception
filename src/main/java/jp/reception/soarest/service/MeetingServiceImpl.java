@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.h2.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -181,7 +180,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public boolean inputCheck(MeetingSearchForm form, Model model) {
         // 会議室名がその他、かつ打ち合わせ場所がNULLまたは空文字の場合
-        if (form.getRoomId() == 9999 && StringUtils.isNullOrEmpty(form.getMtgPlace())) {
+        if (form.getRoomId() == 9999 && (null == form.getMtgPlace() || "" == form.getMtgPlace())) {
             model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_004.getMsg(CharEnum.VALIDATION.getChar()));
             return false;
         }
