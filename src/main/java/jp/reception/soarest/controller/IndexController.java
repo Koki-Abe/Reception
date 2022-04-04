@@ -57,8 +57,6 @@ public class IndexController {
             // 管理画面TOPへ遷移
             return  CharEnum.REDIRECT.getChar() + UrlEnum.TOP.getUrl();
         }
-        // テスト
-        System.out.print(false);
 
         // ログイン画面へ遷移
         return UrlEnum.LOGIN.getPass();
