@@ -146,7 +146,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public boolean inputCheck(AccountSearchForm form, Model model) {
-        // ログイン日時(開始)、ログイン日時(終了)がNULLまたは空文字でない場合
+        // ログイン日時(開始)、ログイン日時(終了)がNULLまたは空文字の場合
         if ((null != form.getLoginDateStart() || "" != form.getLoginDateStart())
                 && (null != form.getLoginDateEnd() || "" != form.getLoginDateEnd())) {
             // 日付の相関チェック
