@@ -70,6 +70,9 @@ public class AccountController {
         if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
+        
+        // テスト
+        System.out.println("aaa");
 
         // セッションから表示情報を取得
         model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
