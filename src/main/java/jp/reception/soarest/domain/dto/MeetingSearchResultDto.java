@@ -39,7 +39,7 @@ public class MeetingSearchResultDto {
     private String scheduledTime;
 
     // 会議室番号
-    private String roomId;
+    private int roomId;
 
     // その他打ち合わせ場所
     private String mtgPlace;
