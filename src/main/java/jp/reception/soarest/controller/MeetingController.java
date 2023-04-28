@@ -22,6 +22,7 @@ import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.enums.UrlEnum;
+import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
 import jp.reception.soarest.form.MeetingUpdateForm;
 import jp.reception.soarest.service.MeetingService;
@@ -56,6 +57,9 @@ public class MeetingController {
 
     // 打ち合わせ情報一覧 更新確認URL
     private final String MTG_UPDATE_URL = "/mtg_update";
+    
+    // 打ち合わせ情報登録　URL
+    private final String MTG_REGISTER_URL = "/mtg_register";
 
     // コメントURL
     private final String COMMENT_URL = "/comment";
@@ -202,7 +206,104 @@ public class MeetingController {
     @RequestMapping(value = COMMENT_URL, method = RequestMethod.GET)
     public String showComment(Model model, @RequestParam(COMMENT) String comment){
         model.addAttribute(COMMENT, comment);
-        return UrlEnum.MEETING_COMMENT.getPass();
+        return UrlEnum.MEETING_COMMENT.getPass();    
         // return "meeting/comment";
     }
+    
+    /* 新規登録ボタンの押下、打ち合わせ登録情報　初期表示
+     * 
+     * @param form 打ち合わせ情報一覧 フォームクラス 
+    　* @param model モデル
+    　* @return 打ち合わせ情報更新確認画面
+     */
+    @RequestMapping(value = MTG_REGISTER_URL, method = RequestMethod.GET)
+    private String registerMeeting(MeetingRegisterForm form, Model model){
+    	// 開始ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+        // セッションの取得
+        session = request.getSession(false);
+
+        // セッション情報のチェック
+        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+            // 終了ログ
+            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+            // ログイン画面へリダイレクト
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+        } 
+        // セッションから表示情報を取得
+        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+        
+      //プルダウンリスト取得
+        try {
+            meetingService.meetingRegister(model);
+        } catch (SQLException e) {
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
+        } catch (Exception e) {
+            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+            return UrlEnum.SYSTEM_ERROR.getPass();
+        }
+        
+        // 終了ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+        
+        // 打ち合わせ情報登録画面を表示
+        return UrlEnum.MEETING_REGISTER.getPass(); 
+    }
+  
+    /*
+     * 打ち合わせ情報登録 登録ボタン押下
+     * 
+     * @param model モデル
+     * @return 打ち合わせ情報一覧画面
+     */
+    @RequestMapping(value = MTG_REGISTER_URL, method = RequestMethod.POST)
+    private String registerCheck(MeetingRegisterForm form, Model model){
+    	// 開始ログ
+        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+        // セッションの取得
+        session = request.getSession(false);
+
+        // セッション情報のチェック
+        if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+            // 終了ログ
+            logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+            // ログイン画面へリダイレクト
+            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+        } 
+        // セッションから表示情報を取得
+        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+        
+        // 検索値を入力欄に保持
+        meetingService.registerCheck(form , model);
+
+        // 入力チェック
+        if(!meetingService.registerCheck(form, model)) {
+            // 終了ログ
+            logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+            return CharEnum.FORWARD.getChar() + UrlEnum.MEETING_LIST.getUrl();
+	        }
+	        //入力チェックに該当しない場合の画面返却値
+	        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+	       	        	
+	        // 終了ログ
+	        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
+        // return "mtg_register_confirm";
+        return UrlEnum.MEETING_REGISTER_CONFIRM.getPass();      
+	}
+    
+    /*
+     * 戻るボタンでの打ち合わせ情報一覧 初期表示
+     * 
+     * @param model モデル
+     * @return 打ち合わせ情報一覧画面
+     */
+    
+    
+
+    
+        
 }

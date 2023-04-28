@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <!-- ヘッダー読み込み -->
+    <div th:include="common/header"></div>
+    <title>打ち合わせ情報登録</title>
+    <body>
+    
+    	<!-- 打ち合わせ情報登録 -->
+        <h1 id="mtg_list">打ち合わせ情報登録</h1>
+        
+        <!-- エラー文言表示部分 -->
+        <th:block th:if="${errMsg}">
+            <p style="color: red;" align="center" th:text="${errMsg}" id="errmsg">
+        </th:block>
+        <div id="form">
+            <form th:action="@{/mtg_search}" method="get">
+                <div class="contact-form" id="clearForm">
+                    <table>
+                        <tr>
+                            <th>主担当<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                            <td>
+                                <select id="userId" name="userId" th:value="${userId}">                 
+                                    <option
+                                        th:each="staff : ${staffList}"
+                                        th:value="${staff.staffId}"
+                                        th:text="${staff.staffName}"
+                                        th:selected="${staff.staffId == userId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>副担当</th>
+                            <td>
+                                <select id="subUserId" name="subUserId" th:value="${subUserId}">
+                                    <option
+                                        th:each="staff : ${staffList}"
+                                        th:value="${staff.staffId}"
+                                        th:text="${staff.staffName}"
+                                        th:selected="${staff.staffId == subUserId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><th>相手会社名</th><td><input type="text" name="clientCompName" th:value="${clientCompName}"></td></tr>
+                        <tr><th>相手氏名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
+                        	<input type="text" name="clientName" th:value="${clientName}">
+                        </td></tr>
+                        <tr><th>予定日<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
+                        	<input type="date" name="scheduledDate" th:value="${scheduledDate}">
+                        </td></tr>
+                        <tr><th>予定時刻<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none  solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
+                            <input type="time" name="scheduledTime" th:value="${scheduledTime}">
+                        </td></tr>
+                        <tr>
+                            <th>会議室名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                            <td>
+                                <select id="roomId" name="roomId" th:value="${roomId}">
+                                   <option
+                                        th:each="room : ${roomList}"
+                                        th:value="${room.roomId}"
+                                        th:text="${room.roomName}"
+                                        th:selected="${room.roomId == roomId}">
+                                   </option>
+                                </select>
+                                ※その他を選択された場合は、打ち合わせ場所を入力してください
+                                <input type="text" id="mtgPlace" name="mtgPlace" th:value="${mtgPlace}" disabled="disabled">
+                            </td>
+                        </tr>
+                        <tr><th>目的<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                            <td>
+                                <select id="purpose" name="purpose" th:value="${purpose}">
+                                   <option
+                                        th:each="purpose : ${purposeList}"
+                                        th:value="${purpose.mtgId}"
+                                        th:text="${purpose.mtgName}"
+                                        th:selected="${purpose.mtgId == mtgId}">
+                                   </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr><th>コメント</th><td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td></tr>
+                    </table>
+                </div>
+
+                <!-- ボタンエリア -->
+                <div style="text-align: center;"> 
+                    <input type="button" value="戻る" style="margin-top:20px;" onclick="clearText()" />
+                    <input type="submit" value="クリア" style="margin-top:20px;">
+                    <input type="button" value="登録" style="background-color:#1e90ff;">
+                </div>
+            </form>
+        </div>
+        
+        <!-- フッター読み込み -->
+        <div th:include="common/footer"></div>
+    </body>
+        
+		
+
+        <!-- JS -->
+        <script>
+        // 戻るボタン押下字のスクリプト
+	        $(function prev(){
+	        	
+	        	
+	        	
+	        })
+            $('#roomId').change(function() {
+                let rmId = $('#roomId').val();
+                // その他を選択した場合、非活性を解除する
+                if(rmId === '9999') {
+                    $('#mtgPlace').prop("disabled", false);
+                } else {
+                    $('#mtgPlace').prop("disabled", true);
+                }
+            });
+            $(document).ready(function() {
+                let rmId = $('#roomId').val();
+                if(rmId === '9999') {
+                    $('#mtgPlace').prop("disabled", false);
+                } else {
+                    $('#mtgPlace').prop("disabled", true);
+                }
+                // ページング付与
+                $(".search-result").paginate({
+                    jqueryui: false,
+                    position: "bottom",
+                });
+            });
+            // コメント表示
+            function showComment(comment) {
+                // let comment = $('input[name="comment"]').val();
+                console.log(comment);
+                let url =  encodeURI("/comment?comment=" + comment)
+                window.open(url, null, 'width=500 ,height=500, toolbar=yes, menubar=yes, scrollbars=yes');
+            }
+            
+        </script>
+</html>

@@ -17,6 +17,7 @@ import jp.reception.soarest.domain.dto.PurposeSearchResultDto;
 import jp.reception.soarest.domain.dto.StaffSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
 import jp.reception.soarest.repository.CommonRepository;
 import jp.reception.soarest.repository.MeetingRepository;
@@ -208,5 +209,100 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
     }
+    
+    /*
+     * 打ち合わせ情報登録 初期処理
+     * 
+     * @param model モデル
+     */
+    @Override
+    public void meetingRegister (Model model) throws SQLException {
+        try {
+            // 主担当、副担当プルダウンの取得
+            List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
+
+            // 会議室プルダウンの取得
+            List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
+            
+            // 目的プルダウンの取得
+            List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
+
+            // プルダウン生成
+            CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
+            CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
+            CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
+           
+        } catch (Exception e) {
+            // SQLの例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    /*
+     * 打ち合わせ情報登録 入力チェック
+     * 
+     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void registerCheck(MeetingSearchForm form, Model model) {
+    	// 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(SUB_USER_ID, form.getSubUserId());
+        model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
+        model.addAttribute(CLIENT_NAME, form.getClientName());
+        model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
+        model.addAttribute(ROOM_ID, form.getRoomId());
+        model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
+        model.addAttribute(COMMENT, form.getComment());
+
+        
+    }
+
+	@Override
+	public boolean registerCheck(MeetingRegisterForm form, Model model) {
+		// TODO 自動生成されたメソッド・スタブ
+		return false;
+	}
+
+	/*
+     * 打ち合わせ情報一覧 初期処理
+     * 
+     * @param model モデル
+     */
+    @Override
+    public void init1(Model model) throws SQLException {
+        try {
+            // 主担当、副担当プルダウンの取得
+            List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
+
+            // 会議室プルダウンの取得
+            List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
+            
+            // 目的プルダウンの取得
+            List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
+
+            // プルダウン生成
+            CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
+            CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
+            CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
+           
+        } catch (Exception e) {
+            // SQLの例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            } else {
+                throw e;
+            }
+        }
+    
+		
+	}
 
 }

@@ -162,7 +162,13 @@
                     </td>
                 </tr>
             </table>
-            <input type="button" onclick="location.href='account_list.html'"value="新規登録">
+            <!--  <input type="button" onclick="location.href='account_list.html'"value="新規登録">-->
+            <form name="registerMeeting" th:action="@{/mtg_register}" method="get">
+                <!-- ボタンエリア -->
+                <div style="text-align: center;"> 
+                    <input type="submit" value="新規登録" style="margin-top:20px;">
+                </div>
+            </form>
         </div>
 
         <!-- フッター読み込み -->
