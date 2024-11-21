@@ -52,6 +52,9 @@ public class AccountController {
     // アカウント情報一覧 検索URL
     private final String ACCOUNT_SEARCH = "/account_search";
 
+    // アカウント情報登録 URL
+    private final String ACCOUNT_REGISTER = "/account_register";
+    
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
 
@@ -67,6 +70,7 @@ public class AccountController {
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
         // セッション存在チェック
         session = request.getSession(false);
+        System.out.println(session.getId());
         if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
@@ -142,4 +146,47 @@ public class AccountController {
         // return "redirect:/account_list";
         return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
    }
+    
+    
+    /*
+     * アカウント情報一覧 登録処理
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     * @return アカウント情報登録画面
+     */
+   @RequestMapping(value = ACCOUNT_REGISTER, method = RequestMethod.GET)
+   private String initRegisterAccount(Model model) {
+
+       // 開始ログ
+       logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+       // セッション存在チェック
+       session = request.getSession(false);
+       if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+           // 終了ログ
+           logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+           // ログイン画面へリダイレクト
+           return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+       }
+       
+       // セッションから表示情報を取得
+       model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+
+       // 初期処理
+       try {
+           accountService.init(model);
+       } catch (SQLException e) {
+           CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+           return UrlEnum.SYSTEM_ERROR.getPass();
+       } catch (Exception e) {
+           CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+           return UrlEnum.SYSTEM_ERROR.getPass();
+       }
+
+       // 終了ログ
+       logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
+       return UrlEnum.ACCOUNT_REGISTER.getPass();
+  }
 }
