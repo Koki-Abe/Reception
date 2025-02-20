@@ -174,7 +174,8 @@ public class MeetingController {
     */
   @RequestMapping(value = MTG_UPDATE_URL, method = RequestMethod.POST)
   private String isUpdateMtg(MeetingUpdateForm form, Model model) {
-
+	  
+	  System.out.println("aaa");
       // 開始ログ
       logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
