@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
+import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
 
 /*
@@ -53,5 +55,24 @@ public interface AccountService {
      * @param model モデル
      */
     void saveWord(AccountSearchForm form, Model model);
+    
+    
+    /*
+     * アカウント情報登録 入力チェック
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    void saveWord(AccountRegisterForm form, Model model);
 
+    /*
+     * アカウント情報登録 入力チェック
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    boolean inputCheck(AccountRegisterForm form, BindingResult result, 
+    		Model model, List<String> errorList);
+    
 }

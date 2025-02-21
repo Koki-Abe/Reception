@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
@@ -16,6 +18,7 @@ import jp.reception.soarest.domain.dto.AuthSearchResultDto;
 import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.repository.AccountRepository;
 import jp.reception.soarest.repository.CommonRepository;
@@ -178,5 +181,52 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(LOGIN_DATE_START, form.getLoginDateStart());
         model.addAttribute(LOGIN_DATE_END, form.getLoginDateEnd());
     }
+    
+    /*
+     * アカウント情報登録 入力チェック
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    @Override
+    public boolean inputCheck(AccountRegisterForm form, BindingResult result, 
+    		Model model, List<String> errorList) {
+    	
+    	// 初期状態のt機入力チェックはスルー
+    	if(form.getUserId() == null && form.getUserName() == null && form.getDepartment() == 0 &&
+    			form.getRole() == 0 && form.getPassword() == null){
+    		return false;
+    	}
+    	
+    	// 入力チェックに該当する場合
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+            	result.getFieldError();
+                errorList.add(error.getDefaultMessage());
+            }
+            // ※リダイレクトにしないとURLが変わってしまうため
+            model.addAttribute(ERR_MSG, errorList);
 
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /*
+     * アカウント情報登録 入力値保持
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void saveWord(AccountRegisterForm form, Model model) {
+    	// 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(USER_NAME, form.getUserName());
+        model.addAttribute(DEPARTMENT, form.getDepartment());
+        model.addAttribute(ROLE, form.getRole());
+        // パスワードはSaveしない(念のため)
+    }
 }

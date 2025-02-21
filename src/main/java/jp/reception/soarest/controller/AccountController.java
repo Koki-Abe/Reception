@@ -1,6 +1,8 @@
 package jp.reception.soarest.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +23,7 @@ import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.enums.UrlEnum;
+import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.service.AccountService;
 
@@ -51,10 +55,10 @@ public class AccountController {
 
     // アカウント情報一覧 検索URL
     private final String ACCOUNT_SEARCH = "/account_search";
-
-    // アカウント情報登録 URL
-    private final String ACCOUNT_REGISTER = "/account_register";
     
+    // アカウント情報登録URL
+    private final String ACCOUNT_REGISTER = "/account_register";
+
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
 
@@ -70,7 +74,6 @@ public class AccountController {
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
         // セッション存在チェック
         session = request.getSession(false);
-        System.out.println(session.getId());
         if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
             return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
         }
@@ -147,18 +150,17 @@ public class AccountController {
         return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
    }
     
-    
     /*
-     * アカウント情報一覧 登録処理
+     * アカウント情報登録 初期表示
      * 
-     * @param form アカウント情報一覧 フォームクラス 
+     * @param form アカウント情報一覧 フォームクラス
+     * @param result フォームのバリデーションチェック
      * @param model モデル
      * @return アカウント情報登録画面
      */
    @RequestMapping(value = ACCOUNT_REGISTER, method = RequestMethod.GET)
-   private String initRegisterAccount(Model model) {
-
-       // 開始ログ
+   private String registerAccount(@Validated AccountRegisterForm form,BindingResult result, Model model) {
+	   // 開始ログ
        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
        // セッション存在チェック
@@ -169,10 +171,24 @@ public class AccountController {
            // ログイン画面へリダイレクト
            return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
        }
-       
+
        // セッションから表示情報を取得
        model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
-
+       
+       // 検索値を入力欄に保持
+       accountService.saveWord(form, model);
+       
+    // エラー格納用リスト
+       List<String> errorList = new ArrayList<String>();
+       
+       // 入力チェック
+       if(accountService.inputCheck(form, result, model, errorList)) {
+           // 終了ログ
+           logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+           // アカウント情報登録確認画面へ遷移("redirect:/")
+           return CharEnum.FORWARD.getChar() + UrlEnum.TOP.getUrl();
+       }
+       
        // 初期処理
        try {
            accountService.init(model);
@@ -183,10 +199,11 @@ public class AccountController {
            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
            return UrlEnum.SYSTEM_ERROR.getPass();
        }
-
+       
        // 終了ログ
        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
+       // アカウント情報一覧画面へ遷移
        return UrlEnum.ACCOUNT_REGISTER.getPass();
-  }
+   }
 }
