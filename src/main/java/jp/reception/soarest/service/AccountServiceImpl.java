@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import jp.reception.soarest.common.utils.CommonUtils;
+import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.domain.dto.AuthSearchResultDto;
@@ -67,6 +68,9 @@ public class AccountServiceImpl implements AccountService {
 
     // ログイン日(終了)
     private final String LOGIN_DATE_END = "loginDateEnd";
+    
+ // ログイン日(終了)
+    private final String PASSWORD = "password";
 
     /*
      * アカウント情報一覧 初期処理
@@ -140,6 +144,50 @@ public class AccountServiceImpl implements AccountService {
         return accList;
     }
 
+    /*
+     * アカウント情報登録 登録
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param searchDto アカウント情報一覧 検索用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    /**
+     * 編集中
+     */
+    @Override
+    public void registerAccount(AccountRegisterForm form, 
+    		AccountRegisterDto registerDto, Model model, String staffID) throws SQLException {
+        
+        try {
+        	// beanの内容を詰め替え
+            BeanUtils.copyProperties(form, registerDto);
+            // プロパティ名が異なるものは別途設定
+            registerDto.setDepId(form.getDepartment());
+            registerDto.setAuthId(form.getRole());
+            registerDto.setCreateduserId(staffID);
+            String pass = CommonUtils.makeHash(form.getPassword());
+            registerDto.setPassword(pass);
+            registerDto.setCreateddate(CommonUtils.getSysdate());
+            registerDto.setCreateduserId(staffID);
+            
+            // 登録処理を実行
+            int registernum = accountRepository.registerAccount(registerDto);
+
+            // 登録件数が0件の場合
+            if (0 == registernum) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
+            }
+            
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            }
+        }
+    }
+    
     
     /*
      * アカウント情報一覧 入力チェック
@@ -165,23 +213,6 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
-    /*
-     * アカウント情報一覧 入力値保持
-     * 
-     * @param form アカウント情報一覧 フォームクラス 
-     * @param model モデル
-     */
-    @Override
-    public void saveWord(AccountSearchForm form, Model model) {
-        // 検索値を入力欄に保持
-        model.addAttribute(USER_ID, form.getUserId());
-        model.addAttribute(USER_NAME, form.getUserName());
-        model.addAttribute(DEPARTMENT, form.getDepartment());
-        model.addAttribute(ROLE, form.getRole());
-        model.addAttribute(LOGIN_DATE_START, form.getLoginDateStart());
-        model.addAttribute(LOGIN_DATE_END, form.getLoginDateEnd());
-    }
-    
     /*
      * アカウント情報登録 入力チェック
      * 
@@ -215,6 +246,23 @@ public class AccountServiceImpl implements AccountService {
     }
     
     /*
+     * アカウント情報一覧 入力値保持
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void saveWord(AccountSearchForm form, Model model) {
+        // 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(USER_NAME, form.getUserName());
+        model.addAttribute(DEPARTMENT, form.getDepartment());
+        model.addAttribute(ROLE, form.getRole());
+        model.addAttribute(LOGIN_DATE_START, form.getLoginDateStart());
+        model.addAttribute(LOGIN_DATE_END, form.getLoginDateEnd());
+    }
+    
+    /*
      * アカウント情報登録 入力値保持
      * 
      * @param form アカウント情報一覧 フォームクラス 
@@ -227,6 +275,6 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(USER_NAME, form.getUserName());
         model.addAttribute(DEPARTMENT, form.getDepartment());
         model.addAttribute(ROLE, form.getRole());
-        // パスワードはSaveしない(念のため)
+        model.addAttribute(PASSWORD, form.getPassword());
     }
 }

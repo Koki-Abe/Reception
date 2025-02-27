@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 
@@ -22,5 +23,13 @@ public interface AccountRepository {
 	 * @return アカウント情報一覧
 	 */
 	List<AccountSearchResultDto> searchAccountList(AccountSearchDto searchDto);
+	
+	/*
+	 * アカウント情報登録 登録
+	 * 
+	 * @param AccountRegisterDto アカウント情報登録用DTO
+	 * @return アカウント登録件数
+	 */
+	int registerAccount(AccountRegisterDto registerDto);
 
 }

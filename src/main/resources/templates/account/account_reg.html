@@ -6,17 +6,17 @@
     <!-- ヘッダー読み込み -->
     <!-- div th:include="::commonHeader"></div>  -->
     
-    <title>アカウント新規登録</title>
+    <title>アカウント情報登録</title>
     <body>
         <!-- アカウント情報一覧 -->
-        <h1 id="acount">アカウント新規登録</h1>
+        <h1 id="acount">アカウント情報登録</h1>
 
         <!-- エラー文言表示部分 -->
         <th:block th:if="${errMsg}">
             <p style="color: red;" align="center" th:text="${errMsg}" id="errmsg">
         </th:block>
         
-        <form th:action="@{/account_register}" method="get">
+        <form th:action="@{/account_register_conf}" method="post" th:object="${AccountRegisterForm}">
            <div class="contact-form" id="clearForm">
             <!-- 検索フォーム -->
                 <table>
@@ -61,6 +61,7 @@
                    　※アルファベットと数字の両方を入れる
                 </p>
             </div>
+        
             <!-- ボタンエリア -->
             <div style="text-align: center;"> 
             	<input type="button" value="戻る"  onclick="location.href=' account_list'" >

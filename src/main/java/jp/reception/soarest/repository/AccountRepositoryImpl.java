@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 
@@ -29,5 +30,14 @@ public class AccountRepositoryImpl implements AccountRepository{
 		return accountRepository.searchAccountList(searchDto);
 	}
 
-
+	
+	/*
+	 * アカウント情報登録 登録
+	 * 
+	 * @param AccountRegisterDto アカウント情報登録用DTO
+	 * @return アカウント登録件数
+	 */
+	public int registerAccount(AccountRegisterDto registerDto) {
+		return accountRepository.registerAccount(registerDto);
+	}
 }

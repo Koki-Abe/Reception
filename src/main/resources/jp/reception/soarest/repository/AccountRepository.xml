@@ -38,4 +38,30 @@
         ORDER BY CAST(MS.STAFF_ID AS SIGNED) ASC
     </select>
 
+	<!-- アカウント情報登録 -->
+    <insert id="registerAccount"  parameterType="jp.reception.soarest.domain.dto.AccountRegisterDto">
+        INSERT INTO m_staff(
+			STAFF_ID ,
+			PASSWORD ,
+			STAFF_NAME ,
+			DEP_ID ,
+			AUTH_ID ,
+			LAST_LOGIN_DATE ,
+			CREATED_DATE ,
+			CREATED_USER ,
+			UPDATED_DATE ,
+			UPDATED_USER 
+		)VALUES (
+			#{userId},
+			#{password},
+			#{userName},
+			#{depId} ,
+			#{authId} ,
+			null ,
+			#{createddate} ,
+			#{createduserId} ,
+			null ,
+			null 
+		);
+    </insert>
 </mapper>

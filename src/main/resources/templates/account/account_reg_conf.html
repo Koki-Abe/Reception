@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <!-- ヘッダー読み込み -->
+    <div th:include="common/header"></div>
+    <!-- ヘッダー読み込み -->
+    <!-- div th:include="::commonHeader"></div>  -->
+    
+    <title>アカウント情報登録確認</title>
+    <body>
+        <!-- アカウント情報一覧 -->
+        <h1 id="acount">アカウント情報登録確認</h1>
+		<h2 align="center">以下の内容で登録しますか?</h2>
+		
+        <form th:action="@{/account_register_conf}" method="post" th:object="${AccountRegisterForm}">
+           <div class="contact-form">
+            <!-- 検索フォーム -->
+                <table>
+                    <tr><th>ユーザーID</th>
+                    	<td style="width:200px;"><input style= "background-color: #e9e9e9;" type="text" name="userId" th:value="${userId}" readonly></td></tr>
+                    <tr><th>ユーザー名</th>
+                    	<td><input style= "background-color: #e9e9e9;"type="text" name="userName" th:value="${userName}" readonly></td></tr>
+                    <tr><th>部署</th>
+						<td><select style= "background-color: #e9e9e9;" name="department" th:value="${department}">
+							<th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+	                            <option
+	                                th:value="${dep.depId}"
+	                                th:text="${dep.depName}"
+	                                th:selected="${dep.depId == department}">
+	                           </option>
+                        	</th:block>
+                       	</select></td>
+					</tr>
+                    <tr><th>ロール</th>
+                    	<td><select style= "background-color: #e9e9e9;" id="role" name="role">
+                    		<th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
+	                        	<option
+	                               	th:value="${auth.authId}"
+	                               	th:text="${auth.authName}"
+	                               	th:selected="${auth.authId == role}">
+	                       		</option>
+                       		</th:block>
+                   		</select></td>
+                    </tr>
+                    <tr><th>パスワード</th><td>
+                    	<input style= "background-color: #e9e9e9;" type="password"id="password" name="password"autocomplete="new-password" th:value="${password}" readonly >
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- ボタンエリア -->
+            <div style="text-align: center;"> 
+	            <input type="submit" value="戻る" name = "backreg">
+                <input type="submit" value="確定" name = "reg"style="margin-top:20px;">
+            </div>
+        </form>
+        <div style="text-align: center;">
+            <th:block th:if="${searchCount}">
+                <b>検索結果</b>
+                <font th:text="${searchCount}"></font> 件
+            </th:block>
+            
+        </div>
+        <!-- フッター読み込み -->
+        <div th:include="common/footer"></div>
+    </body>
+</html>

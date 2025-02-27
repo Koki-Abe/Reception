@@ -63,7 +63,10 @@
             </th:block>
 
             <th:block th:if="${loginUser.authId == 100}">
-	            <input type="submit" onclick="location.href=' /account_register'"value="新規登録">
+            	<form name="registerAccount" th:action="@{/account_register}" method="post">
+	            	<input type="submit" value="新規登録" >
+	            </form>
+	            
 	        </th:block>
             <!-- 検索結果表示欄 -->
             <table>
@@ -94,7 +97,9 @@
             </table>
             <!-- ログインユーザの権限が100(管理者)の場合、新規登録ボタンを表示 -->
             <th:block th:if="${loginUser.authId == 100}">
-                <input type="submit" onclick="location.href=' /account_register'"value="新規登録">
+                <form name="registerAccount" th:action="@{/account_register}" method="post">
+	            	<input type="submit" value="新規登録" >
+	            </form>
             </th:block>
         </div>
         <!-- フッター読み込み -->

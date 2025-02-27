@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.form.AccountRegisterForm;
@@ -40,6 +41,17 @@ public interface AccountService {
         AccountSearchDto searchDto, Model model) throws SQLException;
     
     /*
+     * アカウント情報登録 検索
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param searchDto アカウント情報一覧 検索用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    void registerAccount(AccountRegisterForm form, 
+    		AccountRegisterDto registerDto, Model model, String staffID) throws SQLException;
+    
+    /*
      * アカウント情報一覧 入力チェック
      * 
      * @param form アカウント情報一覧 フォームクラス 
@@ -47,6 +59,16 @@ public interface AccountService {
      * @return 入力チェック結果
      */
     boolean inputCheck(AccountSearchForm form, Model model);
+    
+    /*
+     * アカウント情報登録 入力チェック
+     * 
+     * @param form アカウント情報一覧 フォームクラス 
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    boolean inputCheck(AccountRegisterForm form, BindingResult result, 
+    		Model model, List<String> errorList);
     
     /*
      * アカウント情報一覧 入力値保持
@@ -58,21 +80,13 @@ public interface AccountService {
     
     
     /*
-     * アカウント情報登録 入力チェック
+     * アカウント情報登録 入力値保持
      * 
      * @param form アカウント情報一覧 フォームクラス 
      * @param model モデル
      */
     void saveWord(AccountRegisterForm form, Model model);
-
-    /*
-     * アカウント情報登録 入力チェック
-     * 
-     * @param form アカウント情報一覧 フォームクラス 
-     * @param model モデル
-     * @return 入力チェック結果
-     */
-    boolean inputCheck(AccountRegisterForm form, BindingResult result, 
-    		Model model, List<String> errorList);
+    
+    
     
 }
