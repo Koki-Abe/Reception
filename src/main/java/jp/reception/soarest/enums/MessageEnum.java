@@ -42,6 +42,7 @@ public enum MessageEnum {
     MSG_C02_W_011,
     MSG_C02_W_012,
     MSG_C03_I_001,
+    MSG_C03_E_001,
     MSG_C04_I_001,
     MSG_C05_W_001,
     MSG_C05_W_002,
