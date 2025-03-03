@@ -29,9 +29,9 @@ public enum UrlEnum {
     // アカウント情報変更
     ACCOUNT_UPDATE("/account_update", "account/account_upd", "RECEP_C_05"),
     // アカウント情報変更確認
-    ACCOUNT_UPDATE_CONFIRM("/account_update_conf", "account/account_reg_conf", "RECEP_C_06"),
+    ACCOUNT_UPDATE_CONFIRM("/account_update_conf", "account/account_upd_conf", "RECEP_C_06"),
     // アカウント情報変更完了
-    ACCOUNT_UPDATE_COMPLETE("/account_update_comp", "account/account_reg_comp", "RECEP_C_07"),
+    ACCOUNT_UPDATE_COMPLETE("/account_update_comp", "account/account_upd_comp", "RECEP_C_07"),
     // アカウント情報削除確認
     ACCOUNT_DELETE_CONFIRM("/account_delete_conf", "account/account_del_conf", "RECEP_C_08"),
     // アカウント情報削除完了
@@ -45,11 +45,11 @@ public enum UrlEnum {
     // 打ち合わせ情報登録完了
     MEETING_REGISTER_COMPLETE("/mtg_register_comp", "meeting/mtg_reg_comp", "RECEP_D_04"),
     // 打ち合わせ情報変更
-    MEETING_UPDATE("/mtg_upd", "meeting/mtg_upd", "RECEP_D_05"),
+    MEETING_UPDATE("/mtg_update", "meeting/mtg_upd", "RECEP_D_05"),
     // 打ち合わせ情報変更確認
     MEETING_UPDATE_CONFIRM("/mtg_update_conf", "meeting/mtg_upd_conf", "RECEP_D_06"),
     // 打ち合わせ情報変更完了
-    MEETING_UPDATE_COMPLETE("/mtg_update_comp", "meeting/mtg_reg_comp", "RECEP_D_07"),
+    MEETING_UPDATE_COMPLETE("/mtg_update_comp", "meeting/mtg_upd_comp", "RECEP_D_07"),
     // 打ち合わせ情報削除確認
     MEETING_DELETE_CONFIRM("/mtg_delete_conf", "meeting/mtg_del_conf", "RECEP_D_08"),
     // 打ち合わせ情報削除完了

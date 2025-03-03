@@ -6,19 +6,19 @@
     <!-- ヘッダー読み込み -->
     <!-- div th:include="::commonHeader"></div>  -->
     
-    <title>アカウント情報登録</title>
+    <title>アカウント情報変更</title>
     <body>
-        <!-- アカウント情報一覧 -->
-        <h1 id="acount">アカウント情報登録</h1>
+        <h1 id="acount">アカウント情報変更</h1>
 
         <!-- エラー文言表示部分 -->
         <th:block th:if="${errMsg}">
             <p style="color: red;" align="center" th:text="${errMsg}" id="errmsg">
         </th:block>
         
-        <form th:action="@{/account_register_conf}" method="post">
+        <form th:action="@{/account_update_conf}" method="post">
            <div class="contact-form" id="clearForm">
-            <!-- 入力フォーム -->
+           <input type="hidden" name="oldUserId" th:value="${oldUserId}">
+            <!-- 変更フォーム -->
                 <table>
                     <tr><th>ユーザーID</th><td><input type="text" id="userId" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
                     <tr><th>ユーザー名</th><td><input type="text" name="userName" th:value="${userName}"></td></tr>
@@ -43,30 +43,14 @@
                            </option>
                         </select>
                     </td></tr>
-                    <tr><th>パスワード</th><td>
-                    	<input type="password"id="password" name="password"autocomplete="new-password" th:value="${password}" 
-                    		pattern="^(?=.*[A-Z])[a-zA-Z0-9!-/:-@¥[-`{-~]{8,20}$" 
-                    		title="半角英数字で入力して下さい。" placeholder="必須" >
-	                    <span class="eye" onclick="myFunction()">
-	                        <i id="hide1" class="fa fa-eye"></i>
-	                        <i id="hide2" class="fa fa-eye-slash"></i>
-	                    </span>
-                    </td></tr>
                 </table>
-                <p style="margin-left:600px;">
-                   　※8桁以上20桁以下<br>
-                   　※特殊記号を含める<br>
-                   　※最低1文字は大文字を入れる<br>
-                   　※最低1文字は小文字を入れる<br>
-                   　※アルファベットと数字の両方を入れる
-                </p>
             </div>
         
             <!-- ボタンエリア -->
             <div style="text-align: center;"> 
             	<input type="button" value="戻る"  onclick="location.href=' account_list'" >
                 <input type="button" value="クリア" style="margin-top:20px;" onclick="clearText()" />
-                <input type="submit" value="登録" style="margin-top:20px;">
+                <input type="submit" value="変更" style="margin-top:20px;">
             </div>
         </form>
         <!-- フッター読み込み -->

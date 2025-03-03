@@ -88,9 +88,10 @@
 	                    <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
 	                    <td id="edit" bgcolor="#F0FFFF">
 	                    
-	                    	<form th:action="@{/account_update}" method="get">
+	                    	<form th:action="@{/account_update}" method="post">
 		                    	<th:block th:if="${loginUser.authId == 100}">
 		                    		<!-- 情報保持 -->
+		                    		<input type="hidden" name="oldUserId" th:value="${account.staffId}">
 		                    		<input type="hidden" name="userId" th:value="${account.staffId}">
 		                    		<input type="hidden" name="userName" th:value="${account.staffName}">
 		                    		<th:block th:each="dep : ${depList}" th:if="${dep.depName == account.depName}">

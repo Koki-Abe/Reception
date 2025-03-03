@@ -3,13 +3,16 @@ package jp.reception.soarest.domain.dto;
 import lombok.Data;
 
 /*
- * アカウント情報登録 登録用DTO
+ * アカウント情報変更 変更用DTO
  * 
  * author k.hagiwara
  * version 1.0
  */
 @Data
-public class AccountRegisterDto {
+public class AccountUpdateDto {
+	// 変更前ユーザーID
+	private String oldUserId;
+		
     // ユーザーID
     private String userId;
 
@@ -21,21 +24,6 @@ public class AccountRegisterDto {
 
     // 権限ID
     private int authId;
-
-    // パスワード
-    private String password;
-    
-    // 最終ログイン日(開始)
-    private String loginDateStart;
-
-    // 最終ログイン日(終了)
-    private String loginDateEnd;
-    
-    // 作成日
-    private String createdDate;
-    
-    // 作成者
-    private String createdUserId;
     
     // 変更日
     private String updatedDate;

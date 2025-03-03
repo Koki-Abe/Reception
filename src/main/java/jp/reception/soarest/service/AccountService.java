@@ -10,8 +10,11 @@ import org.springframework.validation.BindingResult;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
+import jp.reception.soarest.domain.dto.AccountUpdateDto;
+import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
+import jp.reception.soarest.form.AccountUpdateForm;
 
 /*
  * アカウント情報一覧 サービスインターフェース
@@ -41,10 +44,21 @@ public interface AccountService {
         AccountSearchDto searchDto, Model model) throws SQLException;
     
     /*
-     * アカウント情報登録 検索
+     * アカウント情報変更 変更
      * 
-     * @param form アカウント情報一覧 フォームクラス 
-     * @param searchDto アカウント情報一覧 検索用DTO
+     * @param form アカウント情報変更 フォームクラス 
+     * @param AccountUpdateDto アカウント情報変更 変更用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    void updateAccount(AccountUpdateForm form, 
+    		AccountUpdateDto updDto, Model model, String staffID) throws SQLException;
+    
+    /*
+     * アカウント情報登録 登録
+     * 
+     * @param form アカウント情報登録 フォームクラス 
+     * @param AccountRegisterDto アカウント情報登録 登録用DTO
      * @param model モデル
      * @return 検索結果
      */
@@ -61,9 +75,21 @@ public interface AccountService {
     boolean inputCheck(AccountSearchForm form, Model model);
     
     /*
+     * アカウント情報変更 入力チェック
+     * 
+     * @param form アカウント情報変更 フォームクラス 
+     * @param result フォームのバリデーションチェック
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    boolean inputCheck(AccountUpdateForm form, BindingResult result, 
+    		Model model, List<String> errorList);
+    
+    /*
      * アカウント情報登録 入力チェック
      * 
-     * @param form アカウント情報一覧 フォームクラス 
+     * @param form アカウント情報登録 フォームクラス 
+     * @param result フォームのバリデーションチェック
      * @param model モデル
      * @return 入力チェック結果
      */
@@ -78,15 +104,29 @@ public interface AccountService {
      */
     void saveWord(AccountSearchForm form, Model model);
     
+    /*
+     * アカウント情報変更 入力値保持
+     * 
+     * @param form アカウント情報変更 フォームクラス 
+     * @param model モデル
+     */
+    void saveWord(AccountUpdateForm form, Model model);
     
     /*
      * アカウント情報登録 入力値保持
      * 
-     * @param form アカウント情報一覧 フォームクラス 
+     * @param form アカウント情報登録 フォームクラス 
      * @param model モデル
      */
     void saveWord(AccountRegisterForm form, Model model);
     
-    
+    /*
+     * アカウント情報変更 セッション情報更新
+     * 
+     * @param form アカウント情報変更 フォームクラス
+     * @param loginUser アカウント情報変更 更新用DTO 
+     * @return 更新データ
+     */
+    LoginUserSearchResultDto setNewSessionData(AccountUpdateForm form, LoginUserSearchResultDto loginUser);
     
 }

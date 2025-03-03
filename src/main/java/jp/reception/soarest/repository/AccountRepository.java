@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
+import jp.reception.soarest.domain.dto.AccountUpdateDto;
 
 /*
  * アカウント関連 リポジトリインターフェース
@@ -23,6 +24,14 @@ public interface AccountRepository {
 	 * @return アカウント情報一覧
 	 */
 	List<AccountSearchResultDto> searchAccountList(AccountSearchDto searchDto);
+	
+	/*
+	 * アカウント情報変更 変更
+	 * 
+	 * @param AccountUpdateDto アカウント情報変更用DTO
+	 * @return アカウント変更件数
+	 */
+	int updateAccount(AccountUpdateDto updDto);
 	
 	/*
 	 * アカウント情報登録 登録

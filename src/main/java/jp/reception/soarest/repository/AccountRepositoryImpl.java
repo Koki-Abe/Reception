@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
+import jp.reception.soarest.domain.dto.AccountUpdateDto;
 
 /*
  * アカウント関連 リポジトリ実装クラス
@@ -30,6 +31,15 @@ public class AccountRepositoryImpl implements AccountRepository{
 		return accountRepository.searchAccountList(searchDto);
 	}
 
+	/*
+	 * アカウント情報変更 変更
+	 * 
+	 * @param AccountUpdateDto アカウント情報変更用DTO
+	 * @return アカウント変更件数
+	 */
+	public int updateAccount(AccountUpdateDto updDto) {
+		return accountRepository.updateAccount(updDto);
+	}
 	
 	/*
 	 * アカウント情報登録 登録

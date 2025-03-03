@@ -38,6 +38,22 @@
         ORDER BY CAST(MS.STAFF_ID AS SIGNED) ASC
     </select>
 
+	<!-- アカウント情報変更 -->
+    <update id="updateAccount"  parameterType="jp.reception.soarest.domain.dto.AccountUpdateDto" >
+        UPDATE
+        	M_STAFF
+        SET
+			STAFF_ID = #{userId} ,
+			STAFF_NAME = #{userName} ,
+			DEP_ID = #{depId} ,
+			AUTH_ID = #{authId} ,
+			UPDATED_DATE = #{updatedDate} ,
+			UPDATED_USER = #{updatedUserId}  
+       	WHERE
+       		STAFF_ID = #{oldUserId};
+        
+    </update>
+    
 	<!-- アカウント情報登録 -->
     <insert id="registerAccount"  parameterType="jp.reception.soarest.domain.dto.AccountRegisterDto">
         INSERT INTO m_staff(
@@ -58,8 +74,8 @@
 			#{depId} ,
 			#{authId} ,
 			null ,
-			#{createddate} ,
-			#{createduserId} ,
+			#{createdDate} ,
+			#{createdUserId} ,
 			null ,
 			null 
 		);
