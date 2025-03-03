@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import lombok.Data;
 
 /* 
- * アカウント情報一覧 フォーム
+ * アカウント情報登録 フォーム
  * 
  * @author k_hagiwara
  * @version 1.0

@@ -8,14 +8,13 @@
     
     <title>アカウント情報登録確認</title>
     <body>
-        <!-- アカウント情報一覧 -->
         <h1 id="acount">アカウント情報登録完了</h1>
 		<h2 align="center">アカウントの登録が完了しました</h2>
 		
-        <form th:action="@{/account_register_comp}" method="get">
+        <form th:action="@{/account_register}" method="post">
             <!-- ボタンエリア -->
             <div style="text-align: center;"> 
-	            <input type="button" value="アカウント情報登録画面へ戻る"  onclick="location.href=' account_register'" >
+	            <input type="submit" value="アカウント情報登録画面へ戻る">
             </div>
         </form>
         <!-- フッター読み込み -->

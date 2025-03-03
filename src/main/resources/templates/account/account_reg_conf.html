@@ -8,52 +8,65 @@
     
     <title>アカウント情報登録確認</title>
     <body>
-        <!-- アカウント情報一覧 -->
+        <!-- アカウント情報登録確認 -->
         <h1 id="acount">アカウント情報登録確認</h1>
 		<h2 align="center">以下の内容で登録しますか?</h2>
 		
-        <form th:action="@{/account_register_conf}" method="post" th:object="${AccountRegisterForm}">
+        <form th:action="@{/account_register_comp}" method="post">
            <div class="contact-form">
-            <!-- 検索フォーム -->
+            <!-- 入力内容表示 -->
                 <table>
                     <tr><th>ユーザーID</th>
-                    	<td style="width:200px;"><input style= "background-color: #e9e9e9;" type="text" name="userId" th:value="${userId}" readonly></td></tr>
+                    	<td><p th:text="${userId}"></td></tr>
                     <tr><th>ユーザー名</th>
-                    	<td><input style= "background-color: #e9e9e9;"type="text" name="userName" th:value="${userName}" readonly></td></tr>
+                    	<td><p th:text="${userName}"></td></tr>
                     <tr><th>部署</th>
-						<td><select style= "background-color: #e9e9e9;" name="department" th:value="${department}">
-							<th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
-	                            <option
-	                                th:value="${dep.depId}"
-	                                th:text="${dep.depName}"
-	                                th:selected="${dep.depId == department}">
-	                           </option>
-                        	</th:block>
-                       	</select></td>
-					</tr>
+                    	<td><th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+            				<p th:text="${dep.depName}">
+            			</th:block></td></tr>
                     <tr><th>ロール</th>
-                    	<td><select style= "background-color: #e9e9e9;" id="role" name="role">
-                    		<th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
-	                        	<option
-	                               	th:value="${auth.authId}"
-	                               	th:text="${auth.authName}"
-	                               	th:selected="${auth.authId == role}">
-	                       		</option>
-                       		</th:block>
-                   		</select></td>
-                    </tr>
+                    	<td><th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
+            				<p th:text="${auth.authName}">
+            			</th:block></td></tr>
                     <tr><th>パスワード</th><td>
-                    	<input style= "background-color: #e9e9e9;" type="password"id="password" name="password"autocomplete="new-password" th:value="${password}" readonly >
+                    	<input type="password"id="password" name="password"autocomplete="new-password" th:value="${password}" disabled >
                     </tr>
                 </table>
             </div>
             
+            
+      	</form>
             <!-- ボタンエリア -->
-            <div style="text-align: center;"> 
-	            <input type="submit" value="戻る" name = "backreg">
-                <input type="submit" value="確定" name = "reg"style="margin-top:20px;">
+            <div style="text-align: center;">
+	            <form th:action="@{/account_register}" method="post">
+	            	<!-- 情報保持 -->
+		            <input type="hidden" name="userId" th:value="${userId}">
+		            <input type="hidden" name="userName" th:value="${userName}">
+		            <th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+		            	<input type="hidden" name="department" th:value="${dep.depId}">
+		            </th:block>
+		            <th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
+		      			<input type="hidden" name="role" th:value="${auth.authId}">
+		      		</th:block>
+		      		<input type="hidden"id="password" name="password"autocomplete="new-password" th:value="${password}" >
+	            	<input type="submit" value="戻る">
+	            </form>
+	            
+	            <form th:action="@{/account_register_comp}" method="post">
+	            	<!-- 情報保持 -->
+		            <input type="hidden" name="userId" th:value="${userId}">
+		            <input type="hidden" name="userName" th:value="${userName}">
+		            <th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+		            	<input type="hidden" name="department" th:value="${dep.depId}">
+		            </th:block>
+		            <th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
+		      			<input type="hidden" name="role" th:value="${auth.authId}">
+		      		</th:block>
+		      		<input type="hidden"id="password" name="password"autocomplete="new-password" th:value="${password}" >
+                	<input type="submit" value="確定" style="margin-top:20px;">
+               	</form>
             </div>
-        </form>
+        <!-- /form -->
         <div style="text-align: center;">
             <th:block th:if="${searchCount}">
                 <b>検索結果</b>

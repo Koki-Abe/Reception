@@ -54,54 +54,73 @@
                     <input type="button" value="クリア" style="margin-top:20px;" onclick="clearText()" />
                     <input type="submit" value="検索" style="margin-top:20px;">
                 </div>
-            </form>
+        	</form>
         </div>
-        <div style="text-align: center;">
-            <th:block th:if="${searchCount}">
-                <b>検索結果</b>
-                <font th:text="${searchCount}"></font> 件
-            </th:block>
-
-            <th:block th:if="${loginUser.authId == 100}">
-            	<form name="registerAccount" th:action="@{/account_register}" method="post">
-	            	<input type="submit" value="新規登録" >
-	            </form>
+        
+	        <div style="text-align: center;">
+	            <th:block th:if="${searchCount}">
+	                <b>検索結果</b>
+	                <font th:text="${searchCount}"></font> 件
+	            </th:block>
+	
+				<form name="registerAccount" th:action="@{/account_register}" method="post">
+		            <th:block th:if="${loginUser.authId == 100}">
+		            	<input type="submit" value="新規登録" >
+			        </th:block>
+		        </form>
+		        
+	            <!-- 検索結果表示欄 -->
+	            <table>
+	                <tr th:if="${accList}">
+	                    <th bgcolor="#F0F8FF">ユーザーID</th>
+	                    <th bgcolor="#F0F8FF">ユーザー名</th>
+	                    <th bgcolor="#F0F8FF">部署</th>
+	                    <th bgcolor="#F0F8FF">ロール</th>
+	                    <th bgcolor="#F0F8FF">編集</th>
+	                </tr>
+	            </table>
 	            
-	        </th:block>
-            <!-- 検索結果表示欄 -->
-            <table>
-                <tr th:if="${accList}">
-                    <th bgcolor="#F0F8FF">ユーザーID</th>
-                    <th bgcolor="#F0F8FF">ユーザー名</th>
-                    <th bgcolor="#F0F8FF">部署</th>
-                    <th bgcolor="#F0F8FF">ロール</th>
-                    <th bgcolor="#F0F8FF">編集</th>
-                </tr>
-            </table>
-            <table id="search-result">
-                <tr th:if="${accList}" th:each="account : ${accList}">
-                    <td id="userId" bgcolor="#F0FFFF" th:text="${account.staffId}"></td>
-                    <td id="userName" bgcolor="#F0FFFF"  th:text="${account.staffName}"></td>
-                    <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
-                    <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
-                    <td id="edit" bgcolor="#F0FFFF">
-                        <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
-                        <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>-->
-                        <!-- ログインユーザーの権限が100(管理者)、またはログインユーザーのアカウント以外の場合、削除リンクを表示 -->
-                        <th:block th:if="${loginUser.authId == 100 && loginUser.staffId != account.staffId}">
-                            <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form> -->
-                            <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
-                        </th:block>
-                    </td>
-                </tr>
-            </table>
-            <!-- ログインユーザの権限が100(管理者)の場合、新規登録ボタンを表示 -->
-            <th:block th:if="${loginUser.authId == 100}">
-                <form name="registerAccount" th:action="@{/account_register}" method="post">
-	            	<input type="submit" value="新規登録" >
-	            </form>
-            </th:block>
-        </div>
+	            <table id="search-result">
+	                <tr th:if="${accList}" th:each="account : ${accList}">
+	                    <td id="userId" bgcolor="#F0FFFF" th:text="${account.staffId}"></td>
+	                    <td id="userName" bgcolor="#F0FFFF"  th:text="${account.staffName}"></td>
+	                    <td id="depName" bgcolor="#F0FFFF"  th:text="${account.depName}"></td>
+	                    <td id="authName" bgcolor="#F0FFFF" th:text="${account.authName}"></td>
+	                    <td id="edit" bgcolor="#F0FFFF">
+	                    
+	                    	<form th:action="@{/account_update}" method="get">
+		                    	<th:block th:if="${loginUser.authId == 100}">
+		                    		<!-- 情報保持 -->
+		                    		<input type="hidden" name="userId" th:value="${account.staffId}">
+		                    		<input type="hidden" name="userName" th:value="${account.staffName}">
+		                    		<th:block th:each="dep : ${depList}" th:if="${dep.depName == account.depName}">
+		                    			<input type="hidden" name="department" th:value="${dep.depId}">
+		                    		</th:block>
+		                    		<th:block th:each="auth : ${authList}" th:if="${auth.authName == account.authName}">
+		                    			<input type="hidden" name="role" th:value="${auth.authId}">
+		                    		</th:block>
+		                        	<input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
+		                        </th:block>
+	                        </form>
+	                        
+	                        <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">変更</a></form>-->
+	                        <!-- ログインユーザーの権限が100(管理者)、またはログインユーザーのアカウント以外の場合、削除リンクを表示 -->
+	                        <th:block th:if="${loginUser.authId == 100 && loginUser.staffId != account.staffId}">
+	                            <!-- <form name="account" th:action="@{/account_list}" method="get"><a href="javascript:account.submit()">削除</a></form> -->
+	                            <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
+	                        </th:block>
+	                    </td>
+	                </tr>
+	            </table>
+	            
+	            <!-- ログインユーザの権限が100(管理者)の場合、新規登録ボタンを表示 -->
+	            <th:block th:if="${loginUser.authId == 100}">
+	                <form name="registerAccount" th:action="@{/account_register}" method="post">
+		            	<input type="submit" value="新規登録" >
+		            </form>
+	            </th:block>
+	        </div>
+        
         <!-- フッター読み込み -->
         <div th:include="common/footer"></div>
     </body>
