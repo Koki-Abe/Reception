@@ -10,7 +10,7 @@
     <body>
         <!-- アカウント情報登録確認 -->
         <h1 id="acount">アカウント情報登録確認</h1>
-		<h2 align="center">以下の内容で登録しますか?</h2>
+		<h2 align="center" th:text="${message}"></h2>
 		
         <form th:action="@{/account_register_comp}" method="post">
            <div class="contact-form">

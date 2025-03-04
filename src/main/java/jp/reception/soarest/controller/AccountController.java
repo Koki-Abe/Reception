@@ -80,6 +80,9 @@ public class AccountController {
     // ログインユーザー
     private final String LOGIN_USER = "loginUser";
     
+    // メッセージ
+    private final String MESSAGE = "message";
+    
     // 更新用 最終ログイン日時
     private final String UPD_LAST_LOGIN_DATE = "forUpdLoginDate";
 
@@ -256,6 +259,8 @@ public class AccountController {
     			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
     			return UrlEnum.SYSTEM_ERROR.getPass();
     		}
+    		// 画面上部メッセージ部分
+    		model.addAttribute(MESSAGE, MessageEnum.MSG_C06_I_001.getMsg(null));
 
     		// 検索値を入力欄に保持
     		accountService.saveWord(form, model);
@@ -308,16 +313,18 @@ public class AccountController {
     	
     	try {
     		// 検索処理
-    		LoginUserSearchResultDto befor = (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER);
     		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
     		accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
     	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C03_E_001.getMsg(null));
+    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C06_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();
     	} catch (Exception e) {
     		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();
     	}
+    	
+    	// 画面上部メッセージ部分
+		model.addAttribute(MESSAGE, MessageEnum.MSG_C07_I_001.getMsg(null));
     	
     	// ログインユーザーの情報を変更した場合はセッション情報を更新する
     	if(((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId().equals(form.getOldUserId())) {
@@ -431,7 +438,9 @@ public class AccountController {
     			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
     			return UrlEnum.SYSTEM_ERROR.getPass();
     		}
-
+    		// 画面上部メッセージ部分
+    		model.addAttribute(MESSAGE, MessageEnum.MSG_C03_I_001.getMsg(null));
+    		
     		// 検索値を入力欄に保持
     		accountService.saveWord(form, model);
 
@@ -492,6 +501,8 @@ public class AccountController {
     		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();
     	}
+    	// 画面上部メッセージ部分
+		model.addAttribute(MESSAGE, MessageEnum.MSG_C04_I_001.getMsg(null));
 
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());

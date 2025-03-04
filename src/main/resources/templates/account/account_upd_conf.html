@@ -10,7 +10,7 @@
     <body>
         <!-- アカウント情報登変更確認 -->
         <h1 id="acount">アカウント情報変更確認</h1>
-		<h2 align="center">以下の内容で変更しますか?</h2>
+		<h2 align="center" th:text="${message}"></h2>
 		
         <form th:action="@{/account_updater_comp}" method="post">
            <div class="contact-form">

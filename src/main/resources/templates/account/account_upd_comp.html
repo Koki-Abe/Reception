@@ -6,10 +6,10 @@
     <!-- ヘッダー読み込み -->
     <!-- div th:include="::commonHeader"></div>  -->
     
-    <title>アカウント情報変更確認</title>
+    <title>アカウント情報変更完了</title>
     <body>
         <h1 id="acount">アカウント情報変更完了</h1>
-		<h2 align="center">アカウントの変更が完了しました</h2>
+        <h2 align="center" th:text="${message}"></h2>
 		
         <form th:action="@{/account_list}" method="get">
             <!-- ボタンエリア -->

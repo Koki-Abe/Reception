@@ -177,7 +177,7 @@ public class AccountServiceImpl implements AccountService {
             // 登録件数が0件の場合
             if (0 == updatenum) {
                 // エラーメッセージを画面に返却
-                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_003.getMsg(CharEnum.VALIDATION.getChar()));
             }
             
         } catch (Exception e) {
