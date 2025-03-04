@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+    <!-- ヘッダー読み込み -->
+    <div th:include="common/header"></div>
+    <!-- ヘッダー読み込み -->
+    <!-- div th:include="::commonHeader"></div>  -->
+    
+    <title>アカウント情報削除確認</title>
+    <body>
+        <!-- アカウント情報削除確認 -->
+        <h1 id="acount">アカウント情報削除確認</h1>
+		<h2 align="center" th:text="${message}"></h2>
+		
+        <form th:action="@{/account_delete_comp}" method="post">
+           <div class="contact-form">
+            <!-- 入力内容表示 -->
+                <table>
+                    <tr><th>ユーザーID</th>
+                    	<td style="width:200px;"><p th:text="${userId}"></td></tr>
+                    <tr><th>ユーザー名</th>
+                    	<td><p th:text="${userName}"></td></tr>
+                </table>
+            </div>
+            
+            
+      	</form>
+            <!-- ボタンエリア -->
+            <div style="text-align: center;">
+            	<form th:action="@{/account_delete_comp}" method="post">
+            
+	            	<input type="button" value="戻る" onclick="location.href='/account_list'">
+	            
+	            
+	            	<!-- 情報保持 -->
+		            <input type="hidden" name="userId" th:value="${userId}">
+		            <input type="hidden" name="userName" th:value="${userName}">
+		            <th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+		            	<input type="hidden" name="department" th:value="${dep.depId}">
+		            </th:block>
+		            <th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
+		      			<input type="hidden" name="role" th:value="${auth.authId}">
+		      		</th:block>
+                	<input type="submit" value="確定" style="margin-top:20px;">
+               	</form>
+            </div>
+        <!-- フッター読み込み -->
+        <div th:include="common/footer"></div>
+    </body>
+</html>

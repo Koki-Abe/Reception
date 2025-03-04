@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import jp.reception.soarest.domain.dto.AccountDeleteDto;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
@@ -28,7 +29,7 @@ public interface AccountRepository {
 	/*
 	 * アカウント情報変更 変更
 	 * 
-	 * @param AccountUpdateDto アカウント情報変更用DTO
+	 * @param updDto アカウント情報変更用DTO
 	 * @return アカウント変更件数
 	 */
 	int updateAccount(AccountUpdateDto updDto);
@@ -40,5 +41,13 @@ public interface AccountRepository {
 	 * @return アカウント登録件数
 	 */
 	int registerAccount(AccountRegisterDto registerDto);
+	
+	/*
+	 * アカウント情報削除 削除
+	 * 
+	 * @param delDto アカウント情報削除用DTO
+	 * @return アカウント削除件数
+	 */
+	int deleteAccount(AccountDeleteDto delDto);
 
 }

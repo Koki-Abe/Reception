@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import jp.reception.soarest.common.utils.CommonUtils;
+import jp.reception.soarest.domain.dto.AccountDeleteDto;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
@@ -21,6 +22,7 @@ import jp.reception.soarest.domain.dto.DepartmentSearchResultDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.form.AccountDeleteForm;
 import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.form.AccountUpdateForm;
@@ -160,7 +162,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void updateAccount(AccountUpdateForm form, 
-    		AccountUpdateDto updDto, Model model, String staffID) throws SQLException {
+    		AccountUpdateDto updDto, Model model, String staffId) throws SQLException {
         
         try {
         	// beanの内容を詰め替え
@@ -169,7 +171,7 @@ public class AccountServiceImpl implements AccountService {
             updDto.setDepId(form.getDepartment());
             updDto.setAuthId(form.getRole());
             updDto.setUpdatedDate(CommonUtils.getSysdate());
-            updDto.setUpdatedUserId(staffID);
+            updDto.setUpdatedUserId(staffId);
             
             // 登録処理を実行
             int updatenum = accountRepository.updateAccount(updDto);
@@ -200,7 +202,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public void registerAccount(AccountRegisterForm form, 
-    		AccountRegisterDto registerDto, Model model, String staffID) throws SQLException {
+    		AccountRegisterDto registerDto, Model model, String staffId) throws SQLException {
         
         try {
         	// beanの内容を詰め替え
@@ -208,11 +210,11 @@ public class AccountServiceImpl implements AccountService {
             // プロパティ名が異なるものは別途設定
             registerDto.setDepId(form.getDepartment());
             registerDto.setAuthId(form.getRole());
-            registerDto.setCreatedUserId(staffID);
+            registerDto.setCreatedUserId(staffId);
             String pass = CommonUtils.makeHash(form.getPassword());
             registerDto.setPassword(pass);
             registerDto.setCreatedDate(CommonUtils.getSysdate());
-            registerDto.setCreatedUserId(staffID);
+            registerDto.setCreatedUserId(staffId);
             
             // 登録処理を実行
             int registernum = accountRepository.registerAccount(registerDto);
@@ -231,6 +233,41 @@ public class AccountServiceImpl implements AccountService {
         }
     }
     
+    /*
+     * アカウント情報登録 削除
+     * 
+     * @param form アカウント情報登録 フォームクラス 
+     * @param AccountRegisterDto アカウント情報登録 登録用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    @Override
+    public void deleteAccount(AccountDeleteForm form, 
+    		AccountDeleteDto delDto, Model model) throws SQLException {
+        
+        try {
+        	// beanの内容を詰め替え
+            BeanUtils.copyProperties(form, delDto);
+            // プロパティ名が異なるものは別途設定
+            delDto.setDepId(form.getDepartment());
+            delDto.setAuthId(form.getRole());
+            
+            // 削除処理を実行
+            int deletenum = accountRepository.deleteAccount(delDto);
+
+            // 登録件数が0件の場合
+            if (0 == deletenum) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C08_W_001.getMsg(CharEnum.VALIDATION.getChar()));
+            }
+            
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            }
+        }
+    }
     
     /*
      * アカウント情報一覧 入力チェック
@@ -368,6 +405,21 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(DEPARTMENT, form.getDepartment());
         model.addAttribute(ROLE, form.getRole());
         model.addAttribute(PASSWORD, form.getPassword());
+    }
+    
+    /*
+     * アカウント情報削除 入力値保持
+     * 
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void saveWord(AccountDeleteForm form, Model model) {
+    	// 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(USER_NAME, form.getUserName());
+        model.addAttribute(DEPARTMENT, form.getDepartment());
+        model.addAttribute(ROLE, form.getRole());
     }
     
     /*

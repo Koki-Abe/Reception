@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import jp.reception.soarest.domain.dto.AccountDeleteDto;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
 import jp.reception.soarest.domain.dto.AccountUpdateDto;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.form.AccountDeleteForm;
 import jp.reception.soarest.form.AccountRegisterForm;
 import jp.reception.soarest.form.AccountSearchForm;
 import jp.reception.soarest.form.AccountUpdateForm;
@@ -47,12 +49,13 @@ public interface AccountService {
      * アカウント情報変更 変更
      * 
      * @param form アカウント情報変更 フォームクラス 
-     * @param AccountUpdateDto アカウント情報変更 変更用DTO
+     * @param updDto アカウント情報変更 変更用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     void updateAccount(AccountUpdateForm form, 
-    		AccountUpdateDto updDto, Model model, String staffID) throws SQLException;
+    		AccountUpdateDto updDto, Model model, String staffId) throws SQLException;
     
     /*
      * アカウント情報登録 登録
@@ -60,10 +63,22 @@ public interface AccountService {
      * @param form アカウント情報登録 フォームクラス 
      * @param AccountRegisterDto アカウント情報登録 登録用DTO
      * @param model モデル
+     * @param staffId 登録したユーザーID
      * @return 検索結果
      */
     void registerAccount(AccountRegisterForm form, 
-    		AccountRegisterDto registerDto, Model model, String staffID) throws SQLException;
+    		AccountRegisterDto registerDto, Model model, String staffId) throws SQLException;
+    
+    /*
+     * アカウント情報登録 削除
+     * 
+     * @param form アカウント情報登録 フォームクラス 
+     * @param delDto アカウント情報削除 登録用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    void deleteAccount(AccountDeleteForm form, 
+    		AccountDeleteDto delDto, Model model) throws SQLException;
     
     /*
      * アカウント情報一覧 入力チェック
@@ -119,6 +134,14 @@ public interface AccountService {
      * @param model モデル
      */
     void saveWord(AccountRegisterForm form, Model model);
+    
+    /*
+     * アカウント情報削除 入力値保持
+     * 
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    void saveWord(AccountDeleteForm form, Model model);
     
     /*
      * アカウント情報変更 セッション情報更新

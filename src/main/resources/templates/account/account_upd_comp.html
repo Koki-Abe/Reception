@@ -11,12 +11,9 @@
         <h1 id="acount">アカウント情報変更完了</h1>
         <h2 align="center" th:text="${message}"></h2>
 		
-        <form th:action="@{/account_list}" method="get">
-            <!-- ボタンエリア -->
-            <div style="text-align: center;"> 
-	            <input type="submit" value="アカウント情報登録画面へ戻る">
-            </div>
-        </form>
+        <div style="text-align: center;">
+    	<input type="button" value="アカウント一覧画面へ戻る" onclick="location.href='/account_list'">
+    	</div>
         <!-- フッター読み込み -->
         <div th:include="common/footer"></div>
     </body>

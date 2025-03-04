@@ -80,4 +80,20 @@
 			null 
 		);
     </insert>
+    
+    <!-- アカウント情報削除 -->
+    <delete id="deleteAccount"  parameterType="jp.reception.soarest.domain.dto.AccountDeleteDto" >
+        DELETE FROM
+        	M_STAFF
+       	WHERE
+       		STAFF_ID = #{userId}
+   		AND
+       		STAFF_NAME = #{userName}
+  		AND
+			DEP_ID = #{depId}
+		AND
+			AUTH_ID = #{authId};
+        
+    </delete>
+    
 </mapper>

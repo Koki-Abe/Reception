@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jp.reception.soarest.domain.dto.AccountDeleteDto;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
 import jp.reception.soarest.domain.dto.AccountSearchResultDto;
@@ -49,5 +50,15 @@ public class AccountRepositoryImpl implements AccountRepository{
 	 */
 	public int registerAccount(AccountRegisterDto registerDto) {
 		return accountRepository.registerAccount(registerDto);
+	}
+	
+	/*
+	 * アカウント情報削除 削除
+	 * 
+	 * @param delDto アカウント情報削除用DTO
+	 * @return アカウント削除件数
+	 */
+	public int deleteAccount(AccountDeleteDto delDto) {
+		return accountRepository.deleteAccount(delDto);
 	}
 }
