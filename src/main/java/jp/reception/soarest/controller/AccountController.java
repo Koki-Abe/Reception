@@ -219,6 +219,22 @@ public class AccountController {
 
     	// 変更内容を入力欄に保持
     	accountService.saveWord(form, model);
+    	
+    	// 変更対象のデータを保持
+    	try {
+    		accountService.getLastDate(form, model);
+    		int count = accountService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
 
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -256,6 +272,21 @@ public class AccountController {
 
     	// 変更内容を入力欄に保持
 		accountService.saveWord(form, model);
+		
+		// 変更対象のデータをチェック
+		try {
+			int count = accountService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
 		
     	// 入力チェック
     	if(accountService.inputCheck(form, result, model, errorList)) {
@@ -315,10 +346,30 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// 変更対象のデータをチェック
+    	try {
+    		int count = accountService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+    	
     	try {
     		// 変更処理
     		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-    		accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
+    		int count = accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
+    		
+    		// 対象のアカウント情報がない場合
+    		if(count == 0) {
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
     	} catch (SQLException e) {
     		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C06_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();

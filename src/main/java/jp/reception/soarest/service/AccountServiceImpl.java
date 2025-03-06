@@ -55,9 +55,6 @@ public class AccountServiceImpl implements AccountService {
 
     // アカウントリスト
     private final String ACC_LIST = "accList";
-
-    // 変更前ユーザーID
-    private final String OLD_USER_ID = "oldUserId";
     
     // ユーザーID
     private final String USER_ID = "userId";
@@ -77,8 +74,23 @@ public class AccountServiceImpl implements AccountService {
     // ログイン日(終了)
     private final String LOGIN_DATE_END = "loginDateEnd";
     
- // ログイン日(終了)
+    // ログイン日(終了)
     private final String PASSWORD = "password";
+    
+    // 変更前ユーザーID
+    private final String OLD_USER_ID = "oldUserId";
+
+    // 変更前ユーザー名
+    private final String OLD_USER_NAME = "oldUserName";
+
+    // 変更前部署
+    private final String OLD_DEPARTMENT = "oldDepartment";
+
+    // 変更前ロール
+    private final String OLD_ROLE = "oldRole";
+    
+    // 変更前アップデート日時
+    private String LAST_UPDATE_DATE = "lastUpdateDate";
 
     /*
      * アカウント情報一覧 初期処理
@@ -161,9 +173,11 @@ public class AccountServiceImpl implements AccountService {
      * @return 検索結果
      */
     @Override
-    public void updateAccount(AccountUpdateForm form, 
+    public int updateAccount(AccountUpdateForm form, 
     		AccountUpdateDto updDto, Model model, String staffId) throws SQLException {
-        
+    	
+    	int updatenum = 0;
+    	
         try {
         	// beanの内容を詰め替え
             BeanUtils.copyProperties(form, updDto);
@@ -172,9 +186,12 @@ public class AccountServiceImpl implements AccountService {
             updDto.setAuthId(form.getRole());
             updDto.setUpdatedDate(CommonUtils.getSysdate());
             updDto.setUpdatedUserId(staffId);
+            updDto.setOldDepId(form.getDepartment());
+            updDto.setOldAuthId(form.getRole());
+            updDto.setLastUpdateDate(form.getLastUpdateDate());
             
             // 登録処理を実行
-            int updatenum = accountRepository.updateAccount(updDto);
+            updatenum = accountRepository.updateAccount(updDto);
             
             // 登録件数が0件の場合
             if (0 == updatenum) {
@@ -190,6 +207,7 @@ public class AccountServiceImpl implements AccountService {
                 throw e;
             }
         }
+        return updatenum;
     }
     
     /*
@@ -270,6 +288,61 @@ public class AccountServiceImpl implements AccountService {
     }
     
     /*
+     * アカウント情報変更 変更対象の最終アップデート時間を取得
+     * 
+     * @param form アカウント情報変更 フォームクラス 
+     * @param model モデル
+     */
+    public void getLastDate(AccountUpdateForm form, Model model) throws SQLException {
+    	AccountUpdateDto updDto = new AccountUpdateDto();
+    	BeanUtils.copyProperties(form, updDto);
+        // プロパティ名が異なるものは別途設定
+        updDto.setOldDepId(form.getDepartment());
+        updDto.setOldAuthId(form.getRole());
+        try {
+	    	String lastDate = accountRepository.getUpdatedDate(updDto);
+	    	form.setLastUpdateDate(lastDate);
+	    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            }
+        }
+    }
+    
+    /*
+     * アカウント情報変更 変更対象のデータをチェック
+     * 
+     * @param form アカウント情報変更 フォームクラス 
+     * @param model モデル
+     */
+    public int checkData(AccountUpdateForm form, Model model) throws SQLException {
+    	AccountUpdateDto updDto = new AccountUpdateDto();
+    	BeanUtils.copyProperties(form, updDto);
+        // プロパティ名が異なるものは別途設定
+        updDto.setOldDepId(form.getDepartment());
+        updDto.setOldAuthId(form.getRole());
+        updDto.setLastUpdateDate(form.getLastUpdateDate());
+        
+        int count = 0;
+        try {
+        	// 完全一致するデータを数える
+	    	count = accountRepository.checkData(updDto);
+            if (0 == count) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
+            }
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            }
+        }
+        return count;
+    }
+    
+    /*
      * アカウント情報一覧 入力チェック
      * 
      * @param form アカウント情報一覧 フォームクラス 
@@ -304,13 +377,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean inputCheck(AccountUpdateForm form, BindingResult result, 
     		Model model, List<String> errorList) {
-    	
-    	// 初期状態のt機入力チェックはスルー
-    	if(form.getUserId() == null && form.getUserName() == null && form.getDepartment() == 0 &&
-    			form.getRole() == 0){
-    		return false;
-    	}
-    	
     	// 入力チェックに該当する場合
         if (result.hasErrors()) {
             for (ObjectError error : result.getAllErrors()) {
@@ -384,11 +450,16 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void saveWord(AccountUpdateForm form, Model model) {
     	// 検索値を入力欄に保持
-    	model.addAttribute(OLD_USER_ID, form.getOldUserId());
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(USER_NAME, form.getUserName());
         model.addAttribute(DEPARTMENT, form.getDepartment());
         model.addAttribute(ROLE, form.getRole());
+        // 変更前の情報を保持
+        model.addAttribute(OLD_USER_ID, form.getOldUserId());
+        model.addAttribute(OLD_USER_NAME, form.getOldUserName());
+        model.addAttribute(OLD_DEPARTMENT, form.getOldDepartment());
+        model.addAttribute(OLD_ROLE, form.getOldRole());
+        model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
     }
     
     /*

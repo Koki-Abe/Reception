@@ -35,6 +35,22 @@ public interface AccountRepository {
 	int updateAccount(AccountUpdateDto updDto);
 	
 	/*
+	 * アカウント情報変更 変更対象の最終アップデート時間を取得
+	 * 
+	 * @param upDto アカウント情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	String getUpdatedDate(AccountUpdateDto upDto);
+	
+	/*
+	 * アカウント情報変更 変更対象のデータをチェック
+	 * 
+	 * @param upDto アカウント情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	int checkData(AccountUpdateDto upDto);
+	
+	/*
 	 * アカウント情報登録 登録
 	 * 
 	 * @param AccountRegisterDto アカウント情報登録用DTO
@@ -50,4 +66,5 @@ public interface AccountRepository {
 	 */
 	int deleteAccount(AccountDeleteDto delDto);
 
+	
 }

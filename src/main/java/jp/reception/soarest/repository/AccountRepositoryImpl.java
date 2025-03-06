@@ -43,6 +43,26 @@ public class AccountRepositoryImpl implements AccountRepository{
 	}
 	
 	/*
+	 * アカウント情報変更 変更対象の最終アップデート時間を取得
+	 * 
+	 * @param upDto アカウント情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	public String getUpdatedDate(AccountUpdateDto upDto) {
+		return accountRepository.getUpdatedDate(upDto);
+	}
+	
+	/*
+	 * アカウント情報変更 変更対象のデータをチェック
+	 * 
+	 * @param upDto アカウント情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	public int checkData(AccountUpdateDto upDto) {
+		return accountRepository.checkData(upDto);
+	}
+	
+	/*
 	 * アカウント情報登録 登録
 	 * 
 	 * @param AccountRegisterDto アカウント情報登録用DTO

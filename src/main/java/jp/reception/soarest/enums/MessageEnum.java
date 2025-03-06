@@ -102,7 +102,8 @@ public enum MessageEnum {
     MSG_D07_I_001,
     MSG_D08_I_001,
     MSG_D09_I_001,
-    MSG_E01_I_001;
+    MSG_E01_I_001,
+	MSG_E01_I_002;
 
     // キー名を取得
     private String key = this.name().replace("_", "-");

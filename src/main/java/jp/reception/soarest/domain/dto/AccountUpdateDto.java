@@ -10,9 +10,6 @@ import lombok.Data;
  */
 @Data
 public class AccountUpdateDto {
-	// 変更前ユーザーID
-	private String oldUserId;
-		
     // ユーザーID
     private String userId;
 
@@ -30,4 +27,11 @@ public class AccountUpdateDto {
     
     // 変更者
     private String updatedUserId;
+    
+    // 変更前ユーザーID
+    private String oldUserId;
+	private String oldUserName;
+	private int oldDepId;
+	private int oldAuthId;
+	private String lastUpdateDate;
 }

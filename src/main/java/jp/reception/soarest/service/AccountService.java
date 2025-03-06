@@ -54,7 +54,7 @@ public interface AccountService {
      * @param staffId 変更したユーザーID
      * @return 検索結果
      */
-    void updateAccount(AccountUpdateForm form, 
+    int updateAccount(AccountUpdateForm form, 
     		AccountUpdateDto updDto, Model model, String staffId) throws SQLException;
     
     /*
@@ -79,6 +79,21 @@ public interface AccountService {
      */
     void deleteAccount(AccountDeleteForm form, 
     		AccountDeleteDto delDto, Model model) throws SQLException;
+    
+    /*
+     * アカウント情報変更 変更対象の最終アップデート時間を取得
+     * @param form アカウント情報変更 フォームクラス 
+     * @param model モデル
+     */
+    void getLastDate(AccountUpdateForm form, Model model) throws SQLException;
+    
+    /*
+     * アカウント情報変更 変更対象のデータをチェック
+     * 
+     * @param form アカウント情報変更 フォームクラス 
+     * @param model モデル
+     */
+    int checkData(AccountUpdateForm form, Model model) throws SQLException;
     
     /*
      * アカウント情報一覧 入力チェック
@@ -151,5 +166,6 @@ public interface AccountService {
      * @return 更新データ
      */
     LoginUserSearchResultDto setNewSessionData(AccountUpdateForm form, LoginUserSearchResultDto loginUser);
+    
     
 }

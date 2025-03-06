@@ -7,6 +7,9 @@
     <title>システムエラー</title>
     <body>
         <!-- エラーメッセージ -->
+        <th:block th:if="${errMsg}">
+            <h1 style="color: red;" align="center" th:text="${errMsg}" id="errmsg"></h1>
+        </th:block>
         <th:block th:if="${status == 500}">
             <h1>システムエラーが発生しました。</h1>
         </th:block>

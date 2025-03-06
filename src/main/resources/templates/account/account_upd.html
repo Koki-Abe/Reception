@@ -17,7 +17,6 @@
         
         <form th:action="@{/account_update_conf}" method="post">
            <div class="contact-form" id="clearForm">
-           <input type="hidden" name="oldUserId" th:value="${oldUserId}">
             <!-- 変更フォーム -->
                 <table>
                     <tr><th>ユーザーID</th><td><input type="text" id="userId" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
@@ -46,6 +45,13 @@
                 </table>
             </div>
         
+        	<!-- 変更前情報保持 -->
+            <input type="hidden" name="oldUserId" th:value="${oldUserId}">
+            <input type="hidden" name="oldUserName" th:value="${oldUserName}">
+            <input type="hidden" name="oldDepartment" th:value="${oldDepartment}">
+            <input type="hidden" name="oldRole" th:value="${oldRole}">
+      		<input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
+		      		
             <!-- ボタンエリア -->
             <div style="text-align: center;"> 
             	<input type="button" value="戻る"  onclick="location.href=' account_list'" >

@@ -15,10 +15,6 @@ import lombok.Data;
  */
 @Data
 public class AccountUpdateForm {
-	
-	// 変更前ユーザーID
-	private String oldUserId;
-	
     // ユーザーID
 	@NotBlank(message = "{MSG-C02-W-001}")
 	@Size(min=6, max=10, message="{MSG-C02-W-003}")
@@ -37,4 +33,11 @@ public class AccountUpdateForm {
     // 権限ID
 	@Max(value = 998, message = "{MSG-C02-W-007}")
     private int role;
+	
+	// 変更前のデータ
+	private String oldUserId;
+	private String oldUserName;
+	private int oldDepartment;
+	private int oldRole;
+	private String lastUpdateDate;
 }

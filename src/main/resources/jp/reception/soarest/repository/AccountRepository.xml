@@ -38,6 +38,42 @@
         ORDER BY CAST(MS.STAFF_ID AS SIGNED) ASC
     </select>
 
+	<!-- アカウント情報変更 変更対象の最終アップデート時間を取得 -->
+    <select id="getUpdatedDate"  parameterType="jp.reception.soarest.domain.dto.AccountUpdateDto" resultType="String">
+        SELECT
+            UPDATED_DATE
+        FROM
+            M_STAFF
+        WHERE
+			STAFF_ID = #{oldUserId}
+		AND
+			STAFF_NAME = #{oldUserName}
+		AND
+			DEP_ID = #{oldDepId}
+		AND
+			AUTH_ID = #{oldAuthId}
+        
+    </select>
+    
+    <!-- アカウント情報変更 変更対象のデータをチェック -->
+    <select id="checkData"  parameterType="jp.reception.soarest.domain.dto.AccountUpdateDto" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            M_STAFF MS
+        WHERE
+			STAFF_ID = #{oldUserId}
+		AND
+			STAFF_NAME = #{oldUserName}
+		AND
+			DEP_ID = #{oldDepId}
+		AND
+			AUTH_ID = #{oldAuthId}
+		AND
+			UPDATED_DATE = #{lastUpdateDate}
+        
+    </select>
+    
 	<!-- アカウント情報変更 -->
     <update id="updateAccount"  parameterType="jp.reception.soarest.domain.dto.AccountUpdateDto" >
         UPDATE
@@ -50,7 +86,15 @@
 			UPDATED_DATE = #{updatedDate} ,
 			UPDATED_USER = #{updatedUserId}  
        	WHERE
-       		STAFF_ID = #{oldUserId};
+       		STAFF_ID = #{oldUserId}
+   		AND
+			STAFF_NAME = #{oldUserName}
+		AND
+			DEP_ID = #{oldDepId}
+		AND
+			AUTH_ID = #{oldAuthId}
+		AND
+			UPDATED_DATE = #{lastUpdateDate}
         
     </update>
     
