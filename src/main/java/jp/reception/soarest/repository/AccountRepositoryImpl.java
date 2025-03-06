@@ -48,8 +48,8 @@ public class AccountRepositoryImpl implements AccountRepository{
 	 * @param upDto アカウント情報変更用DTO
 	 * @return 最終アップデート時間
 	 */
-	public String getUpdatedDate(AccountUpdateDto upDto) {
-		return accountRepository.getUpdatedDate(upDto);
+	public String getUpdateDate(AccountUpdateDto upDto) {
+		return accountRepository.getUpdateDate(upDto);
 	}
 	
 	/*
@@ -58,8 +58,8 @@ public class AccountRepositoryImpl implements AccountRepository{
 	 * @param upDto アカウント情報変更用DTO
 	 * @return 最終アップデート時間
 	 */
-	public int checkData(AccountUpdateDto upDto) {
-		return accountRepository.checkData(upDto);
+	public int checkUpdateData(AccountUpdateDto upDto) {
+		return accountRepository.checkUpdateData(upDto);
 	}
 	
 	/*
@@ -81,4 +81,25 @@ public class AccountRepositoryImpl implements AccountRepository{
 	public int deleteAccount(AccountDeleteDto delDto) {
 		return accountRepository.deleteAccount(delDto);
 	}
+	
+	/*
+	 * アカウント情報削除 削除対象の最終アップデート時間を取得
+	 * 
+	 * @param delDto アカウント情報削除用DTO
+	 * @return 最終アップデート時間
+	 */
+	public String getDeleteDate(AccountDeleteDto delDto) {
+		return accountRepository.getDeleteDate(delDto);
+	}
+	
+	/*
+	 * アカウント情報削除 削除対象のデータをチェック
+	 * 
+	 * @param delDto アカウント情報削除用DTO
+	 * @return 最終アップデート時間
+	 */
+	public int checkDeleteData(AccountDeleteDto delDto) {
+		return accountRepository.checkDeleteData(delDto);
+	}
+	
 }

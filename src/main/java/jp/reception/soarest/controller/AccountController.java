@@ -542,7 +542,12 @@ public class AccountController {
     	try {
     		// 登録処理
     		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-    		accountService.registerAccount(form, new AccountRegisterDto(), model, staffID);
+    		int count = accountService.registerAccount(form, new AccountRegisterDto(), model, staffID);
+    		// 対象のアカウント情報がない場合
+    		if(count == 0) {
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    		
     	} catch (SQLException e) {
     		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C03_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();
@@ -603,6 +608,22 @@ public class AccountController {
 		// 対象アカウント情報を保持
 		accountService.saveWord(form, model);
 
+		// 削除対象のデータを保持
+    	try {
+    		accountService.getLastDate(form, model);
+    		int count = accountService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+    	
 		// 終了ログ
 		logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 		
@@ -636,9 +657,28 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// 削除対象のデータをチェック
+    	try {
+    		int count = accountService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+    	
     	try {
     		// 削除処理
-    		accountService.deleteAccount(form, new AccountDeleteDto(), model);
+    		int count = accountService.deleteAccount(form, new AccountDeleteDto(), model);
+    		// 対象のアカウント情報がない場合
+    		if(count == 0) {
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
     	} catch (SQLException e) {
     		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C08_E_001.getMsg(null));
     		return UrlEnum.SYSTEM_ERROR.getPass();

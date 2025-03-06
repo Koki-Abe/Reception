@@ -186,9 +186,9 @@ public class AccountServiceImpl implements AccountService {
             updDto.setAuthId(form.getRole());
             updDto.setUpdatedDate(CommonUtils.getSysdate());
             updDto.setUpdatedUserId(staffId);
-            updDto.setOldDepId(form.getDepartment());
-            updDto.setOldAuthId(form.getRole());
-            updDto.setLastUpdateDate(form.getLastUpdateDate());
+            updDto.setOldDepId(form.getOldDepartment());
+            updDto.setOldAuthId(form.getOldRole());
+            if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
             
             // 登録処理を実行
             updatenum = accountRepository.updateAccount(updDto);
@@ -219,9 +219,11 @@ public class AccountServiceImpl implements AccountService {
      * @return 検索結果
      */
     @Override
-    public void registerAccount(AccountRegisterForm form, 
+    public int registerAccount(AccountRegisterForm form, 
     		AccountRegisterDto registerDto, Model model, String staffId) throws SQLException {
         
+    	int registernum = 0;
+    	
         try {
         	// beanの内容を詰め替え
             BeanUtils.copyProperties(form, registerDto);
@@ -235,7 +237,7 @@ public class AccountServiceImpl implements AccountService {
             registerDto.setCreatedUserId(staffId);
             
             // 登録処理を実行
-            int registernum = accountRepository.registerAccount(registerDto);
+            registernum = accountRepository.registerAccount(registerDto);
 
             // 登録件数が0件の場合
             if (0 == registernum) {
@@ -249,6 +251,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new SQLException(e);
             }
         }
+        return registernum;
     }
     
     /*
@@ -260,9 +263,10 @@ public class AccountServiceImpl implements AccountService {
      * @return 検索結果
      */
     @Override
-    public void deleteAccount(AccountDeleteForm form, 
+    public int deleteAccount(AccountDeleteForm form, 
     		AccountDeleteDto delDto, Model model) throws SQLException {
         
+    	int deletenum = 0 ;
         try {
         	// beanの内容を詰め替え
             BeanUtils.copyProperties(form, delDto);
@@ -271,7 +275,7 @@ public class AccountServiceImpl implements AccountService {
             delDto.setAuthId(form.getRole());
             
             // 削除処理を実行
-            int deletenum = accountRepository.deleteAccount(delDto);
+            deletenum = accountRepository.deleteAccount(delDto);
 
             // 登録件数が0件の場合
             if (0 == deletenum) {
@@ -283,8 +287,11 @@ public class AccountServiceImpl implements AccountService {
         	// ハッシュ生成時の例外の場合
             if (e.getCause() instanceof SQLException) {
                 throw new SQLException(e);
+            } else {
+                throw e;
             }
         }
+        return  deletenum;
     }
     
     /*
@@ -297,16 +304,18 @@ public class AccountServiceImpl implements AccountService {
     	AccountUpdateDto updDto = new AccountUpdateDto();
     	BeanUtils.copyProperties(form, updDto);
         // プロパティ名が異なるものは別途設定
-        updDto.setOldDepId(form.getDepartment());
-        updDto.setOldAuthId(form.getRole());
+        updDto.setOldDepId(form.getOldDepartment());
+        updDto.setOldAuthId(form.getOldRole());
         try {
-	    	String lastDate = accountRepository.getUpdatedDate(updDto);
+	    	String lastDate = accountRepository.getUpdateDate(updDto);
 	    	form.setLastUpdateDate(lastDate);
 	    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
         } catch (Exception e) {
         	// ハッシュ生成時の例外の場合
             if (e.getCause() instanceof SQLException) {
                 throw new SQLException(e);
+            } else {
+                throw e;
             }
         }
     }
@@ -321,14 +330,14 @@ public class AccountServiceImpl implements AccountService {
     	AccountUpdateDto updDto = new AccountUpdateDto();
     	BeanUtils.copyProperties(form, updDto);
         // プロパティ名が異なるものは別途設定
-        updDto.setOldDepId(form.getDepartment());
-        updDto.setOldAuthId(form.getRole());
-        updDto.setLastUpdateDate(form.getLastUpdateDate());
+        updDto.setOldDepId(form.getOldDepartment());
+        updDto.setOldAuthId(form.getOldRole());
+        if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
         
         int count = 0;
         try {
         	// 完全一致するデータを数える
-	    	count = accountRepository.checkData(updDto);
+	    	count = accountRepository.checkUpdateData(updDto);
             if (0 == count) {
                 // エラーメッセージを画面に返却
                 model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
@@ -337,6 +346,66 @@ public class AccountServiceImpl implements AccountService {
         	// ハッシュ生成時の例外の場合
             if (e.getCause() instanceof SQLException) {
                 throw new SQLException(e);
+            } else {
+                throw e;
+            }
+        }
+        return count;
+    }
+    
+    /*
+     * アカウント情報削除 削除対象の最終アップデート時間を取得
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    public void getLastDate(AccountDeleteForm form, Model model) throws SQLException {
+    	AccountDeleteDto delDto = new AccountDeleteDto();
+    	BeanUtils.copyProperties(form, delDto);
+        // プロパティ名が異なるものは別途設定
+    	delDto.setOldDepId(form.getOldDepartment());
+    	delDto.setOldAuthId(form.getOldRole());
+        try {
+	    	String lastDate = accountRepository.getDeleteDate(delDto);
+	    	form.setLastUpdateDate(lastDate);
+	    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    /*
+     * アカウント情報削除 削除対象のデータをチェック
+     * 
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    public int checkData(AccountDeleteForm form, Model model) throws SQLException {
+    	AccountDeleteDto delDto = new AccountDeleteDto();
+    	BeanUtils.copyProperties(form, delDto);
+        // プロパティ名が異なるものは別途設定
+    	delDto.setOldDepId(form.getOldDepartment());
+    	delDto.setOldAuthId(form.getOldRole());
+    	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
+        
+    	int count = 0;
+        try {
+        	// 完全一致するデータを数える
+	    	count = accountRepository.checkDeleteData(delDto);
+            if (0 == count) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
+            }
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            } else {
+                throw e;
             }
         }
         return count;
@@ -491,6 +560,12 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(USER_NAME, form.getUserName());
         model.addAttribute(DEPARTMENT, form.getDepartment());
         model.addAttribute(ROLE, form.getRole());
+        // 変更前の情報を保持
+        model.addAttribute(OLD_USER_ID, form.getOldUserId());
+        model.addAttribute(OLD_USER_NAME, form.getOldUserName());
+        model.addAttribute(OLD_DEPARTMENT, form.getOldDepartment());
+        model.addAttribute(OLD_ROLE, form.getOldRole());
+        model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
     }
     
     /*

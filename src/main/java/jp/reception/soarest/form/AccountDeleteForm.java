@@ -22,4 +22,11 @@ public class AccountDeleteForm {
 
     // 権限ID
     private int role;
+    
+    // 変更前のデータ
+ 	private String oldUserId;
+ 	private String oldUserName;
+ 	private int oldDepartment;
+ 	private int oldRole;
+ 	private String lastUpdateDate;
 }

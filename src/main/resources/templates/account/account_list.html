@@ -115,12 +115,16 @@
 		                            
 		                            <!-- 情報保持 -->
 		                    		<input type="hidden" name="userId" th:value="${account.staffId}">
+		                    		<input type="hidden" name="oldUserId" th:value="${account.staffId}">
 		                    		<input type="hidden" name="userName" th:value="${account.staffName}">
+		                    		<input type="hidden" name="oldUserName" th:value="${account.staffName}">
 		                    		<th:block th:each="dep : ${depList}" th:if="${dep.depName == account.depName}">
 		                    			<input type="hidden" name="department" th:value="${dep.depId}">
+		                    			<input type="hidden" name="oldDepartment" th:value="${dep.depId}">
 		                    		</th:block>
 		                    		<th:block th:each="auth : ${authList}" th:if="${auth.authName == account.authName}">
 		                    			<input type="hidden" name="role" th:value="${auth.authId}">
+		                    			<input type="hidden" name="oldRole" th:value="${auth.authId}">
 		                    		</th:block>
 		                            <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
 		                        </th:block>

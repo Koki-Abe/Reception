@@ -21,4 +21,11 @@ public class AccountDeleteDto {
 
     // 権限ID
     private int authId;
+    
+    // 変更前ユーザーID
+    private String oldUserId;
+	private String oldUserName;
+	private int oldDepId;
+	private int oldAuthId;
+	private String lastUpdateDate;
 }

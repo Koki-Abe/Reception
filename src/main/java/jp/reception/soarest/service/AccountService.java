@@ -66,18 +66,18 @@ public interface AccountService {
      * @param staffId 登録したユーザーID
      * @return 検索結果
      */
-    void registerAccount(AccountRegisterForm form, 
+    int registerAccount(AccountRegisterForm form, 
     		AccountRegisterDto registerDto, Model model, String staffId) throws SQLException;
     
     /*
-     * アカウント情報登録 削除
+     * アカウント情報削除 削除
      * 
-     * @param form アカウント情報登録 フォームクラス 
+     * @param form アカウント情報削除 フォームクラス 
      * @param delDto アカウント情報削除 登録用DTO
      * @param model モデル
      * @return 検索結果
      */
-    void deleteAccount(AccountDeleteForm form, 
+    int deleteAccount(AccountDeleteForm form, 
     		AccountDeleteDto delDto, Model model) throws SQLException;
     
     /*
@@ -94,6 +94,21 @@ public interface AccountService {
      * @param model モデル
      */
     int checkData(AccountUpdateForm form, Model model) throws SQLException;
+    
+    /*
+     * アカウント情報削除 削除対象の最終アップデート時間を取得
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    void getLastDate(AccountDeleteForm form, Model model) throws SQLException;
+    
+    /*
+     * アカウント情報削除 削除対象のデータをチェック
+     * 
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    int checkData(AccountDeleteForm form, Model model) throws SQLException;
     
     /*
      * アカウント情報一覧 入力チェック
