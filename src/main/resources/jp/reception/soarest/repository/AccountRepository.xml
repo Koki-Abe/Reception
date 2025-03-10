@@ -34,6 +34,7 @@
             <if test="loginDateEnd != null and loginDateEnd != ''">
                 AND MS.LAST_LOGIN_DATE <![CDATA[<=]]> #{loginDateEnd}
             </if>
+            AND MS.DELETED =false
         </where>
         ORDER BY CAST(MS.STAFF_ID AS SIGNED) ASC;
     </select>
@@ -162,9 +163,11 @@
     </select>
     
     <!-- アカウント情報削除 -->
-    <delete id="deleteAccount"  parameterType="jp.reception.soarest.domain.dto.AccountDeleteDto" >
-        DELETE FROM
+    <update id="deleteAccount"  parameterType="jp.reception.soarest.domain.dto.AccountDeleteDto" >
+        UPDATE
         	M_STAFF
+       	SET
+			DELETED = true
        	WHERE
        		STAFF_ID = #{userId}
    		AND
@@ -174,6 +177,6 @@
 		AND
 			AUTH_ID = #{authId};
         
-    </delete>
+    </update>
     
 </mapper>

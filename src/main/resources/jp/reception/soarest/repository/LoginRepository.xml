@@ -20,6 +20,7 @@
             <if test="password != null and password != ''">
                 AND MS.PASSWORD = #{password}
             </if>
+            AND MS.DELETED =false
         </where>
     </select>
 
