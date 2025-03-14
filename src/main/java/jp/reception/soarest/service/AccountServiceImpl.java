@@ -362,8 +362,8 @@ public class AccountServiceImpl implements AccountService {
     	AccountDeleteDto delDto = new AccountDeleteDto();
     	BeanUtils.copyProperties(form, delDto);
         // プロパティ名が異なるものは別途設定
-    	delDto.setOldDepId(form.getOldDepartment());
-    	delDto.setOldAuthId(form.getOldRole());
+    	delDto.setDepId(form.getDepartment());
+    	delDto.setAuthId(form.getRole());
         try {
 	    	String lastDate = accountRepository.getDeleteDate(delDto);
 	    	form.setLastUpdateDate(lastDate);
@@ -388,8 +388,8 @@ public class AccountServiceImpl implements AccountService {
     	AccountDeleteDto delDto = new AccountDeleteDto();
     	BeanUtils.copyProperties(form, delDto);
         // プロパティ名が異なるものは別途設定
-    	delDto.setOldDepId(form.getOldDepartment());
-    	delDto.setOldAuthId(form.getOldRole());
+    	delDto.setDepId(form.getDepartment());
+    	delDto.setAuthId(form.getRole());
     	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
         
     	int count = 0;
@@ -560,11 +560,7 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(USER_NAME, form.getUserName());
         model.addAttribute(DEPARTMENT, form.getDepartment());
         model.addAttribute(ROLE, form.getRole());
-        // 変更前の情報を保持
-        model.addAttribute(OLD_USER_ID, form.getOldUserId());
-        model.addAttribute(OLD_USER_NAME, form.getOldUserName());
-        model.addAttribute(OLD_DEPARTMENT, form.getOldDepartment());
-        model.addAttribute(OLD_ROLE, form.getOldRole());
+        // 最終変更日時を保持
         model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
     }
     

@@ -133,13 +133,13 @@
         FROM
             M_STAFF
         WHERE
-			STAFF_ID = #{oldUserId}
+			STAFF_ID = #{userId}
 		AND
-			STAFF_NAME = #{oldUserName}
+			STAFF_NAME = #{userName}
 		AND
-			DEP_ID = #{oldDepId}
+			DEP_ID = #{depId}
 		AND
-			AUTH_ID = #{oldAuthId};
+			AUTH_ID = #{authId};
         
     </select>
     
@@ -150,13 +150,13 @@
         FROM
             M_STAFF MS
         WHERE
-			STAFF_ID = #{oldUserId}
+			STAFF_ID = #{userId}
 		AND
-			STAFF_NAME = #{oldUserName}
+			STAFF_NAME = #{userName}
 		AND
-			DEP_ID = #{oldDepId}
+			DEP_ID = #{depId}
 		AND
-			AUTH_ID = #{oldAuthId}
+			AUTH_ID = #{authId}
 		AND
 			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
         
@@ -175,7 +175,9 @@
   		AND
 			DEP_ID = #{depId}
 		AND
-			AUTH_ID = #{authId};
+			AUTH_ID = #{authId}
+		AND
+			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
         
     </update>
     
