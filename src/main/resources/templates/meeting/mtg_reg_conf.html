@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+	<!-- ヘッダー読み込み -->
+	<div th:include="common/header"></div>
+	<title>打ち合わせ情報登録確認</title>
+	<body>
+	
+		<!-- 打ち合わせ情報登録確認 -->
+		<h1 id="mtg_list">打ち合わせ情報登録確認</h1>
+	
+		<!-- 入力内容表示 -->
+		<form th:action="@{/mtg_register_comp}" method="post">
+			<div class="contact-form">
+				<table>
+					<tr>
+						<th>打合せ担当者名(主担当)</th>
+						<td style="width: 200px;">
+							<th:block th:each="staff : ${staffList}" th:if="${staff.staffId == userId}">
+								<p th:text="${staff.staffName}">
+							</th:block></td>
+					</tr>
+					<tr>
+						<th>打合せ担当者名(副担当)</th>
+						<td style="width: 200px;">
+							<th:block th:each="staff : ${staffList}" th:if="${staff.staffId == subUserId}">
+								<p th:text="${staff.staffName}">
+							</th:block></td>
+					</tr>
+					<tr>
+						<th>相手会社名</th>
+						<td style="width: 200px;"><p th:text="${clientCompName}"></td>
+					</tr>
+					<tr>
+						<th>相手氏名</th>
+						<td style="width: 200px;"><p th:text="${clientName}"></td>
+					</tr>
+					<tr>
+						<th>予定日</th>
+						<td style="width: 200px;"><p th:text="${scheduledDate}"></td>
+					</tr>
+					<tr>
+						<th>予定時刻</th>
+						<td style="width: 200px;"><p th:text="${scheduledTime}"></td>
+					</tr>
+					<tr>
+						<th>会議室名</th>
+						<td style="width: 200px;">
+							<th:block th:each="room : ${roomList}" th:if="${room.roomId == roomId}">
+								<p th:text="${room.roomName}">
+							</th:block></td>
+					</tr>
+					<tr>
+						<th>その他打合せ場所</th>
+						<td style="width: 200px;"><p th:text="${mtgPlace}"></td>
+					</tr>
+					<tr>
+						<th>目的</th>
+						<td style="width: 200px;">
+							<th:block th:each="purpose : ${purposeList}" th:if="${purpose.mtgId == mtgId}">
+								<p th:text="${purpose.mtgName}">
+							</th:block></td>
+					</tr>
+					<tr>
+						<th>コメント</th>
+						<td style="width: 200px;"><p th:text="${comment}"></td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	
+		<div id="form">
+	
+			<!-- ボタンエリア -->
+			<div style="text-align: center;">
+				<form th:action="@{/mtg_register}" method="post">
+					<!-- 情報保持 -->
+					<input type="hidden" name="userId" th:value="${userId}">
+					<input type="hidden" name="subUserId" th:value="${subUserId}">
+					<input type="hidden" name="clientCompName" th:value="${clientCompName}">
+					<input type="hidden" name="clientName" th:value="${clientName}">
+					<input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
+					<input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
+					<input type="hidden" name="roomId" th:value="${roomId}">
+					<input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
+					<input type="hidden" name="purpose" th:value="${mtgId}">
+					<input type="hidden" name="comment" th:value="${comment}">
+					
+					<input type="submit" value="戻る">
+				</form>
+				
+				<form th:action="@{/mtg_register_comp}" method="post">
+					<!-- 情報保持 -->
+					<input type="hidden" name="userId" th:value="${userId}">
+					<input type="hidden" name="subUserId" th:value="${subUserId}">
+					<input type="hidden" name="clientCompName" th:value="${clientCompName}">
+					<input type="hidden" name="clientName" th:value="${clientName}">
+					<input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
+					<input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
+					<input type="hidden" name="roomId" th:value="${roomId}">
+					<input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
+					<input type="hidden" name="purpose" th:value="${mtgId}">
+					<input type="hidden" name="comment" th:value="${comment}">
+					
+					<input type="submit" value="登録" style="background-color: #1e90ff;">
+				</form>
+			</div>
+		</div>
+	
+		<!-- フッター読み込み -->
+		<div th:include="common/footer"></div>
+	</body>
+
+
+
+<!-- JS -->
+<script>
+        // 戻るボタン押下字のスクリプト
+	        $(function prev(){
+	        	
+	        })
+            $('#roomId').change(function() {
+                let rmId = $('#roomId').val();
+                // その他を選択した場合、非活性を解除する
+                if(rmId === '9999') {
+                    $('#mtgPlace').prop("disabled", false);
+                } else {
+                    $('#mtgPlace').prop("disabled", true);
+                }
+            });
+            $(document).ready(function() {
+                let rmId = $('#roomId').val();
+                if(rmId === '9999') {
+                    $('#mtgPlace').prop("disabled", false);
+                } else {
+                    $('#mtgPlace').prop("disabled", true);
+                }
+                // ページング付与
+                $(".search-result").paginate({
+                    jqueryui: false,
+                    position: "bottom",
+                });
+            });
+            // コメント表示
+            function showComment(comment) {
+                // let comment = $('input[name="comment"]').val();
+                console.log(comment);
+                let url =  encodeURI("/comment?comment=" + comment)
+                window.open(url, null, 'width=500 ,height=500, toolbar=yes, menubar=yes, scrollbars=yes');
+            }
+            
+        </script>
+</html>

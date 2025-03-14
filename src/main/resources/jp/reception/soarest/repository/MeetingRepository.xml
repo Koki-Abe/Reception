@@ -79,5 +79,48 @@
         </where>
         ORDER BY CAST(MTG.SCHEDULE_ID AS SIGNED) ASC
     </select>
+    
+    <!-- 打ち合わせ情報登録 -->
+    <select id="getScheduleId" resultType = "String">
+    	SELECT
+		  SCHEDULE_ID
+		FROM
+		    MTG_SCHEDULE
+		ORDER BY SCHEDULE_ID DESC
+		LIMIT 1;
+    </select>
+    
+    <!-- 打ち合わせ情報登録 -->
+    <insert id="registerMtg"  parameterType="jp.reception.soarest.domain.dto.MeetingRegisterDto">
+        INSERT INTO MTG_SCHEDULE (
+			SCHEDULE_ID,
+			STAFF_ID,
+			SUB_STAFF_ID,
+			CLIENT_NAME,
+			CLIENT_COMP_NAME,
+			MTG_ID,
+			ROOM_ID,
+			MTG_PLACE,
+			SCHEDULED_DATE,
+			SCHEDULED_TIME,
+			COMMENT,
+			CREATED_DATE,
+			CREATED_USER
+		) VALUES (
+			#{scheduleId},
+			#{userId},
+			#{subUserId},
+			#{clientName},
+			#{clientCompName},
+			#{mtgId},
+			#{roomId},
+			#{mtgPlace},
+			#{scheduledDate},
+			#{scheduledTime},
+			#{comment},
+			#{createdDate},
+			#{createdUserId}
+		);
+    </insert>
 
 </mapper>

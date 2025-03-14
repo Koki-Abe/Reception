@@ -1,24 +1,19 @@
-package jp.reception.soarest.form;
-
-import java.time.LocalDate;
-
-import org.springframework.format.annotation.DateTimeFormat;
+package jp.reception.soarest.domain.dto;
 
 import lombok.Data;
 
-/* 
- * 打ち合わせ情報一覧 更新用フォーム
+/*
+ * 打ち合わせ情報登録用DTO
  * 
- * @author k.abe
- * @version 1.0
+ * author k.hagiwara
+ * version 1.0
  */
 @Data
-public class MeetingUpdateForm {
-
+public class MeetingRegisterDto {
+	// 打ち合わせID
+	private String scheduleId;
+	
     // ユーザーID
-    private String scheduleId;
-
-    // サブユーザーID
     private String userId;
 
     // サブユーザーID
@@ -31,8 +26,7 @@ public class MeetingUpdateForm {
     private String clientName;
 
     // 予定日
-    @DateTimeFormat(pattern = "yyyy/MM/dd") // type="date"に代入するための形式
-    private LocalDate scheduledDate;
+    private String scheduledDate;
 
     // 予定時刻
     private String scheduledTime;
@@ -44,8 +38,15 @@ public class MeetingUpdateForm {
     private String mtgPlace;
 
     // 目的
-    private int purpose;
-
+    private int mtgId;
+    
     // コメント
     private String comment;
+    
+    // 作成日
+    private String createdDate;
+    
+    // 作成者
+    private String createdUserId;
+    
 }

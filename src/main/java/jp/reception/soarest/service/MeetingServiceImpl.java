@@ -8,8 +8,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import jp.reception.soarest.common.utils.CommonUtils;
+import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
@@ -19,6 +22,7 @@ import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
+import jp.reception.soarest.form.MeetingUpdateForm;
 import jp.reception.soarest.repository.CommonRepository;
 import jp.reception.soarest.repository.MeetingRepository;
 
@@ -171,7 +175,51 @@ public class MeetingServiceImpl implements MeetingService {
         // 検索結果を返却
         return mtgList;
     }
+    
+    /*
+     * 打ち合わせ情報登録 登録
+     * 
+     * @param form 打ち合わせ情報登録 フォームクラス 
+     * @param searchDto 打ち合わせ情報登録 検索用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    public int registerMtg(MeetingRegisterForm form, 
+    		MeetingRegisterDto registerDto, Model model, String staffID) throws SQLException{
+    	
+    	int registernum = 0;
+    	
+        try {
+        	String maxScheduleId = meetingRepository.getScheduleId();
+        	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
+        	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
+        	// beanの内容を詰め替え
+            BeanUtils.copyProperties(form, registerDto);
+            // プロパティ名が異なるものは別途設定
+            registerDto.setScheduleId(newScheduleId);
+            registerDto.setRoomId(form.getRoomId());
+            registerDto.setMtgId(form.getPurpose());
+            registerDto.setCreatedDate(CommonUtils.getSysdate());
+            registerDto.setCreatedUserId(staffID);
+            
+            // 登録処理を実行
+            registernum = meetingRepository.registerMtg(registerDto);
 
+            // 登録件数が0件の場合
+            if (0 == registernum) {
+                // エラーメッセージを画面に返却
+                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
+            }
+            
+        } catch (Exception e) {
+        	// ハッシュ生成時の例外の場合
+            if (e.getCause() instanceof SQLException) {
+                throw new SQLException(e);
+            }
+        }
+        return registernum;
+    }
+    
     /*
      * 打ち合わせ情報一覧 入力チェック
      * 
@@ -188,7 +236,49 @@ public class MeetingServiceImpl implements MeetingService {
 
         return true;
     }
+    
+    /*
+     * 打ち合わせ情報一覧 入力チェック
+     * 
+     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public boolean inputCheck(MeetingUpdateForm form, Model model) {
+        // 会議室名がその他、かつ打ち合わせ場所がNULLまたは空文字の場合
+        if (form.getRoomId() == 9999 && (null == form.getMtgPlace() || "" == form.getMtgPlace())) {
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_004.getMsg(CharEnum.VALIDATION.getChar()));
+            return false;
+        }
 
+        return true;
+    }
+
+    /*
+     * 打ち合わせ情報登録 入力チェック
+     * 
+     * @param form 打ち合わせ情報登録 フォームクラス 
+     * @param model モデル
+     * @return 入力チェック結果
+     */
+    @Override
+	public boolean inputCheck(MeetingRegisterForm form, BindingResult result, 
+    		Model model, List<String> errorList){
+    	// 入力チェックに該当する場合
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+            	result.getFieldError();
+                errorList.add(error.getDefaultMessage());
+            }
+            // ※リダイレクトにしないとURLが変わってしまうため
+            model.addAttribute(ERR_MSG, errorList);
+
+            return false;
+        }
+        
+        return true;
+	}
+    
     /*
      * 打ち合わせ情報一覧 入力値保持
      * 
@@ -211,35 +301,46 @@ public class MeetingServiceImpl implements MeetingService {
     }
     
     /*
-     * 打ち合わせ情報登録 初期処理
+     * 打ち合わせ登録 入力値保持
      * 
+     * @param form 打ち合わせ情報登録 フォームクラス 
      * @param model モデル
      */
     @Override
-    public void meetingRegister (Model model) throws SQLException {
-        try {
-            // 主担当、副担当プルダウンの取得
-            List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
-
-            // 会議室プルダウンの取得
-            List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
-            
-            // 目的プルダウンの取得
-            List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
-
-            // プルダウン生成
-            CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
-            CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
-            CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
-           
-        } catch (Exception e) {
-            // SQLの例外の場合
-            if (e.getCause() instanceof SQLException) {
-                throw new SQLException(e);
-            } else {
-                throw e;
-            }
-        }
+    public void saveWord(MeetingRegisterForm form, Model model) {
+    	// 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(SUB_USER_ID, form.getSubUserId());
+        model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
+        model.addAttribute(CLIENT_NAME, form.getClientName());
+        model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
+        model.addAttribute(ROOM_ID, form.getRoomId());
+        model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
+        model.addAttribute(COMMENT, form.getComment());
+    }
+    
+    /*
+     * 打ち合わせ情報一覧 入力値保持
+     * 
+     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void saveWord(MeetingUpdateForm form, Model model) {
+        // 検索値を入力欄に保持
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(SUB_USER_ID, form.getSubUserId());
+        model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
+        model.addAttribute(CLIENT_NAME, form.getClientName()).addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
+        model.addAttribute(ROOM_ID, form.getRoomId());
+        model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
+        model.addAttribute(COMMENT, form.getComment());
+        
     }
     
     /*
@@ -264,13 +365,7 @@ public class MeetingServiceImpl implements MeetingService {
 
         
     }
-
-	@Override
-	public boolean registerCheck(MeetingRegisterForm form, Model model) {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
-	}
-
+    
 	/*
      * 打ち合わせ情報一覧 初期処理
      * 

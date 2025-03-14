@@ -3,10 +3,10 @@
 
     <!-- ヘッダー読み込み -->
     <div th:include="common/header"></div>
-    <title>打ち合わせ情報一覧</title>
+    <title>打ち合わせ情報変更</title>
     <body>
         <!-- 打ち合わせ情報一覧 -->
-        <h1 id="mtg_list">打ち合わせ情報一覧</h1>
+        <h1 id="mtg_list">打ち合わせ情報変更</h1>
 
         <!-- エラー文言表示部分 -->
         <th:block th:if="${errMsg}">
@@ -163,7 +163,7 @@
                 </tr>
             </table>
             <!--  <input type="button" onclick="location.href='account_list.html'"value="新規登録">-->
-            <form name="registerMeeting" th:action="@{/mtg_register}" method="post">
+            <form name="registerMeeting" th:action="@{/mtg_register}" method="get">
                 <!-- ボタンエリア -->
                 <div style="text-align: center;"> 
                     <input type="submit" value="新規登録" style="margin-top:20px;">
