@@ -1,6 +1,8 @@
 package jp.reception.soarest.service;
 
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.thymeleaf.util.StringUtils;
 
 import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
@@ -20,12 +23,12 @@ import jp.reception.soarest.domain.dto.PurposeSearchResultDto;
 import jp.reception.soarest.domain.dto.StaffSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.form.MeetingDeleteForm;
 import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
 import jp.reception.soarest.form.MeetingUpdateForm;
 import jp.reception.soarest.repository.CommonRepository;
 import jp.reception.soarest.repository.MeetingRepository;
-
 
 @Service
 /*
@@ -82,6 +85,8 @@ public class MeetingServiceImpl implements MeetingService {
 
     // コメント
     private final String COMMENT = "comment";
+    
+    private final String OTHERS = "その他";
 
     /*
      * 打ち合わせ情報一覧 初期処理
@@ -89,30 +94,20 @@ public class MeetingServiceImpl implements MeetingService {
      * @param model モデル
      */
     @Override
-    public void init(Model model) throws SQLException {
-        try {
-            // 主担当、副担当プルダウンの取得
-            List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
+    public void init(Model model){
+    	// 主担当、副担当プルダウンの取得
+        List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
 
-            // 会議室プルダウンの取得
-            List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
-            
-            // 目的プルダウンの取得
-            List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
+        // 会議室プルダウンの取得
+        List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
+        
+        // 目的プルダウンの取得
+        List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
 
-            // プルダウン生成
-            CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
-            CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
-            CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
-           
-        } catch (Exception e) {
-            // SQLの例外の場合
-            if (e.getCause() instanceof SQLException) {
-                throw new SQLException(e);
-            } else {
-                throw e;
-            }
-        }
+        // プルダウン生成
+        CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
+        CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
+        CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
     }
 
     /*
@@ -125,7 +120,7 @@ public class MeetingServiceImpl implements MeetingService {
      */
     @Override
     public List<MeetingSearchResultDto> searchMtgList(MeetingSearchForm form, 
-        MeetingSearchDto searchDto, Model model) throws SQLException {
+        MeetingSearchDto searchDto, Model model) {
         
         // beanの内容を詰め替え
         BeanUtils.copyProperties(form, searchDto);
@@ -134,44 +129,38 @@ public class MeetingServiceImpl implements MeetingService {
 
         // 検索結果格納用リスト
         List<MeetingSearchResultDto> mtgList = new ArrayList<MeetingSearchResultDto>();
-        try {
-            // 検索処理を実行
-            mtgList = meetingRepository.searchMtgList(searchDto);
+        
+        // 検索処理を実行
+        mtgList = meetingRepository.searchMtgList(searchDto);
+        
+        // 検索結果が0件の場合
+        if (0 == mtgList.size()) {
+            // エラーメッセージを画面に返却
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_001.getMsg(CharEnum.VALIDATION.getChar()));
+            // 検索結果件数を設定
+            // model.addAttribute(SEARCH_COUNT, mtgList.size());
+        } else {
             
-            // 検索結果が0件の場合
-            if (0 == mtgList.size()) {
-                // エラーメッセージを画面に返却
-                model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_001.getMsg(CharEnum.VALIDATION.getChar()));
-                // 検索結果件数を設定
-                // model.addAttribute(SEARCH_COUNT, mtgList.size());
-            } else {
+            int cnt = 0;
+            for(MeetingSearchResultDto rs : mtgList) {
+                // 日付のハイフンを削除
+                mtgList.get(cnt).setScheduledDate(rs.getScheduledDate()
+                    .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
+
+                // 時間の秒を削除
+                mtgList.get(cnt).setScheduledTime(rs.getScheduledTime().substring(0,5));
                 
-                int cnt = 0;
-                for(MeetingSearchResultDto rs : mtgList) {
-                    // 日付のハイフンを削除
-                    mtgList.get(cnt).setScheduledDate(rs.getScheduledDate()
-                        .replace(CharEnum.HYPHEN.getChar(), CharEnum.SLASH.getChar()));
+                // コメントの改行を置換
+                mtgList.get(cnt).setComment(rs.getComment().replaceAll("\r\n|\r|\n", "<br>"));
 
-                    // 時間の秒を削除
-                    mtgList.get(cnt).setScheduledTime(rs.getScheduledTime().substring(0,5));
-                    
-                    // コメントの改行を置換
-                    mtgList.get(cnt).setComment(rs.getComment().replaceAll("\r\n|\r|\n", "<br>"));
-
-                    ++cnt;
-                }
-                // 検索結果を格納
-                model.addAttribute(MTG_LIST, mtgList);
-                // 検索結果件数を設定
-                model.addAttribute(SEARCH_COUNT, mtgList.size());
+                ++cnt;
             }
-        } catch (Exception e) {
-            if (e.getCause() instanceof SQLException) {
-                throw new SQLException(e);
-            } else {
-                throw e;
-            }
+            // 検索結果を格納
+            model.addAttribute(MTG_LIST, mtgList);
+            // 検索結果件数を設定
+            model.addAttribute(SEARCH_COUNT, mtgList.size());
         }
+        
         // 検索結果を返却
         return mtgList;
     }
@@ -185,40 +174,34 @@ public class MeetingServiceImpl implements MeetingService {
      * @return 検索結果
      */
     public int registerMtg(MeetingRegisterForm form, 
-    		MeetingRegisterDto registerDto, Model model, String staffID) throws SQLException{
+    		MeetingRegisterDto registerDto, Model model, String staffID){
     	
     	int registernum = 0;
     	
-        try {
-        	String maxScheduleId = meetingRepository.getScheduleId();
-        	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
-        	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
-        	// beanの内容を詰め替え
-            BeanUtils.copyProperties(form, registerDto);
-            // プロパティ名が異なるものは別途設定
-            registerDto.setScheduleId(newScheduleId);
-            registerDto.setRoomId(form.getRoomId());
-            registerDto.setMtgId(form.getPurpose());
-            registerDto.setCreatedDate(CommonUtils.getSysdate());
-            registerDto.setCreatedUserId(staffID);
-            
-            // 登録処理を実行
-            registernum = meetingRepository.registerMtg(registerDto);
+    	String maxScheduleId = meetingRepository.getScheduleId();
+    	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
+    	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
+    	// beanの内容を詰め替え
+        BeanUtils.copyProperties(form, registerDto);
+        // プロパティ名が異なるものは別途設定
+        registerDto.setScheduleId(newScheduleId);
+        registerDto.setRoomId(form.getRoomId());
+        registerDto.setMtgId(form.getPurpose());
+        registerDto.setCreatedDate(CommonUtils.getSysdate());
+        registerDto.setCreatedUserId(staffID);
+        
+        // 登録処理を実行
+        registernum = meetingRepository.registerMtg(registerDto);
 
-            // 登録件数が0件の場合
-            if (0 == registernum) {
-                // エラーメッセージを画面に返却
-                model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
-            }
-            
-        } catch (Exception e) {
-        	// ハッシュ生成時の例外の場合
-            if (e.getCause() instanceof SQLException) {
-                throw new SQLException(e);
-            }
+        // 登録件数が0件の場合
+        if (0 == registernum) {
+            // エラーメッセージを画面に返却
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
         }
+        
         return registernum;
     }
+    
     
     /*
      * 打ち合わせ情報一覧 入力チェック
@@ -265,6 +248,41 @@ public class MeetingServiceImpl implements MeetingService {
 	public boolean inputCheck(MeetingRegisterForm form, BindingResult result, 
     		Model model, List<String> errorList){
     	// 入力チェックに該当する場合
+    	
+    	Boolean is_error = false;
+    	
+    	if(form.getRoomList() != null) {
+	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
+	    		if(room.getRoomId() == form.getRoomId()) {
+	    			if( room.getRoomName().equals(OTHERS) && StringUtils.isEmpty(form.getMtgPlace()) ) {
+	    				model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
+	    				is_error = true;
+	    			}
+	    		}
+	    	}
+    	}
+    	
+    	if(!StringUtils.isEmpty(form.getScheduledDate()) && !StringUtils.isEmpty(form.getScheduledTime())) {
+			
+	    	LocalDate nowDate = LocalDate.now();
+	    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    	LocalDate date = LocalDate.parse(form.getScheduledDate(), dateFormat);
+	    	
+	    	LocalTime nowTime = LocalTime.now();
+	    	DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
+	    	
+	    	 if(date.isBefore(nowDate)){
+	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
+ 				is_error = true;
+	    	}else if(date.equals(nowDate)) {
+	    		if(time.isBefore(nowTime)) {
+	    			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
+    				is_error = true;
+	    		}
+	    	}
+    	}
+    	
         if (result.hasErrors()) {
             for (ObjectError error : result.getAllErrors()) {
             	result.getFieldError();
@@ -273,10 +291,11 @@ public class MeetingServiceImpl implements MeetingService {
             // ※リダイレクトにしないとURLが変わってしまうため
             model.addAttribute(ERR_MSG, errorList);
 
-            return false;
+            is_error = true;
         }
         
-        return true;
+        if(is_error == true) return false;
+        else					return true;
 	}
     
     /*
@@ -344,60 +363,24 @@ public class MeetingServiceImpl implements MeetingService {
     }
     
     /*
-     * 打ち合わせ情報登録 入力チェック
+     * 打ち合わせ情報削除 入力値保持
      * 
      * @param form 打ち合わせ情報一覧 フォームクラス 
      * @param model モデル
      */
     @Override
-    public void registerCheck(MeetingSearchForm form, Model model) {
-    	// 検索値を入力欄に保持
+    public void saveWord(MeetingDeleteForm form, Model model) {
+        // 検索値を入力欄に保持
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(SUB_USER_ID, form.getSubUserId());
         model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
-        model.addAttribute(CLIENT_NAME, form.getClientName());
+        model.addAttribute(CLIENT_NAME, form.getClientName()).addAttribute(SCHEDULED_DATE, form.getScheduledDate());
         model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());
         model.addAttribute(MTG_PLACE, form.getMtgPlace());
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
-
         
     }
-    
-	/*
-     * 打ち合わせ情報一覧 初期処理
-     * 
-     * @param model モデル
-     */
-    @Override
-    public void init1(Model model) throws SQLException {
-        try {
-            // 主担当、副担当プルダウンの取得
-            List<StaffSearchResultDto> staffList = commonRepository.searchStaffList();
-
-            // 会議室プルダウンの取得
-            List<MeetingRoomSearchResultDto> roomList = commonRepository.searchRoomList();
-            
-            // 目的プルダウンの取得
-            List<PurposeSearchResultDto> purposeList = commonRepository.searchPurposeList();
-
-            // プルダウン生成
-            CommonUtils.makePulldown(model, staffList, new StaffSearchResultDto());
-            CommonUtils.makePulldown(model, roomList, new MeetingRoomSearchResultDto());
-            CommonUtils.makePulldown(model, purposeList, new PurposeSearchResultDto());
-           
-        } catch (Exception e) {
-            // SQLの例外の場合
-            if (e.getCause() instanceof SQLException) {
-                throw new SQLException(e);
-            } else {
-                throw e;
-            }
-        }
-    
-		
-	}
-
 }

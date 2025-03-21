@@ -1,11 +1,9 @@
 package jp.reception.soarest.form;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -38,7 +36,7 @@ public class MeetingRegisterForm {
 	
 	@AssertTrue(message="{MSG-D02-W-005}")
     public boolean isSubUserIdSize() {
-		if(subUserId != null && !subUserId.equals("") && (subUserId.length() < 6 || subUserId.length() >10)) {
+		if(!StringUtils.isEmpty(subUserId) && (subUserId.length() < 6 || subUserId.length() >10)) {
 			return false;
 		}
         return true;
@@ -46,7 +44,7 @@ public class MeetingRegisterForm {
 	
 	@AssertTrue(message="{MSG-D02-W-004}")
     public boolean isSubUserIdPattern() {
-		if(subUserId != null && !subUserId.equals("") && !subUserId.matches("^(?=.*[a-z])(?=.*[0-9])..*|(?=.*[A-Z])(?=.*[0-9])..*$") ) {
+		if(!StringUtils.isEmpty(subUserId) && !subUserId.matches("^(?=.*[a-z])(?=.*[0-9])..*|(?=.*[A-Z])(?=.*[0-9])..*$") ) {
 			return false;
 		}
         return true;
@@ -57,7 +55,7 @@ public class MeetingRegisterForm {
     
     @AssertTrue(message="{MSG-D02-W-006}")
     public boolean isClientCopNameSize() {
-    	if(clientCompName != null && !clientCompName.equals("")  && (clientCompName.length() < 1 || clientCompName.length() >100)) {
+    	if(!StringUtils.isEmpty(clientCompName)  && (clientCompName.length() < 1 || clientCompName.length() >100)) {
 			return false;
 		}
     	return true;
@@ -75,29 +73,6 @@ public class MeetingRegisterForm {
     // 予定時刻
     @NotBlank(message = "{MSG-D02-W-010}")
     private String scheduledTime;
-    
-    @AssertTrue(message="{MSG-D02-W-011}")
-    public boolean isScheduledDateTimeAfter() {
-    	if(scheduledDate != null && !scheduledDate.equals("") && scheduledTime != null && !scheduledTime.equals("")) {
-    			
-	    	LocalDate nowDate = LocalDate.now();
-	    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    	LocalDate date = LocalDate.parse(scheduledDate, dateFormat);
-	    	
-	    	LocalTime nowTime = LocalTime.now();
-	    	DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-	    	LocalTime time = LocalTime.parse(scheduledTime, timeFormat);
-	    	
-	    	 if(date.isBefore(nowDate)){
-	    		return false;
-	    	}else if(date.equals(nowDate)) {
-	    		if(time.isBefore(nowTime)) {
-	    			return false;
-	    		}
-	    	}
-    	}
-    	return true;
-    }
 
     // 会議室番号
     private int roomId;
@@ -113,35 +88,22 @@ public class MeetingRegisterForm {
     private String mtgPlace;
     @AssertTrue(message="{MSG-D02-W-013}")
     public boolean isMtgPlaceSize() {
-    	if(clientCompName != null && !clientCompName.equals("")  && (clientCompName.length() < 1 || clientCompName.length() >50)) {
+    	if(!StringUtils.isEmpty(clientCompName)  && (clientCompName.length() < 1 || clientCompName.length() >50)) {
 			return false;
 		}
     	return true;
-    }
-    
-    @AssertTrue(message="{MSG-D02-W-014}")
-    public boolean isMtgPlaceNotNull() {
-    	if(roomList != null) {
-	    	for(MeetingRoomSearchResultDto room : roomList) {
-	    		if(room.getRoomId() == roomId) {
-	    			if( room.getRoomName().equals(OTHERS) && StringUtils.isEmpty(mtgPlace) ) {
-	    				return false;
-	    			}
-	    		}
-	    	}
-    	}
-		return true;
     }
     
     // 目的
     private int purpose;
     
     // コメント
+    @Max(value = 998, message="{MSG-D02-W-015}")
     private String comment;
     
-    @AssertTrue(message="{MSG-D02-W-015}")
+    @AssertTrue(message="{MSG-D02-W-016}")
     public boolean isCommentSize() {
-		if(comment != null && !comment.equals("") && (comment.length() < 1 || comment.length() >200)) {
+		if(!StringUtils.isEmpty(comment) && (comment.length() < 1 || comment.length() >200)) {
 			return false;
 		}
         return true;

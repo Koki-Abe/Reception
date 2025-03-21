@@ -1,6 +1,7 @@
 package jp.reception.soarest.controller;
 
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
@@ -70,6 +71,12 @@ public class MeetingController {
     // 打ち合わせ情報登録完了　URL
     private final String MTG_REGISTER_COMPLETE_URL = "/mtg_register_comp";
     
+    // 打ち合わせ情報削除確認　URL
+    private final String MTG_DELETE_CONFIRM_URL = "/mtg_delete_conf";
+    
+    // 打ち合わせ情報削除完了　URL
+    private final String MTG_DELETE_COMPLETE_URL = "/mtg_delete_comp";
+    
     // コメントURL
     private final String COMMENT_URL = "/comment";
 
@@ -81,6 +88,9 @@ public class MeetingController {
     
     // コメント
     private final String COMMENT = "comment";
+    
+    // エラーメッセージ
+    static private String errMsg = "";
 
     /*
      * 打ち合わせ情報一覧 初期表示
@@ -107,16 +117,11 @@ public class MeetingController {
         // セッションから表示情報を取得
         model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
         
+        // エラーメッセージ
+    	errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+    	
         // 初期処理
-        try {
-            meetingService.init(model);
-        } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        }
+        meetingService.init(model);
 
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -157,16 +162,12 @@ public class MeetingController {
            return CharEnum.FORWARD.getChar() + UrlEnum.MEETING_LIST.getUrl();
        }
 
-       try {
-           // 検索処理
-           meetingService.searchMtgList(form, new MeetingSearchDto(), model);
-       } catch (SQLException e) {
-           CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_002.getMsg(null));
-           return UrlEnum.SYSTEM_ERROR.getPass();
-       } catch (Exception e) {
-           CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-           return UrlEnum.SYSTEM_ERROR.getPass();
-       }
+       // エラーメッセージ
+       errMsg = MessageEnum.MSG_D01_E_002.getMsg(null);
+       
+       // 検索処理
+       meetingService.searchMtgList(form, new MeetingSearchDto(), model);
+       
        // 終了ログ
        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
@@ -203,16 +204,11 @@ public class MeetingController {
       // セッションから表示情報を取得
       model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
       
+      // エラーメッセージ
+      errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+  	
       // 初期処理
-      try {
-          meetingService.init(model);
-      } catch (SQLException e) {
-          CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-          return UrlEnum.SYSTEM_ERROR.getPass();
-      } catch (Exception e) {
-          CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-          return UrlEnum.SYSTEM_ERROR.getPass();
-      }
+      meetingService.init(model);
       
       // 検索値を入力欄に保持
       meetingService.saveWord(form, model);
@@ -270,16 +266,11 @@ public class MeetingController {
         // 検索値を入力欄に保持
         meetingService.saveWord(form , model);
 
-     // 初期処理
-    	try {
-    		meetingService.init(model);
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+        // エラーメッセージ
+    	errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+    	
+        // 初期処理
+        meetingService.init(model);
     	
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -319,16 +310,13 @@ public class MeetingController {
     	
     	// 入力チェック
     	if(meetingService.inputCheck(form, result, model, errorList)) {
-    		// 初期処理
-    		try {
-    			meetingService.init(model);
-    		} catch (SQLException e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		} catch (Exception e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		}
+    		
+    		// エラーメッセージ
+	    	errMsg = MessageEnum.MSG_D02_E_001.getMsg(null);
+	    	
+	    	// 初期処理
+			meetingService.init(model);
+			
     		// 画面上部メッセージ部分
     		model.addAttribute(MESSAGE, MessageEnum.MSG_C03_I_001.getMsg(null));
 
@@ -375,22 +363,17 @@ public class MeetingController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-    	try {
-    		// 登録処理
-    		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-    		int count = meetingService.registerMtg(form, new MeetingRegisterDto(), model, staffID);
-    		// 登録情報がない場合
-    		if(count == 0) {
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    		
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C03_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+    	// エラーメッセージ
+    	errMsg = MessageEnum.MSG_D03_E_002.getMsg(null);
+    	
+    	String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
+    	int count = meetingService.registerMtg(form, new MeetingRegisterDto(), model, staffID);
+		
+    	// 登録情報がない場合
+		if(count == 0) {
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+		
     	// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_D04_I_001.getMsg(null));
 
@@ -403,7 +386,162 @@ public class MeetingController {
     	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.MEETING_REGISTER_COMPLETE.getPass();
     }
-
     
-        
+    // TODO
+    /*
+     * 打ち合わせ情報削除確認 確認
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス
+     * @param result フォームのバリデーションチェック
+     * @param model モデル
+     * @return 打ち合わせ情報削除画面
+     */
+    
+    /*
+    @RequestMapping(value = MTG_DELETE_CONFIRM_URL, method = RequestMethod.POST)
+    private String deleteMtgConf(MeetingDeleteForm form, BindingResult result, Model model) {
+    	// 開始ログ
+    	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+    	// セッション存在チェック
+    	session = request.getSession(false);
+    	if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+    		// 終了ログ
+    		logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+    		// ログイン画面へリダイレクト
+    		return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+    	}
+    	// セッションから表示情報を取得
+    	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+    	
+		// 初期処理
+		try {
+			meetingService.init(model);
+		} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+		// 画面上部メッセージ部分
+		model.addAttribute(MESSAGE, MessageEnum.MSG_C08_I_001.getMsg(null));
+		
+		// 対象アカウント情報を保持
+		meetingService.saveWord(form, model);
+
+		// 削除対象のデータを保持
+    	try {
+    		meetingService.getLastDate(form, model);
+    		int count = meetingService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+    	
+		// 終了ログ
+		logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+		
+		// アカウント情報削除確認画面へ遷移
+		return UrlEnum.MEETING_DELETE_CONFIRM.getPass();
+    }
+    */
+    
+    /*
+     * 打ち合わせ情報削除確認 削除
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス
+     * @param result フォームのバリデーションチェック
+     * @param model モデル
+     * @return 打ち合わせ情報登録削除画面
+     */
+    /*
+    @RequestMapping(value = MTG_DELETE_COMPLETE_URL, method = RequestMethod.POST)
+    private String deleteMtgConmp(AccountDeleteForm form, BindingResult result, Model model) {
+
+    	// 開始ログ
+    	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
+
+    	// セッション存在チェック
+    	session = request.getSession(false);
+    	if (null == session || null == (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)) {
+    		// 終了ログ
+    		logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+    		// ログイン画面へリダイレクト
+    		return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
+    	}gradle exception 追加
+    	
+    	// セッションから表示情報を取得
+    	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
+    	
+    	// 削除対象のデータをチェック
+    	try {
+    		int count = meetingService.checkData(form, model);
+			if(count == 0) {
+				// 変更予定のデータに操作が加えられていた場合
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		} catch (Exception e) {
+			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+    	
+    	try {
+    		// 削除処理
+    		int count = meetingService.deleteAccount(form, new AccountDeleteDto(), model);
+    		// 対象のアカウント情報がない場合
+    		if(count == 0) {
+				return UrlEnum.SYSTEM_ERROR.getPass();
+			}
+    	} catch (SQLException e) {
+    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C08_E_001.getMsg(null));
+    		return UrlEnum.SYSTEM_ERROR.getPass();
+    	} catch (Exception e) {
+    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+    		return UrlEnum.SYSTEM_ERROR.getPass();
+    	}
+    	
+    	// 画面上部メッセージ部分
+		model.addAttribute(MESSAGE, MessageEnum.MSG_C09_I_001.getMsg(null));
+
+    	// 終了ログ
+    	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
+
+    	// アカウント情報削除完了画面へ遷移
+    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
+    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
+    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
+    	return UrlEnum.MEETING_DELETE_COMPLETE.getPass();
+    }
+        */
+    
+    /*
+     * 例外ハンドリング
+     * 
+     * @param e 例外
+     * @param model モデル
+     * @return エラー画面
+     */
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler(Exception e, Model model) {
+    	
+    	if (e.getCause() instanceof SQLException) {
+    		model.addAttribute("errMsg", errMsg);
+    	}else if(e.getCause() instanceof NoSuchAlgorithmException) {
+    		model.addAttribute("errMsg", MessageEnum.MSG_E_002.getMsg(null));
+        }else {
+        	model.addAttribute("errMsg", MessageEnum.MSG_E_001.getMsg(null));
+        }
+    	return UrlEnum.SYSTEM_ERROR.getPass();
+    }
 }

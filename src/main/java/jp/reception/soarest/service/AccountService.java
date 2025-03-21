@@ -1,6 +1,5 @@
 package jp.reception.soarest.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public interface AccountService {
      * 
      * @param model モデル
      */
-    void init(Model model) throws SQLException;
+    void init(Model model);
 
     /*
      * アカウント情報一覧 検索
@@ -43,7 +42,7 @@ public interface AccountService {
      * @return 検索結果
      */
     List<AccountSearchResultDto> searchAccountList(AccountSearchForm form, 
-        AccountSearchDto searchDto, Model model) throws SQLException;
+        AccountSearchDto searchDto, Model model);
     
     /*
      * アカウント情報変更 変更
@@ -55,7 +54,7 @@ public interface AccountService {
      * @return 検索結果
      */
     int updateAccount(AccountUpdateForm form, 
-    		AccountUpdateDto updDto, Model model, String staffId) throws SQLException;
+    		AccountUpdateDto updDto, Model model, String staffId);
     
     /*
      * アカウント情報登録 登録
@@ -67,7 +66,7 @@ public interface AccountService {
      * @return 検索結果
      */
     int registerAccount(AccountRegisterForm form, 
-    		AccountRegisterDto registerDto, Model model, String staffId) throws SQLException;
+    		AccountRegisterDto registerDto, Model model, String staffId);
     
     /*
      * アカウント情報削除 削除
@@ -78,14 +77,14 @@ public interface AccountService {
      * @return 検索結果
      */
     int deleteAccount(AccountDeleteForm form, 
-    		AccountDeleteDto delDto, Model model) throws SQLException;
+    		AccountDeleteDto delDto, Model model);
     
     /*
      * アカウント情報変更 変更対象の最終アップデート時間を取得
      * @param form アカウント情報変更 フォームクラス 
      * @param model モデル
      */
-    void getLastDate(AccountUpdateForm form, Model model) throws SQLException;
+    void getLastDate(AccountUpdateForm form, Model model);
     
     /*
      * アカウント情報変更 変更対象のデータをチェック
@@ -93,14 +92,14 @@ public interface AccountService {
      * @param form アカウント情報変更 フォームクラス 
      * @param model モデル
      */
-    int checkData(AccountUpdateForm form, Model model) throws SQLException;
+    int checkData(AccountUpdateForm form, Model model);
     
     /*
      * アカウント情報削除 削除対象の最終アップデート時間を取得
      * @param form アカウント情報削除 フォームクラス 
      * @param model モデル
      */
-    void getLastDate(AccountDeleteForm form, Model model) throws SQLException;
+    void getLastDate(AccountDeleteForm form, Model model);
     
     /*
      * アカウント情報削除 削除対象のデータをチェック
@@ -108,7 +107,7 @@ public interface AccountService {
      * @param form アカウント情報削除 フォームクラス 
      * @param model モデル
      */
-    int checkData(AccountDeleteForm form, Model model) throws SQLException;
+    int checkData(AccountDeleteForm form, Model model);
     
     /*
      * アカウント情報一覧 入力チェック

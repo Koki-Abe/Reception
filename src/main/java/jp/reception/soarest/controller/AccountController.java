@@ -1,5 +1,6 @@
 package jp.reception.soarest.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import jp.reception.soarest.common.utils.CommonUtils;
 import jp.reception.soarest.domain.dto.AccountDeleteDto;
 import jp.reception.soarest.domain.dto.AccountRegisterDto;
 import jp.reception.soarest.domain.dto.AccountSearchDto;
@@ -93,6 +94,9 @@ public class AccountController {
     
     // 更新用 最終ログイン日時
     private final String UPD_LAST_LOGIN_DATE = "forUpdLoginDate";
+    
+    // エラーメッセージ
+    static private String errMsg = "";
 
      /*
       * アカウント情報一覧 初期表示
@@ -113,16 +117,12 @@ public class AccountController {
         // セッションから表示情報を取得
         model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
+        // エラーメッセージ
+        errMsg = MessageEnum.MSG_C01_E_001.getMsg(null);
+        
         // 初期処理
-        try {
-            accountService.init(model);
-        } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        }
+        accountService.init(model);
+        
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
@@ -162,16 +162,12 @@ public class AccountController {
             return CharEnum.FORWARD.getChar() + UrlEnum.ACCOUNT_LIST.getUrl();
         }
 
-        try {
-            // 検索処理
-            accountService.searchAccountList(form, new AccountSearchDto(), model);
-        } catch (SQLException e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_002.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        } catch (Exception e) {
-            CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-            return UrlEnum.SYSTEM_ERROR.getPass();
-        }
+        // エラーメッセージ
+        errMsg = MessageEnum.MSG_C01_E_002.getMsg(null);
+        
+        // 検索処理
+        accountService.searchAccountList(form, new AccountSearchDto(), model);
+        
         // 終了ログ
         logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
@@ -206,35 +202,20 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
-    	// 初期処理
-    	try {
-    		accountService.init(model);
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        
+        // 初期処理
+        accountService.init(model);
 
     	// 変更内容を入力欄に保持
     	accountService.saveWord(form, model);
     	
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        
     	// 変更対象のデータを保持
-    	try {
-    		accountService.getLastDate(form, model);
-    		int count = accountService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		}
+        accountService.getLastDate(form, model);
 
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -273,33 +254,24 @@ public class AccountController {
     	// 変更内容を入力欄に保持
 		accountService.saveWord(form, model);
 		
+		// エラーメッセージ
+        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        
 		// 変更対象のデータをチェック
-		try {
-			int count = accountService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+		int count = accountService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
     	// 入力チェック
     	if(accountService.inputCheck(form, result, model, errorList)) {
-    		// 初期処理
-    		try {
-    			accountService.init(model);
-    		} catch (SQLException e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		} catch (Exception e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		}
+    		// エラーメッセージ
+            errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+            
+            // 初期処理
+            accountService.init(model);
+    		
     		// 画面上部メッセージ部分
     		model.addAttribute(MESSAGE, MessageEnum.MSG_C06_I_001.getMsg(null));
     		
@@ -346,37 +318,27 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-    	// 変更対象のデータをチェック
-    	try {
-    		int count = accountService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        
+		// 変更対象のデータをチェック
+		int count = accountService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
-    	try {
-    		// 変更処理
-    		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-    		int count = accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
-    		
-    		// 対象のアカウント情報がない場合
-    		if(count == 0) {
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C06_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+		// エラーメッセージ
+        errMsg = MessageEnum.MSG_C06_E_001.getMsg(null);
+        
+        // 変更処理
+		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
+		int updAccountCount = accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
+		
+		// 対象のアカウント情報がない場合
+		if(updAccountCount == 0) {
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
     	
     	// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C07_I_001.getMsg(null));
@@ -434,16 +396,11 @@ public class AccountController {
     	// 登録内容を入力欄に保持
     	accountService.saveWord(form, model);
 
-    	// 初期処理
-    	try {
-    		accountService.init(model);
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        
+        // 初期処理
+        accountService.init(model);
 
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -483,16 +440,12 @@ public class AccountController {
     	
     	// 入力チェック
     	if(accountService.inputCheck(form, result, model, errorList)) {
-    		// 初期処理
-    		try {
-    			accountService.init(model);
-    		} catch (SQLException e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		} catch (Exception e) {
-    			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    			return UrlEnum.SYSTEM_ERROR.getPass();
-    		}
+    		// エラーメッセージ
+            errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+            
+            // 初期処理
+            accountService.init(model);
+            
     		// 画面上部メッセージ部分
     		model.addAttribute(MESSAGE, MessageEnum.MSG_C03_I_001.getMsg(null));
 
@@ -539,22 +492,17 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-    	try {
-    		// 登録処理
-    		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-    		int count = accountService.registerAccount(form, new AccountRegisterDto(), model, staffID);
-    		// 対象のアカウント情報がない場合
-    		if(count == 0) {
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    		
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C03_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_C03_E_001.getMsg(null);
+        
+        // 登録処理
+		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
+		int count = accountService.registerAccount(form, new AccountRegisterDto(), model, staffID);
+		// 対象のアカウント情報がない場合
+		if(count == 0) {
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
+		
     	// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C04_I_001.getMsg(null));
 
@@ -592,35 +540,26 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-		// 初期処理
-		try {
-			accountService.init(model);
-		} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		}
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        
+        // 初期処理
+        accountService.init(model);
+        
 		// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C08_I_001.getMsg(null));
 		
 		// 対象アカウント情報を保持
 		accountService.saveWord(form, model);
 
+		// エラーメッセージ
+        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        
 		// 削除対象のデータを保持
-    	try {
-    		accountService.getLastDate(form, model);
-    		int count = accountService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+        accountService.getLastDate(form, model);
+		int count = accountService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -654,38 +593,29 @@ public class AccountController {
     		return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
     	}
     	
+    	// エラーメッセージ
+        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
     	// 削除対象のデータをチェック
-    	try {
-    		int count = accountService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+    	int count = accountService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
-    	try {
-    		// 削除処理
-    		int count = accountService.deleteAccount(form, new AccountDeleteDto(), model);
-    		// 対象のアカウント情報がない場合
-    		if(count == 0) {
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C08_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+		// エラーメッセージ
+        errMsg = MessageEnum.MSG_C08_E_001.getMsg(null);
+        
+        // 削除処理
+		int deleteAccountCount = accountService.deleteAccount(form, new AccountDeleteDto(), model);
+		
+		// 対象のアカウント情報がない場合
+		if(deleteAccountCount == 0) {
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
     	
     	// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C09_I_001.getMsg(null));
@@ -699,4 +629,25 @@ public class AccountController {
     	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.ACCOUNT_DELETE_COMPLETE.getPass();
     }
+    
+    /*
+     * 例外ハンドリング
+     * 
+     * @param e 例外
+     * @param model モデル
+     * @return エラー画面
+     */
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler(Exception e, Model model) {
+    	
+    	if (e.getCause() instanceof SQLException) {
+    		model.addAttribute("errMsg", errMsg);
+    	}else if(e.getCause() instanceof NoSuchAlgorithmException) {
+    		model.addAttribute("errMsg", MessageEnum.MSG_E_002.getMsg(null));
+        }else {
+        	model.addAttribute("errMsg", MessageEnum.MSG_E_001.getMsg(null));
+        }
+    	return UrlEnum.SYSTEM_ERROR.getPass();
+    }
+    
 }
