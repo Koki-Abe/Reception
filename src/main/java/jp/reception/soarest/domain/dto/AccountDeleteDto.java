@@ -22,6 +22,6 @@ public class AccountDeleteDto {
     // 権限ID
     private int authId;
     
- // 最終変更日時
+    // 最終変更日時
 	private String lastUpdateDate;
 }

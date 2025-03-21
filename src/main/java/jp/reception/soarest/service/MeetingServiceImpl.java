@@ -15,6 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.thymeleaf.util.StringUtils;
 
 import jp.reception.soarest.common.utils.CommonUtils;
+import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
@@ -87,6 +88,9 @@ public class MeetingServiceImpl implements MeetingService {
     private final String COMMENT = "comment";
     
     private final String OTHERS = "その他";
+    
+    // 変更前アップデート日時
+    private String LAST_UPDATE_DATE = "lastUpdateDate";
 
     /*
      * 打ち合わせ情報一覧 初期処理
@@ -169,7 +173,7 @@ public class MeetingServiceImpl implements MeetingService {
      * 打ち合わせ情報登録 登録
      * 
      * @param form 打ち合わせ情報登録 フォームクラス 
-     * @param searchDto 打ち合わせ情報登録 検索用DTO
+     * @param registerDto 打ち合わせ情報登録 検索用DTO
      * @param model モデル
      * @return 検索結果
      */
@@ -200,6 +204,64 @@ public class MeetingServiceImpl implements MeetingService {
         }
         
         return registernum;
+    }
+    
+    /*
+     * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param model モデル
+     */
+    public void getLastDate(MeetingDeleteForm form, Model model){
+    	MeetingDeleteDto delDto = new MeetingDeleteDto();
+    	BeanUtils.copyProperties(form, delDto);
+        // プロパティ名が異なるものは別途設定
+    	
+    	// 変更対象の最重アップデート日時を取得
+    	String lastDate = meetingRepository.getDeleteDate(delDto);
+    	form.setLastUpdateDate(lastDate);
+    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+    }
+    
+    /*
+     * 打ち合わせ情報削除 削除対象のデータをチェック
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param model モデル
+     */
+    public int checkData(MeetingDeleteForm form, Model model){
+    	MeetingDeleteDto delDto = new MeetingDeleteDto();
+    	BeanUtils.copyProperties(form, delDto);
+        // プロパティ名が異なるものは別途設定
+    	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
+        
+    	// 完全一致するデータを数える
+    	int count = meetingRepository.checkDeleteData(delDto);
+        if (0 == count) {
+            // エラーメッセージを画面に返却
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
+        }
+        return count;
+    }
+    
+    /*
+     * 打ち合わせ情報削除 削除
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param searchDto 打ち合わせ情報削除 削除用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    public int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model){
+    	// beanの内容を詰め替え
+        BeanUtils.copyProperties(form, deleteDto);
+        
+        // プロパティ名が異なるものは別途設定
+    	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
+    	
+        // 削除処理を実行
+        int deletenum = meetingRepository.deleteMtg(deleteDto);
+        
+        return  deletenum;
     }
     
     

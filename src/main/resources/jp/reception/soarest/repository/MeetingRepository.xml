@@ -38,6 +38,7 @@
                 , MM.MTG_ID AS MTG_ID
                 , MM.MTG_NAME AS MTG_NAME
                 , MSC.COMMENT AS COMMENT
+                , MSC.IS_DELETED AS IS_DELETED
             FROM
                 MTG_SCHEDULE MSC
             INNER JOIN M_STAFF MS ON MSC.STAFF_ID = MS.STAFF_ID
@@ -75,7 +76,8 @@
             </if>  
             <if test="comment != null and comment != ''">
                 AND MTG.COMMENT LIKE CONCAT('%', #{comment}, '%' )
-            </if> 
+            </if>
+            	AND MTG.IS_DELETED =false
         </where>
         ORDER BY CAST(MTG.SCHEDULE_ID AS SIGNED) ASC
     </select>
@@ -122,5 +124,143 @@
 			#{createdUserId}
 		);
     </insert>
+    
+    <!-- 打ち合わせ情報削除 削除対象の最終アップデート時間を取得 -->
+    <select id="getDeleteDate"  parameterType="jp.reception.soarest.domain.dto.MeetingDeleteDto" resultType="String">
+        SELECT
+            UPDATED_DATE
+        FROM
+            MTG_SCHEDULE
+        <where>
+        	<if test="scheduleId != null and scheduleId != ''">
+                SCHEDULE_ID = #{scheduleId}
+            </if>  
+            <if test="userId != null and userId != ''">
+                AND STAFF_ID = #{userId}
+            </if>  
+            <if test="subUserId != null and subUserId != ''">
+                AND SUB_STAFF_ID = #{subUserId}
+            </if>  
+            <if test="clientName != null and clientName != ''">
+                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
+            </if>  
+            <if test="clientCompName != null and clientCompName != ''">
+                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
+            </if>  
+            <if test="scheduledDate != null and scheduledDate != ''">
+                AND SCHEDULED_DATE = #{scheduledDate}
+            </if>  
+            <if test="scheduledTime != null and scheduledTime != ''">
+                AND SCHEDULED_TIME = #{scheduledTime}
+            </if>  
+            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
+                AND ROOM_ID = #{roomId}
+            </if>  
+            <if test="mtgPlace != null and mtgPlace != ''">
+                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
+            </if>  
+            <if test="mtgId != null and mtgId != '' and mtgId != 999">
+                AND MTG_ID = #{mtgId}
+            </if>  
+            <if test="comment != null and comment != ''">
+                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
+            </if> 
+        </where>;
+        
+    </select>
+    
+    <!-- 打ち合わせ情報変更 削除対象のデータをチェック -->
+    <select id="checkDeleteData"  parameterType="jp.reception.soarest.domain.dto.MeetingDeleteDto" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            MTG_SCHEDULE
+        <where>
+            <if test="scheduleId != null and scheduleId != ''">
+                SCHEDULE_ID = #{scheduleId}
+            </if>  
+            <if test="userId != null and userId != ''">
+                AND STAFF_ID = #{userId}
+            </if>  
+            <if test="subUserId != null and subUserId != ''">
+                AND SUB_STAFF_ID = #{subUserId}
+            </if>  
+            <if test="clientName != null and clientName != ''">
+                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
+            </if>  
+            <if test="clientCompName != null and clientCompName != ''">
+                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
+            </if>  
+            <if test="scheduledDate != null and scheduledDate != ''">
+                AND SCHEDULED_DATE = #{scheduledDate}
+            </if>  
+            <if test="scheduledTime != null and scheduledTime != ''">
+                AND SCHEDULED_TIME = #{scheduledTime}
+            </if>  
+            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
+                AND ROOM_ID = #{roomId}
+            </if>  
+            <if test="mtgPlace != null and mtgPlace != ''">
+                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
+            </if>  
+            <if test="mtgId != null and mtgId != '' and mtgId != 999">
+                AND MTG_ID = #{mtgId}
+            </if>  
+            <if test="comment != null and comment != ''">
+                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
+            </if> 
+            <if test="lastUpdateDate != null and lastUpdateDate != ''">
+                AND UPDATED_DATE LIKE CONCAT('%', #{lastUpdateDate}, '%' )
+            </if>
+        </where>;
+        
+    </select>
+    
+    <!-- 打ち合わせ情報削除 -->
+    <update id="deleteMtg"  parameterType="jp.reception.soarest.domain.dto.MeetingDeleteDto" >
+        UPDATE
+        	MTG_SCHEDULE
+       	SET
+			IS_DELETED = true
+       	<where>
+            <if test="scheduleId != null and scheduleId != ''">
+                SCHEDULE_ID = #{scheduleId}
+            </if>  
+            <if test="userId != null and userId != ''">
+                AND STAFF_ID = #{userId}
+            </if>  
+            <if test="subUserId != null and subUserId != ''">
+                AND SUB_STAFF_ID = #{subUserId}
+            </if>  
+            <if test="clientName != null and clientName != ''">
+                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
+            </if>  
+            <if test="clientCompName != null and clientCompName != ''">
+                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
+            </if>  
+            <if test="scheduledDate != null and scheduledDate != ''">
+                AND SCHEDULED_DATE = #{scheduledDate}
+            </if>  
+            <if test="scheduledTime != null and scheduledTime != ''">
+                AND SCHEDULED_TIME = #{scheduledTime}
+            </if>  
+            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
+                AND ROOM_ID = #{roomId}
+            </if>  
+            <if test="mtgPlace != null and mtgPlace != ''">
+                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
+            </if>  
+            <if test="mtgId != null and mtgId != '' and mtgId != 999">
+                AND MTG_ID = #{mtgId}
+            </if>  
+            <if test="comment != null and comment != ''">
+                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
+            </if> 
+            <if test="lastUpdateDate != null and lastUpdateDate != ''">
+                AND UPDATED_DATE LIKE CONCAT('%', #{lastUpdateDate}, '%' )
+            </if>
+        </where>;
+        
+    </update>
 
 </mapper>

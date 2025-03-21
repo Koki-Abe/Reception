@@ -1,20 +1,19 @@
-package jp.reception.soarest.form;
+package jp.reception.soarest.domain.dto;
 
 import lombok.Data;
 
-/* 
- * アカウント情報変更 フォーム
+/*
+ * 打ち合わせ情報登録用DTO
  * 
- * @author k_hagiwara
- * @version 1.0
+ * author k.hagiwara
+ * version 1.0
  */
 @Data
-public class MeetingDeleteForm {
-	
+public class MeetingDeleteDto {
 	// 打ち合わせID
 	private String scheduleId;
-		
-	// ユーザーID
+	
+    // ユーザーID
     private String userId;
 
     // サブユーザーID
@@ -39,11 +38,12 @@ public class MeetingDeleteForm {
     private String mtgPlace;
 
     // 目的
-    private int purpose;
+    private int mtgId;
     
     // コメント
     private String comment;
     
     // 最終変更日時
-  	private String lastUpdateDate;
+ 	private String lastUpdateDate;
+    
 }

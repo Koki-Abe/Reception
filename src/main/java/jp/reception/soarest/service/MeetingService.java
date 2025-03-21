@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
@@ -45,13 +46,38 @@ public interface MeetingService {
      * 打ち合わせ情報登録 登録
      * 
      * @param form 打ち合わせ情報登録 フォームクラス 
-     * @param searchDto 打ち合わせ情報登録 検索用DTO
+     * @param registerDto 打ち合わせ情報登録 登録用DTO
      * @param model モデル
      * @return 検索結果
      */
     int registerMtg(MeetingRegisterForm form, 
     		MeetingRegisterDto registerDto, Model model, String staffID);
-
+    
+    /*
+     * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param model モデル
+     */
+    void getLastDate(MeetingDeleteForm form, Model model);
+    
+    /*
+     * 打ち合わせ情報削除 削除対象のデータをチェック
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param model モデル
+     */
+    int checkData(MeetingDeleteForm form, Model model);
+    
+    /*
+     * 打ち合わせ情報削除 削除
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param searchDto 打ち合わせ情報削除 削除用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model);
+    
     /*
      * 打ち合わせ情報一覧 入力チェック
      * 

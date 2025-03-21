@@ -129,7 +129,7 @@
                         <!-- ログインユーザーの権限が100(管理者)の場合、変更及び削除リンクを表示 -->
                         <th:block th:if="${loginUser.authId == 100}">
                             <!-- 変更 -->
-                            <form name="isUpdateMtg" th:action="@{/mtg_update}" method="post">
+                            <form th:action="@{/mtg_update}" method="post">
                                 <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
                                 <input type="hidden" name="userId" th:value="${mtg.staffId}">
                                 <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
@@ -144,7 +144,7 @@
                                 <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
                             </form>
                             <!-- 削除 -->
-                            <form name="isDeleteMtg" th:action="@{/mtg_delete}" method="post">
+                            <form th:action="@{/mtg_delete_conf}" method="post">
                                 <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
                                 <input type="hidden" name="userId" th:value="${mtg.staffId}">
                                 <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
@@ -162,7 +162,6 @@
                     </td>
                 </tr>
             </table>
-            <!--  <input type="button" onclick="location.href='account_list.html'"value="新規登録">-->
             <form name="registerMeeting" th:action="@{/mtg_register}" method="post">
                 <!-- ボタンエリア -->
                 <div style="text-align: center;"> 

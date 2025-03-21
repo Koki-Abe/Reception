@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
@@ -41,4 +42,27 @@ public interface MeetingRepository {
 	 */
 	int registerMtg(MeetingRegisterDto registerDto);
 	
+	/*
+	 * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
+	 * 
+	 * @param delDto 打ち合わせ情報削除用DTO
+	 * @return 最終アップデート時間
+	 */
+	String getDeleteDate(MeetingDeleteDto delDto);
+	
+	/*
+	 * 打ち合わせ情報削除 削除対象のデータをチェック
+	 * 
+	 * @param delDto 打ち合わせ情報削除用DTO
+	 * @return 最終アップデート時間
+	 */
+	int checkDeleteData(MeetingDeleteDto delDto);
+	
+	/*
+	 * 打ち合わせ情報削除 削除
+	 * 
+	 * @param MeetingDeleteDto 打ち合わせ情報登録用DTO
+	 * @return 打ち合わせ登録件数
+	 */
+	int deleteMtg(MeetingDeleteDto delDto);
 }

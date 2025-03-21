@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
+import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.enums.UrlEnum;
+import jp.reception.soarest.form.MeetingDeleteForm;
 import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
 import jp.reception.soarest.service.MeetingService;
@@ -366,6 +368,7 @@ public class MeetingController {
     	// エラーメッセージ
     	errMsg = MessageEnum.MSG_D03_E_002.getMsg(null);
     	
+    	// 会議情報の登録
     	String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
     	int count = meetingService.registerMtg(form, new MeetingRegisterDto(), model, staffID);
 		
@@ -387,7 +390,6 @@ public class MeetingController {
     	return UrlEnum.MEETING_REGISTER_COMPLETE.getPass();
     }
     
-    // TODO
     /*
      * 打ち合わせ情報削除確認 確認
      * 
@@ -397,7 +399,6 @@ public class MeetingController {
      * @return 打ち合わせ情報削除画面
      */
     
-    /*
     @RequestMapping(value = MTG_DELETE_CONFIRM_URL, method = RequestMethod.POST)
     private String deleteMtgConf(MeetingDeleteForm form, BindingResult result, Model model) {
     	// 開始ログ
@@ -414,35 +415,26 @@ public class MeetingController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// エラーメッセージ
+    	errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+    	
 		// 初期処理
-		try {
-			meetingService.init(model);
-		} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		}
+    	meetingService.init(model);
+    	
 		// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C08_I_001.getMsg(null));
 		
 		// 対象アカウント情報を保持
 		meetingService.saveWord(form, model);
 
+		// エラーメッセージ
+    	errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+    	
 		// 削除対象のデータを保持
-    	try {
-    		meetingService.getLastDate(form, model);
-    		int count = meetingService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+    	meetingService.getLastDate(form, model);
+		int count = meetingService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -452,7 +444,6 @@ public class MeetingController {
 		// アカウント情報削除確認画面へ遷移
 		return UrlEnum.MEETING_DELETE_CONFIRM.getPass();
     }
-    */
     
     /*
      * 打ち合わせ情報削除確認 削除
@@ -462,9 +453,8 @@ public class MeetingController {
      * @param model モデル
      * @return 打ち合わせ情報登録削除画面
      */
-    /*
     @RequestMapping(value = MTG_DELETE_COMPLETE_URL, method = RequestMethod.POST)
-    private String deleteMtgConmp(AccountDeleteForm form, BindingResult result, Model model) {
+    private String deleteMtgConmp(MeetingDeleteForm form, BindingResult result, Model model) {
 
     	// 開始ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
@@ -476,40 +466,30 @@ public class MeetingController {
     		logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
     		// ログイン画面へリダイレクト
     		return CharEnum.REDIRECT.getChar() + UrlEnum.LOGIN.getUrl();
-    	}gradle exception 追加
+    	}
     	
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// エラーメッセージ
+    	errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+    	
     	// 削除対象のデータをチェック
-    	try {
-    		int count = meetingService.checkData(form, model);
-			if(count == 0) {
-				// 変更予定のデータに操作が加えられていた場合
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C01_E_001.getMsg(null));
-			return UrlEnum.SYSTEM_ERROR.getPass();
-		} catch (Exception e) {
-			CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
+    	int count = meetingService.checkData(form, model);
+		if(count == 0) {
+			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
-    	try {
-    		// 削除処理
-    		int count = meetingService.deleteAccount(form, new AccountDeleteDto(), model);
-    		// 対象のアカウント情報がない場合
-    		if(count == 0) {
-				return UrlEnum.SYSTEM_ERROR.getPass();
-			}
-    	} catch (SQLException e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_C08_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	} catch (Exception e) {
-    		CommonUtils.outputErrLog(logger, e, MessageEnum.MSG_E_001.getMsg(null));
-    		return UrlEnum.SYSTEM_ERROR.getPass();
-    	}
+		// エラーメッセージ
+    	errMsg = MessageEnum.MSG_C08_E_001.getMsg(null);
+    	
+		// 削除処理
+		int deleteAccountCount = meetingService.deletehMtg(form, new MeetingDeleteDto(), model);
+		// 対象の打ち合わせ情報がない場合
+		if(deleteAccountCount == 0) {
+			return UrlEnum.SYSTEM_ERROR.getPass();
+		}
     	
     	// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C09_I_001.getMsg(null));
@@ -523,7 +503,6 @@ public class MeetingController {
     	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.MEETING_DELETE_COMPLETE.getPass();
     }
-        */
     
     /*
      * 例外ハンドリング
