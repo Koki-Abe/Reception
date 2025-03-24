@@ -23,8 +23,6 @@ import lombok.Data;
 @Data
 public class MeetingRegisterForm {
 	
-	private final String OTHERS = "その他";
-	
 	// ユーザーID
 	@NotBlank(message = "{MSG-D02-W-001}")
 	@Size(min=6, max=10, message="{MSG-D02-W-003}")
@@ -95,10 +93,10 @@ public class MeetingRegisterForm {
     }
     
     // 目的
+    @Max(value = 998, message="{MSG-D02-W-015}")
     private int purpose;
     
     // コメント
-    @Max(value = 998, message="{MSG-D02-W-015}")
     private String comment;
     
     @AssertTrue(message="{MSG-D02-W-016}")
