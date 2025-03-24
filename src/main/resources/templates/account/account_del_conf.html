@@ -41,11 +41,6 @@
 		            <th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
 		      			<input type="hidden" name="role" th:value="${auth.authId}">
 		      		</th:block>
-		      		<!-- 変更前情報保持 -->
-		      		<input type="hidden" name="oldUserId" th:value="${oldUserId}">
-                    <input type="hidden" name="oldUserName" th:value="${oldUserName}">
-                    <input type="hidden" name="oldDepartment" th:value="${oldDepartment}">
-                    <input type="hidden" name="oldRole" th:value="${oldRole}">
 		      		<input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
                 	<input type="submit" value="確定" style="margin-top:20px;">
                	</form>

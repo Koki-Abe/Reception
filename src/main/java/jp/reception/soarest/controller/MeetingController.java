@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.util.StringUtils;
 
 import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingDeleteDto;
@@ -519,7 +520,8 @@ public class MeetingController {
     	}else if(e.getCause() instanceof NoSuchAlgorithmException) {
     		model.addAttribute("errMsg", MessageEnum.MSG_E_002.getMsg(null));
         }else {
-        	model.addAttribute("errMsg", MessageEnum.MSG_E_001.getMsg(null));
+        	if(StringUtils.isEmpty(errMsg))	model.addAttribute("errMsg", MessageEnum.MSG_E_001.getMsg(null));
+        	else								model.addAttribute("errMsg", errMsg);
         }
     	return UrlEnum.SYSTEM_ERROR.getPass();
     }
