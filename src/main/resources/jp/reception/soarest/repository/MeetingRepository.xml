@@ -31,7 +31,7 @@
                 , MSC.SCHEDULED_DATE AS SCHEDULED_DATE
                 , MSC.SCHEDULED_TIME AS SCHEDULED_TIME
                 , MMR.ROOM_ID AS ROOM_ID
-                , CASE WHEN MSC.ROOM_ID != '' AND MSC.ROOM_ID IS NOT NULL
+                , CASE WHEN MSC.ROOM_ID != '' AND MSC.ROOM_ID IS NOT NULL AND MSC.ROOM_ID != 999 AND MSC.ROOM_ID != 9999
                       THEN MMR.ROOM_NAME
                       ELSE MSC.MTG_PLACE
                   END AS MTG_PLACE
@@ -94,7 +94,7 @@
     
     <!-- 打ち合わせ情報登録 -->
     <insert id="registerMtg"  parameterType="jp.reception.soarest.domain.dto.MeetingRegisterDto">
-        INSERT INTO MTG_SCHEDULE (
+        INSERT INTO MTG_SCHEDULE(
 			SCHEDULE_ID,
 			STAFF_ID,
 			SUB_STAFF_ID,
@@ -163,7 +163,7 @@
                 AND MTG_ID = #{mtgId}
             </if>  
             <if test="comment != null and comment != ''">
-                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
+                AND COMMENT = #{comment}
             </if> 
         </where>;
         

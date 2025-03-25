@@ -78,10 +78,10 @@ public class MeetingRegisterForm {
     public boolean isRoomId() {
     	return roomId != NumEnum.PULLDOWN.getNum();
     }
-    
+
     // 会議室名
     private List<MeetingRoomSearchResultDto> roomList;
-
+    
     // その他打ち合わせ場所
     private String mtgPlace;
     @AssertTrue(message="{MSG-D02-W-013}")

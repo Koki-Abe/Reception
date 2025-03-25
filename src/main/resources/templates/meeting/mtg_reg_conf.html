@@ -99,6 +99,10 @@
 					<input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
 					<input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
 					<input type="hidden" name="roomId" th:value="${roomId}">
+					<th:block th:each="room,stat : ${roomList}">
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
+                   	</th:block>
 					<input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
 					<input type="hidden" name="purpose" th:value="${mtgId}">
 					<input type="hidden" name="comment" th:value="${comment}">

@@ -57,6 +57,9 @@ public class MeetingServiceImpl implements MeetingService {
     // 打ち合わせリスト
     private final String MTG_LIST = "mtgList";
 
+    // スケジュールID
+    private final String SCHEDULED_ID = "scheduledId";
+    
     // ユーザーID
     private final String USER_ID = "userId";
 
@@ -77,6 +80,9 @@ public class MeetingServiceImpl implements MeetingService {
 
     // 会議室No
     private final String ROOM_ID = "roomId";
+    
+    // 会議室リスト
+    private final String ROOM_LIST = "roomList";
 
     // その他打ち合わせ場所
     private final String MTG_PLACE = "mtgPlace";
@@ -190,6 +196,17 @@ public class MeetingServiceImpl implements MeetingService {
         // プロパティ名が異なるものは別途設定
         registerDto.setScheduleId(newScheduleId);
         registerDto.setRoomId(form.getRoomId());
+        
+        // その他以外のルームIDの場合はROOM_NAMEをmtgPlaceに設定する
+        if(form.getRoomId() != 0 && form.getRoomId() != 9999) {
+        	if(form.getRoomList() != null) {
+    	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
+    	    		if(room.getRoomId() == form.getRoomId()) {
+    	    			registerDto.setMtgPlace(room.getRoomName());
+    	    		}
+    	    	}
+        	}
+        }
         registerDto.setMtgId(form.getPurpose());
         registerDto.setCreatedDate(CommonUtils.getSysdate());
         registerDto.setCreatedUserId(staffID);
@@ -283,9 +300,9 @@ public class MeetingServiceImpl implements MeetingService {
     }
     
     /*
-     * 打ち合わせ情報一覧 入力チェック
+     * 打ち合わせ情報変更 入力チェック
      * 
-     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param form 打ち合わせ情報変更 フォームクラス 
      * @param model モデル
      */
     @Override
@@ -397,31 +414,32 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());
+        model.addAttribute(ROOM_LIST, form.getRoomList());
         model.addAttribute(MTG_PLACE, form.getMtgPlace());
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
     }
     
     /*
-     * 打ち合わせ情報一覧 入力値保持
+     * 打ち合わせ情報変更 入力値保持
      * 
-     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param form 打ち合わせ情報変更 フォームクラス 
      * @param model モデル
      */
     @Override
     public void saveWord(MeetingUpdateForm form, Model model) {
         // 検索値を入力欄に保持
+    	model.addAttribute(SCHEDULED_ID, form.getScheduleId());
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(SUB_USER_ID, form.getSubUserId());
         model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
-        model.addAttribute(CLIENT_NAME, form.getClientName()).addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(CLIENT_NAME, form.getClientName());
         model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());
         model.addAttribute(MTG_PLACE, form.getMtgPlace());
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
-        
     }
     
     /*
@@ -436,7 +454,7 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(SUB_USER_ID, form.getSubUserId());
         model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
-        model.addAttribute(CLIENT_NAME, form.getClientName()).addAttribute(SCHEDULED_DATE, form.getScheduledDate());
+        model.addAttribute(CLIENT_NAME, form.getClientName());
         model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());

@@ -74,9 +74,8 @@
                                 <th:block th:each="room,stat : ${roomList}">
                                 	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
                                 	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
-                               	</th:block>>
+                               	</th:block>
                                 
-                                <input type="hidden" name="roomNameList" th:value="${roomList}">
                                 ※その他を選択された場合は、打ち合わせ場所を入力してください
                                 <input type="text" id="mtgPlace" name="mtgPlace" th:value="${mtgPlace}" disabled="disabled">
                             </td>

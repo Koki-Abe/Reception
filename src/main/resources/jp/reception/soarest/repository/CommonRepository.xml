@@ -24,7 +24,9 @@
             STAFF_ID
             , STAFF_NAME
         FROM
-            M_STAFF;
+            M_STAFF
+        WHERE
+        	IS_DELETED = FALSE;
     </select>
     <!-- 会議室プルダウン取得 -->
     <select id="searchRoomList" resultType="jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto">
