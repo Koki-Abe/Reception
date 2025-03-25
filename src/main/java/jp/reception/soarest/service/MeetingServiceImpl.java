@@ -187,7 +187,6 @@ public class MeetingServiceImpl implements MeetingService {
     		MeetingRegisterDto registerDto, Model model, String staffID){
     	
     	int registernum = 0;
-    	
     	String maxScheduleId = meetingRepository.getScheduleId();
     	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
     	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
@@ -195,7 +194,7 @@ public class MeetingServiceImpl implements MeetingService {
         BeanUtils.copyProperties(form, registerDto);
         // プロパティ名が異なるものは別途設定
         registerDto.setScheduleId(newScheduleId);
-        registerDto.setRoomId(form.getRoomId());
+        registerDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
         
         // その他以外のルームIDの場合はROOM_NAMEをmtgPlaceに設定する
         if(form.getRoomId() != 0 && form.getRoomId() != 9999) {
@@ -222,6 +221,28 @@ public class MeetingServiceImpl implements MeetingService {
         
         return registernum;
     }
+    
+    /*
+     * 打ち合わせ情報削除 削除
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param searchDto 打ち合わせ情報削除 削除用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    public int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model){
+    	// beanの内容を詰め替え
+        BeanUtils.copyProperties(form, deleteDto);
+        
+        // プロパティ名が異なるものは別途設定
+    	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
+    	
+        // 削除処理を実行
+        int deletenum = meetingRepository.deleteMtg(deleteDto);
+        
+        return  deletenum;
+    }
+    
     
     /*
      * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
@@ -259,28 +280,6 @@ public class MeetingServiceImpl implements MeetingService {
         }
         return count;
     }
-    
-    /*
-     * 打ち合わせ情報削除 削除
-     * 
-     * @param form 打ち合わせ情報削除 フォームクラス 
-     * @param searchDto 打ち合わせ情報削除 削除用DTO
-     * @param model モデル
-     * @return 検索結果
-     */
-    public int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model){
-    	// beanの内容を詰め替え
-        BeanUtils.copyProperties(form, deleteDto);
-        
-        // プロパティ名が異なるものは別途設定
-    	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
-    	
-        // 削除処理を実行
-        int deletenum = meetingRepository.deleteMtg(deleteDto);
-        
-        return  deletenum;
-    }
-    
     
     /*
      * 打ち合わせ情報一覧 入力チェック

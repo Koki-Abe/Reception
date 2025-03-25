@@ -54,6 +54,16 @@ public interface MeetingService {
     		MeetingRegisterDto registerDto, Model model, String staffID);
     
     /*
+     * 打ち合わせ情報削除 削除
+     * 
+     * @param form 打ち合わせ情報削除 フォームクラス 
+     * @param searchDto 打ち合わせ情報削除 削除用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model);
+    
+    /*
      * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
      * @param form 打ち合わせ情報削除 フォームクラス 
      * @param model モデル
@@ -67,16 +77,6 @@ public interface MeetingService {
      * @param model モデル
      */
     int checkData(MeetingDeleteForm form, Model model);
-    
-    /*
-     * 打ち合わせ情報削除 削除
-     * 
-     * @param form 打ち合わせ情報削除 フォームクラス 
-     * @param searchDto 打ち合わせ情報削除 削除用DTO
-     * @param model モデル
-     * @return 検索結果
-     */
-    int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model);
     
     /*
      * 打ち合わせ情報一覧 入力チェック

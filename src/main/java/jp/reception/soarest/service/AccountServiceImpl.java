@@ -277,6 +277,24 @@ public class AccountServiceImpl implements AccountService {
     }
     
     /*
+     * アカウント情報削除 削除対象の最終アップデート時間を取得
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    public void getLastDate(AccountDeleteForm form, Model model){
+    	AccountDeleteDto delDto = new AccountDeleteDto();
+    	BeanUtils.copyProperties(form, delDto);
+        // プロパティ名が異なるものは別途設定
+    	delDto.setDepId(form.getDepartment());
+    	delDto.setAuthId(form.getRole());
+    	
+    	// 変更対象の最重アップデート日時を取得
+    	String lastDate = accountRepository.getDeleteDate(delDto);
+    	form.setLastUpdateDate(lastDate);
+    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+    }
+    
+    /*
      * アカウント情報変更 変更対象のデータをチェック
      * 
      * @param form アカウント情報変更 フォームクラス 
@@ -297,24 +315,6 @@ public class AccountServiceImpl implements AccountService {
             model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
         }
         return count;
-    }
-    
-    /*
-     * アカウント情報削除 削除対象の最終アップデート時間を取得
-     * @param form アカウント情報削除 フォームクラス 
-     * @param model モデル
-     */
-    public void getLastDate(AccountDeleteForm form, Model model){
-    	AccountDeleteDto delDto = new AccountDeleteDto();
-    	BeanUtils.copyProperties(form, delDto);
-        // プロパティ名が異なるものは別途設定
-    	delDto.setDepId(form.getDepartment());
-    	delDto.setAuthId(form.getRole());
-    	
-    	// 変更対象の最重アップデート日時を取得
-    	String lastDate = accountRepository.getDeleteDate(delDto);
-    	form.setLastUpdateDate(lastDate);
-    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
     }
     
     /*

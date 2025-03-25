@@ -87,19 +87,19 @@ public interface AccountService {
     void getLastDate(AccountUpdateForm form, Model model);
     
     /*
+     * アカウント情報削除 削除対象の最終アップデート時間を取得
+     * @param form アカウント情報削除 フォームクラス 
+     * @param model モデル
+     */
+    void getLastDate(AccountDeleteForm form, Model model);
+    
+    /*
      * アカウント情報変更 変更対象のデータをチェック
      * 
      * @param form アカウント情報変更 フォームクラス 
      * @param model モデル
      */
     int checkData(AccountUpdateForm form, Model model);
-    
-    /*
-     * アカウント情報削除 削除対象の最終アップデート時間を取得
-     * @param form アカウント情報削除 フォームクラス 
-     * @param model モデル
-     */
-    void getLastDate(AccountDeleteForm form, Model model);
     
     /*
      * アカウント情報削除 削除対象のデータをチェック
