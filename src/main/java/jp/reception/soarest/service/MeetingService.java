@@ -64,11 +64,26 @@ public interface MeetingService {
     int deletehMtg(MeetingDeleteForm form, MeetingDeleteDto deleteDto, Model model);
     
     /*
+     * 打ち合わせ情報変更 変更対象の最終アップデート時間を取得
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param model モデル
+     */
+    void getLastDate(MeetingUpdateForm form, Model model);
+    
+    /*
      * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
      * @param form 打ち合わせ情報削除 フォームクラス 
      * @param model モデル
      */
     void getLastDate(MeetingDeleteForm form, Model model);
+    
+    /*
+     * 打ち合わせ情報変更 変更対象のデータをチェック
+     * 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param model モデル
+     */
+    int checkData(MeetingUpdateForm form, Model model);
     
     /*
      * 打ち合わせ情報削除 削除対象のデータをチェック
@@ -88,19 +103,24 @@ public interface MeetingService {
     boolean inputCheck(MeetingSearchForm form, Model model);
     
     /*
-     * 打ち合わせ情報更新 入力チェック
+     * 打ち合わせ情報変更 入力チェック
      * 
-     * @param form 打ち合わせ情報一覧 フォームクラス 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
-    boolean inputCheck(MeetingUpdateForm form, Model model);
+    boolean inputCheck(MeetingUpdateForm form, BindingResult result, 
+    		Model model, List<String> errorList);
 
     /*
      * 打ち合わせ情報登録 入力チェック
      * 
      * @param form 打ち合わせ情報登録 フォームクラス 
+     * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     boolean inputCheck(MeetingRegisterForm form, BindingResult result, 

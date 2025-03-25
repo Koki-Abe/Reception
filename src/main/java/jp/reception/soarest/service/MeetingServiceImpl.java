@@ -20,6 +20,7 @@ import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
+import jp.reception.soarest.domain.dto.MeetingUpdateDto;
 import jp.reception.soarest.domain.dto.PurposeSearchResultDto;
 import jp.reception.soarest.domain.dto.StaffSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
@@ -58,7 +59,7 @@ public class MeetingServiceImpl implements MeetingService {
     private final String MTG_LIST = "mtgList";
 
     // スケジュールID
-    private final String SCHEDULED_ID = "scheduledId";
+    private final String SCHEDULE_ID = "scheduleId";
     
     // ユーザーID
     private final String USER_ID = "userId";
@@ -194,6 +195,7 @@ public class MeetingServiceImpl implements MeetingService {
         BeanUtils.copyProperties(form, registerDto);
         // プロパティ名が異なるものは別途設定
         registerDto.setScheduleId(newScheduleId);
+        registerDto.setMtgId(form.getPurpose());
         registerDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
         
         // その他以外のルームIDの場合はROOM_NAMEをmtgPlaceに設定する
@@ -235,6 +237,7 @@ public class MeetingServiceImpl implements MeetingService {
         BeanUtils.copyProperties(form, deleteDto);
         
         // プロパティ名が異なるものは別途設定
+        deleteDto.setMtgId(form.getPurpose());
     	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
     	
         // 削除処理を実行
@@ -243,6 +246,22 @@ public class MeetingServiceImpl implements MeetingService {
         return  deletenum;
     }
     
+    /*
+     * 打ち合わせ情報変更 変更対象の最終アップデート時間を取得
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param model モデル
+     */
+    public void getLastDate(MeetingUpdateForm form, Model model){
+    	MeetingUpdateDto updDto = new MeetingUpdateDto();
+    	BeanUtils.copyProperties(form, updDto);
+        // プロパティ名が異なるものは別途設定
+    	updDto.setMtgId(form.getPurpose());
+    	
+    	// 変更対象の最重アップデート日時を取得	
+    	String lastDate = meetingRepository.getUpdateDate(updDto);
+    	form.setLastUpdateDate(lastDate);
+    	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+    }
     
     /*
      * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
@@ -253,11 +272,30 @@ public class MeetingServiceImpl implements MeetingService {
     	MeetingDeleteDto delDto = new MeetingDeleteDto();
     	BeanUtils.copyProperties(form, delDto);
         // プロパティ名が異なるものは別途設定
+    	delDto.setMtgId(form.getPurpose());
     	
-    	// 変更対象の最重アップデート日時を取得
+    	// 削除対象の最重アップデート日時を取得
     	String lastDate = meetingRepository.getDeleteDate(delDto);
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
+    }
+    
+    /*
+     * 打ち合わせ情報変更 変更対象のデータをチェック
+     * 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param model モデル
+     */
+    public int checkData(MeetingUpdateForm form, Model model){
+    	MeetingUpdateDto updDto = new MeetingUpdateDto();
+    	BeanUtils.copyProperties(form, updDto);
+        // プロパティ名が異なるものは別途設定
+    	updDto.setMtgId(form.getPurpose());
+    	if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
+        
+    	// 完全一致するデータを数える
+    	int count = meetingRepository.checkUpdateData(updDto);
+        return count;
     }
     
     /*
@@ -270,14 +308,10 @@ public class MeetingServiceImpl implements MeetingService {
     	MeetingDeleteDto delDto = new MeetingDeleteDto();
     	BeanUtils.copyProperties(form, delDto);
         // プロパティ名が異なるものは別途設定
+    	delDto.setMtgId(form.getPurpose());
     	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
         
-    	// 完全一致するデータを数える
     	int count = meetingRepository.checkDeleteData(delDto);
-        if (0 == count) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
-        }
         return count;
     }
     
@@ -302,33 +336,18 @@ public class MeetingServiceImpl implements MeetingService {
      * 打ち合わせ情報変更 入力チェック
      * 
      * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param result フォームのバリデーションチェック
      * @param model モデル
-     */
-    @Override
-    public boolean inputCheck(MeetingUpdateForm form, Model model) {
-        // 会議室名がその他、かつ打ち合わせ場所がNULLまたは空文字の場合
-        if (form.getRoomId() == 9999 && (null == form.getMtgPlace() || "" == form.getMtgPlace())) {
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_004.getMsg(CharEnum.VALIDATION.getChar()));
-            return false;
-        }
-
-        return true;
-    }
-
-    /*
-     * 打ち合わせ情報登録 入力チェック
-     * 
-     * @param form 打ち合わせ情報登録 フォームクラス 
-     * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     @Override
-	public boolean inputCheck(MeetingRegisterForm form, BindingResult result, 
+    public boolean inputCheck(MeetingUpdateForm form, BindingResult result, 
     		Model model, List<String> errorList){
-    	// 入力チェックに該当する場合
     	
     	Boolean is_error = false;
     	
+    	// 会議室が「その他」の場合、mtgPlaceがnullの時バリデーションエラー
     	if(form.getRoomList() != null) {
 	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
 	    		if(room.getRoomId() == form.getRoomId()) {
@@ -340,17 +359,84 @@ public class MeetingServiceImpl implements MeetingService {
 	    	}
     	}
     	
-    	if(!StringUtils.isEmpty(form.getScheduledDate()) && !StringUtils.isEmpty(form.getScheduledTime())) {
-			
+    	// 打ち合わせ予定日、予定時刻のバリデーションチェック
+    	if(!StringUtils.isEmpty(form.getScheduledTime())) {
+    		// 現在の日時の取得
 	    	LocalDate nowDate = LocalDate.now();
-	    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    	LocalDate date = LocalDate.parse(form.getScheduledDate(), dateFormat);
-	    	
 	    	LocalTime nowTime = LocalTime.now();
+	    	
+	    	// 予定日、予定時刻の取得
 	    	DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
 	    	
-	    	 if(date.isBefore(nowDate)){
+	    	// 予定日、予定時刻が現在の日時より過去になっていた場合バリデーションエラー
+	    	if(form.getScheduledDate().isBefore(nowDate)){
+	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
+ 				is_error = true;
+	    	}else if(form.getScheduledDate().equals(nowDate)) {
+	    		if(time.isBefore(nowTime)) {
+	    			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
+    				is_error = true;
+	    		}
+	    	}
+    	}
+    	
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+            	result.getFieldError();
+                errorList.add(error.getDefaultMessage());
+            }
+            // ※リダイレクトにしないとURLが変わってしまうため
+            model.addAttribute(ERR_MSG, errorList);
+
+            is_error = true;
+        }
+        
+        if(is_error == true) return false;
+        else					return true;
+	}
+
+    /*
+     * 打ち合わせ情報登録 入力チェック
+     * 
+     * @param form 打ち合わせ情報登録 フォームクラス 
+     * @param result フォームのバリデーションチェック
+     * @param model モデル
+     * @param errorList エラーリスト
+     * @return 入力チェック結果
+     */
+    @Override
+	public boolean inputCheck(MeetingRegisterForm form, BindingResult result, 
+    		Model model, List<String> errorList){
+    	
+    	Boolean is_error = false;
+    	
+    	// 会議室が「その他」の場合、mtgPlaceがnullの時バリデーションエラー
+    	if(form.getRoomList() != null) {
+	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
+	    		if(room.getRoomId() == form.getRoomId()) {
+	    			if( room.getRoomName().equals(OTHERS) && StringUtils.isEmpty(form.getMtgPlace()) ) {
+	    				model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
+	    				is_error = true;
+	    			}
+	    		}
+	    	}
+    	}
+    	
+    	// 打ち合わせ予定日、予定時刻のバリデーションチェック
+    	if(!StringUtils.isEmpty(form.getScheduledDate()) && !StringUtils.isEmpty(form.getScheduledTime())) {
+    		// 現在の日時の取得
+	    	LocalDate nowDate = LocalDate.now();
+	    	LocalTime nowTime = LocalTime.now();
+	    	
+	    	// 予定日、予定時刻の取得
+	    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    	LocalDate date = LocalDate.parse(form.getScheduledDate(), dateFormat);
+	    	DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
+	    	
+	    	// 予定日、予定時刻が現在の日時より過去になっていた場合バリデーションエラー
+	    	if(date.isBefore(nowDate)){
 	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
  				is_error = true;
 	    	}else if(date.equals(nowDate)) {
@@ -428,7 +514,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void saveWord(MeetingUpdateForm form, Model model) {
         // 検索値を入力欄に保持
-    	model.addAttribute(SCHEDULED_ID, form.getScheduleId());
+    	model.addAttribute(SCHEDULE_ID, form.getScheduleId());
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(SUB_USER_ID, form.getSubUserId());
         model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
@@ -450,6 +536,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void saveWord(MeetingDeleteForm form, Model model) {
         // 検索値を入力欄に保持
+    	model.addAttribute(SCHEDULE_ID, form.getScheduleId());
         model.addAttribute(USER_ID, form.getUserId());
         model.addAttribute(SUB_USER_ID, form.getSubUserId());
         model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());

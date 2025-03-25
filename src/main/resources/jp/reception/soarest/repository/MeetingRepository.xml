@@ -82,6 +82,49 @@
         ORDER BY CAST(MTG.SCHEDULE_ID AS SIGNED) ASC
     </select>
     
+    <!-- 打ち合わせ情報削除 削除対象の最終アップデート時間を取得 -->
+    <select id="getUpdateDate"  parameterType="jp.reception.soarest.domain.dto.MeetingUpdateDto" resultType="String">
+        SELECT
+            UPDATED_DATE
+        FROM
+            MTG_SCHEDULE
+        WHERE
+        	SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{userId}
+            AND SUB_STAFF_ID = #{subUserId}
+            AND CLIENT_NAME = #{clientName}
+            AND CLIENT_COMP_NAME = #{clientCompName}
+            AND SCHEDULED_DATE = #{scheduledDate}
+            AND SCHEDULED_TIME = #{scheduledTime}
+            AND ROOM_ID = #{roomId}
+            AND MTG_PLACE = #{mtgPlace}
+            AND MTG_ID = #{mtgId}
+            AND COMMENT = #{comment};
+        
+    </select>
+    
+    <!-- 打ち合わせ情報変更 削除対象のデータをチェック -->
+    <select id="checkUpdateData"  parameterType="jp.reception.soarest.domain.dto.MeetingUpdateDto" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            MTG_SCHEDULE
+        WHERE
+            SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{userId}
+            AND SUB_STAFF_ID = #{subUserId}
+            AND CLIENT_NAME = #{clientName}
+            AND CLIENT_COMP_NAME = #{clientCompName}
+            AND SCHEDULED_DATE = #{scheduledDate}
+            AND SCHEDULED_TIME = #{scheduledTime}
+            AND ROOM_ID = #{roomId}
+            AND MTG_PLACE = #{mtgPlace}
+            AND MTG_ID = #{mtgId}
+            AND COMMENT = #{comment}
+            AND UPDATED_DATE = #{lastUpdateDate};
+        
+    </select>
+    
     <!-- 打ち合わせ情報登録 -->
     <select id="getScheduleId" resultType = "String">
     	SELECT
@@ -131,41 +174,18 @@
             UPDATED_DATE
         FROM
             MTG_SCHEDULE
-        <where>
-        	<if test="scheduleId != null and scheduleId != ''">
-                SCHEDULE_ID = #{scheduleId}
-            </if>  
-            <if test="userId != null and userId != ''">
-                AND STAFF_ID = #{userId}
-            </if>  
-            <if test="subUserId != null and subUserId != ''">
-                AND SUB_STAFF_ID = #{subUserId}
-            </if>  
-            <if test="clientName != null and clientName != ''">
-                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
-            </if>  
-            <if test="clientCompName != null and clientCompName != ''">
-                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
-            </if>  
-            <if test="scheduledDate != null and scheduledDate != ''">
-                AND SCHEDULED_DATE = #{scheduledDate}
-            </if>  
-            <if test="scheduledTime != null and scheduledTime != ''">
-                AND SCHEDULED_TIME = #{scheduledTime}
-            </if>  
-            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
-                AND ROOM_ID = #{roomId}
-            </if>  
-            <if test="mtgPlace != null and mtgPlace != ''">
-                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
-            </if>  
-            <if test="mtgId != null and mtgId != '' and mtgId != 999">
-                AND MTG_ID = #{mtgId}
-            </if>  
-            <if test="comment != null and comment != ''">
-                AND COMMENT = #{comment}
-            </if> 
-        </where>;
+        WHERE
+        	SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{userId}
+            AND SUB_STAFF_ID = #{subUserId}
+            AND CLIENT_NAME = #{clientName}
+            AND CLIENT_COMP_NAME = #{clientCompName}
+            AND SCHEDULED_DATE = #{scheduledDate}
+            AND SCHEDULED_TIME = #{scheduledTime}
+            AND ROOM_ID = #{roomId}
+            AND MTG_PLACE = #{mtgPlace}
+            AND MTG_ID = #{mtgId}
+            AND COMMENT = #{comment};
         
     </select>
     
@@ -175,44 +195,19 @@
             COUNT(*)
         FROM
             MTG_SCHEDULE
-        <where>
-            <if test="scheduleId != null and scheduleId != ''">
-                SCHEDULE_ID = #{scheduleId}
-            </if>  
-            <if test="userId != null and userId != ''">
-                AND STAFF_ID = #{userId}
-            </if>  
-            <if test="subUserId != null and subUserId != ''">
-                AND SUB_STAFF_ID = #{subUserId}
-            </if>  
-            <if test="clientName != null and clientName != ''">
-                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
-            </if>  
-            <if test="clientCompName != null and clientCompName != ''">
-                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
-            </if>  
-            <if test="scheduledDate != null and scheduledDate != ''">
-                AND SCHEDULED_DATE = #{scheduledDate}
-            </if>  
-            <if test="scheduledTime != null and scheduledTime != ''">
-                AND SCHEDULED_TIME = #{scheduledTime}
-            </if>  
-            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
-                AND ROOM_ID = #{roomId}
-            </if>  
-            <if test="mtgPlace != null and mtgPlace != ''">
-                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
-            </if>  
-            <if test="mtgId != null and mtgId != '' and mtgId != 999">
-                AND MTG_ID = #{mtgId}
-            </if>  
-            <if test="comment != null and comment != ''">
-                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
-            </if> 
-            <if test="lastUpdateDate != null and lastUpdateDate != ''">
-                AND UPDATED_DATE LIKE CONCAT('%', #{lastUpdateDate}, '%' )
-            </if>
-        </where>;
+        WHERE
+            SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{userId}
+            AND SUB_STAFF_ID = #{subUserId}
+            AND CLIENT_NAME = #{clientName}
+            AND CLIENT_COMP_NAME = #{clientCompName}
+            AND SCHEDULED_DATE = #{scheduledDate}
+            AND SCHEDULED_TIME = #{scheduledTime}
+            AND ROOM_ID = #{roomId}
+            AND MTG_PLACE = #{mtgPlace}
+            AND MTG_ID = #{mtgId}
+            AND COMMENT = #{comment}
+            AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
         
     </select>
     
@@ -222,44 +217,19 @@
         	MTG_SCHEDULE
        	SET
 			IS_DELETED = true
-       	<where>
-            <if test="scheduleId != null and scheduleId != ''">
-                SCHEDULE_ID = #{scheduleId}
-            </if>  
-            <if test="userId != null and userId != ''">
-                AND STAFF_ID = #{userId}
-            </if>  
-            <if test="subUserId != null and subUserId != ''">
-                AND SUB_STAFF_ID = #{subUserId}
-            </if>  
-            <if test="clientName != null and clientName != ''">
-                AND CLIENT_NAME LIKE CONCAT('%', #{clientName}, '%' )
-            </if>  
-            <if test="clientCompName != null and clientCompName != ''">
-                AND CLIENT_COMP_NAME LIKE CONCAT('%', #{clientCompName}, '%' )
-            </if>  
-            <if test="scheduledDate != null and scheduledDate != ''">
-                AND SCHEDULED_DATE = #{scheduledDate}
-            </if>  
-            <if test="scheduledTime != null and scheduledTime != ''">
-                AND SCHEDULED_TIME = #{scheduledTime}
-            </if>  
-            <if test="roomId != null and roomId != '' and roomId != 999 and roomId != 9999">
-                AND ROOM_ID = #{roomId}
-            </if>  
-            <if test="mtgPlace != null and mtgPlace != ''">
-                AND MTG_PLACE LIKE CONCAT('%', #{mtgPlace}, '%' )
-            </if>  
-            <if test="mtgId != null and mtgId != '' and mtgId != 999">
-                AND MTG_ID = #{mtgId}
-            </if>  
-            <if test="comment != null and comment != ''">
-                AND COMMENT LIKE CONCAT('%', #{comment}, '%' )
-            </if> 
-            <if test="lastUpdateDate != null and lastUpdateDate != ''">
-                AND UPDATED_DATE LIKE CONCAT('%', #{lastUpdateDate}, '%' )
-            </if>
-        </where>;
+       	WHERE
+            SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{userId}
+            AND SUB_STAFF_ID = #{subUserId}
+            AND CLIENT_NAME = #{clientName}
+            AND CLIENT_COMP_NAME = #{clientCompName}
+            AND SCHEDULED_DATE = #{scheduledDate}
+            AND SCHEDULED_TIME = #{scheduledTime}
+            AND ROOM_ID = #{roomId}
+            AND MTG_PLACE = #{mtgPlace}
+            AND MTG_ID = #{mtgId}
+            AND COMMENT = #{comment}
+            AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
         
     </update>
 

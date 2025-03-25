@@ -47,13 +47,10 @@
             M_STAFF
         WHERE
 			STAFF_ID = #{oldUserId}
-		AND
-			STAFF_NAME = #{oldUserName}
-		AND
-			DEP_ID = #{oldDepId}
-		AND
-			AUTH_ID = #{oldAuthId};
-        
+			AND STAFF_NAME = #{oldUserName}
+			AND DEP_ID = #{oldDepId}
+			AND AUTH_ID = #{oldAuthId};
+			
     </select>
     
     <!-- アカウント情報変更 変更対象のデータをチェック -->
@@ -64,15 +61,11 @@
             M_STAFF
         WHERE
 			STAFF_ID = #{oldUserId}
-		AND
-			STAFF_NAME = #{oldUserName}
-		AND
-			DEP_ID = #{oldDepId}
-		AND
-			AUTH_ID = #{oldAuthId}
-		AND
-			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
-        
+			AND STAFF_NAME = #{oldUserName}
+			AND DEP_ID = #{oldDepId}
+			AND AUTH_ID = #{oldAuthId}
+			AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
+		
     </select>
     
 	<!-- アカウント情報変更 -->
@@ -88,15 +81,11 @@
 			UPDATED_USER = #{updatedUserId}  
        	WHERE
        		STAFF_ID = #{oldUserId}
-   		AND
-			STAFF_NAME = #{oldUserName}
-		AND
-			DEP_ID = #{oldDepId}
-		AND
-			AUTH_ID = #{oldAuthId}
-		AND
-			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
-        
+   			AND STAFF_NAME = #{oldUserName}
+			AND DEP_ID = #{oldDepId}
+			AND AUTH_ID = #{oldAuthId}
+			AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
+		
     </update>
     
 	<!-- アカウント情報登録 -->
@@ -134,13 +123,10 @@
             M_STAFF
         WHERE
 			STAFF_ID = #{userId}
-		AND
-			STAFF_NAME = #{userName}
-		AND
-			DEP_ID = #{depId}
-		AND
-			AUTH_ID = #{authId};
-        
+			AND STAFF_NAME = #{userName}
+			AND DEP_ID = #{depId}
+			AND AUTH_ID = #{authId};
+		
     </select>
     
     <!-- アカウント情報変更 削除対象のデータをチェック -->
@@ -151,15 +137,11 @@
             M_STAFF MS
         WHERE
 			STAFF_ID = #{userId}
-		AND
-			STAFF_NAME = #{userName}
-		AND
-			DEP_ID = #{depId}
-		AND
-			AUTH_ID = #{authId}
-		AND
-			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
-        
+			AND STAFF_NAME = #{userName}
+			AND DEP_ID = #{depId}
+			AND AUTH_ID = #{authId}
+			AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
+		
     </select>
     
     <!-- アカウント情報削除 -->
@@ -170,15 +152,11 @@
 			IS_DELETED = true
        	WHERE
        		STAFF_ID = #{userId}
-   		AND
-       		STAFF_NAME = #{userName}
-  		AND
-			DEP_ID = #{depId}
-		AND
-			AUTH_ID = #{authId}
-		AND
-			(UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
-        
+   			AND STAFF_NAME = #{userName}
+       		AND DEP_ID = #{depId}
+  			AND AUTH_ID = #{authId}
+			AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
+		
     </update>
     
 </mapper>

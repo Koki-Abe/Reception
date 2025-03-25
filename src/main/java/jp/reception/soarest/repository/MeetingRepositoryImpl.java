@@ -8,6 +8,7 @@ import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
+import jp.reception.soarest.domain.dto.MeetingUpdateDto;
 
 /*
  * 打ち合わせ関連 リポジトリ実装クラス
@@ -51,6 +52,16 @@ public class MeetingRepositoryImpl implements MeetingRepository{
 	}
 	
 	/*
+	 * 打ち合わせ情報変更 変更対象の最終アップデート時間を取得
+	 * 
+	 * @param updDto 打ち合わせ情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	public String getUpdateDate(MeetingUpdateDto updDto) {
+		return meetingRepository.getUpdateDate(updDto);
+	}
+	
+	/*
 	 * 打ち合わせ情報削除 削除対象の最終アップデート時間を取得
 	 * 
 	 * @param delDto 打ち合わせ情報削除用DTO
@@ -58,6 +69,16 @@ public class MeetingRepositoryImpl implements MeetingRepository{
 	 */
 	public String getDeleteDate(MeetingDeleteDto delDto) {
 		return meetingRepository.getDeleteDate(delDto);
+	}
+	
+	/*
+	 * 打ち合わせ情報変更 変更対象のデータをチェック
+	 * 
+	 * @param updDto 打ち合わせ情報変更用DTO
+	 * @return 最終アップデート時間
+	 */
+	public int checkUpdateData(MeetingUpdateDto updDto) {
+		return meetingRepository.checkUpdateData(updDto);
 	}
 	
 	/*
