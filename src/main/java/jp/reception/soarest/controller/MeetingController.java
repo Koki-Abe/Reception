@@ -26,6 +26,7 @@ import jp.reception.soarest.domain.dto.LoginUserSearchResultDto;
 import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
+import jp.reception.soarest.domain.dto.MeetingUpdateDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
 import jp.reception.soarest.enums.UrlEnum;
@@ -151,7 +152,7 @@ public class MeetingController {
      * @return 打ち合わせ情報一覧画面
      */
    @RequestMapping(value = MTG_SEARCH_URL, method = RequestMethod.GET)
-   private String searchMeetingList(@Validated MeetingSearchForm form, Model model) {
+   private String searchMtgList(@Validated MeetingSearchForm form, Model model) {
 
        // 開始ログ
        logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
@@ -215,7 +216,7 @@ public class MeetingController {
      * @return 打ち合わせ情報変更画面
      */
     @RequestMapping(value = MTG_UPDATE_URL, method = RequestMethod.POST)
-    private String updateAccount(MeetingUpdateForm form, BindingResult result, Model model) {
+    private String updateMtg(MeetingUpdateForm form, BindingResult result, Model model) {
 
     	// 開始ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
@@ -233,7 +234,7 @@ public class MeetingController {
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
 
     	// エラーメッセージ
-        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        errMsg = MessageEnum.MSG_D05_E_001.getMsg(null);
         
         // 初期処理
         meetingService.init(model);
@@ -257,7 +258,6 @@ public class MeetingController {
     	return UrlEnum.MEETING_UPDATE.getPass();
     }
     
-    // TODO
     /*
      * 打ち合わせ情報変更確認 入力確認
      * 
@@ -267,7 +267,7 @@ public class MeetingController {
      * @return 打ち合わせ情報変更画面
      */
     @RequestMapping(value = MTG_UPDATE_CONFIRM_URL, method = RequestMethod.POST)
-    private String updateAccountConf(@Validated MeetingUpdateForm form, BindingResult result, Model model) {
+    private String updateMtgConf(@Validated MeetingUpdateForm form, BindingResult result, Model model) {
     	// 開始ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
 
@@ -301,7 +301,7 @@ public class MeetingController {
     	// 入力チェック
     	if(meetingService.inputCheck(form, result, model, errorList)) {
     		// エラーメッセージ
-            errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+            errMsg = MessageEnum.MSG_D05_E_001.getMsg(null);
             
             // 初期処理
             meetingService.init(model);
@@ -310,7 +310,7 @@ public class MeetingController {
       		errMsg = "";
     		
     		// 画面上部メッセージ部分
-    		model.addAttribute(MESSAGE, MessageEnum.MSG_C06_I_001.getMsg(null));
+    		model.addAttribute(MESSAGE, MessageEnum.MSG_D06_I_001.getMsg(null));
     		
     		// 終了ログ
     		logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -329,18 +329,16 @@ public class MeetingController {
     	return CharEnum.FORWARD.getChar() +UrlEnum.MEETING_UPDATE.getUrl();
     }
     
-    // TODO
     /*
-     * アカウント情報変更確認 変更
+     * 打ち合わせ情報変更確認 変更
      * 
-     * @param form アカウント情報変更 フォームクラス
+     * @param form 打ち合わせ情報変更 フォームクラス
      * @param result フォームのバリデーションチェック
      * @param model モデル
-     * @return アカウント情報変更完了画面
+     * @return 打ち合わせ情報変更完了画面
      */
-    /*
     @RequestMapping(value = MTG_UPDATE_COMPLETE_URL, method = RequestMethod.POST)
-    private String updateAccountConmp(@Validated AccountUpdateForm form, BindingResult result, Model model) {
+    private String updateMtgConmp(@Validated MeetingUpdateForm form, BindingResult result, Model model) {
 
     	// 開始ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.START.getChar());
@@ -357,41 +355,35 @@ public class MeetingController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-    	// エラーメッセージ
-        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
-        
 		// 変更対象のデータをチェック
-		int count = accountService.checkData(form, model);
+		int count = meetingService.checkData(form, model);
 		if(count == 0) {
+			// エラーメッセージ
+			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
 			// 変更予定のデータに操作が加えられていた場合
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
-		// エラーメッセージ
-        errMsg = MessageEnum.MSG_C06_E_001.getMsg(null);
-        
         // 変更処理
 		String staffID = ((LoginUserSearchResultDto)session.getAttribute(LOGIN_USER)).getStaffId();
-		int updAccountCount = accountService.updateAccount(form, new AccountUpdateDto(), model, staffID);
+		int updAccountCount = meetingService.updateMtg(form, new MeetingUpdateDto(), model, staffID);
 		
-		// 対象のアカウント情報がない場合
+		// 対象の打ち合わせ情報がない場合
 		if(updAccountCount == 0) {
+			// エラーメッセージ
+			model.addAttribute("errMsg", MessageEnum.MSG_D06_E_001.getMsg(null));
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
     	// 画面上部メッセージ部分
-		model.addAttribute(MESSAGE, MessageEnum.MSG_C07_I_001.getMsg(null));
+		model.addAttribute(MESSAGE, MessageEnum.MSG_D07_I_001.getMsg(null));
 		
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// アカウント情報変更完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
-    	return UrlEnum.ACCOUNT_UPDATE_COMPLETE.getPass();
+    	return UrlEnum.MEETING_UPDATE_COMPLETE.getPass();
     }
-    */
     
     /*
      * 新規登録ボタンの押下、打ち合わせ情報登録 初期表示
@@ -479,7 +471,7 @@ public class MeetingController {
 	  		errMsg = "";
 			
     		// 画面上部メッセージ部分
-    		model.addAttribute(MESSAGE, MessageEnum.MSG_C03_I_001.getMsg(null));
+    		model.addAttribute(MESSAGE, MessageEnum.MSG_D03_I_001.getMsg(null));
 
     		// 終了ログ
     		logger.warn(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
@@ -542,9 +534,6 @@ public class MeetingController {
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// 打ち合わせ情報登録完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.MEETING_REGISTER_COMPLETE.getPass();
     }
     
@@ -583,7 +572,7 @@ public class MeetingController {
   		errMsg = "";
     	
 		// 画面上部メッセージ部分
-		model.addAttribute(MESSAGE, MessageEnum.MSG_C08_I_001.getMsg(null));
+		model.addAttribute(MESSAGE, MessageEnum.MSG_D08_I_001.getMsg(null));
 		
 		// 対象アカウント情報を保持
 		meetingService.saveWord(form, model);
@@ -645,20 +634,17 @@ public class MeetingController {
 		// 対象の打ち合わせ情報がない場合
 		if(deleteAccountCount == 0) {
 			// エラーメッセージ
-			model.addAttribute("errMsg", MessageEnum.MSG_C08_E_001.getMsg(null));
+			model.addAttribute("errMsg", MessageEnum.MSG_D08_E_001.getMsg(null));
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
     	// 画面上部メッセージ部分
-		model.addAttribute(MESSAGE, MessageEnum.MSG_C09_I_001.getMsg(null));
+		model.addAttribute(MESSAGE, MessageEnum.MSG_D09_I_001.getMsg(null));
 
     	// 終了ログ
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// アカウント情報削除完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.MEETING_DELETE_COMPLETE.getPass();
     }
     

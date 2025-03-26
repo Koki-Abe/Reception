@@ -138,9 +138,25 @@
                                 <input type="hidden" name="scheduledDate" th:value="${mtg.scheduledDate}">
                                 <input type="hidden" name="scheduledTime" th:value="${mtg.scheduledTime}">
                                 <input type="hidden" name="roomId" th:value="${mtg.roomId}">
+                                <th:block th:each="room,stat : ${roomList}">
+                                	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
+                                	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
+                               	</th:block>
                                 <input type="hidden" name="mtgPlace" th:value="${mtg.mtgPlace}">
                                 <input type="hidden" name="purpose" th:value="${mtg.mtgId}">
                                 <input type="hidden" name="comment" th:value="${mtg.comment}">
+                                
+                                <!-- 情報保持 -->
+                                <input type="hidden" name="oldUserId" th:value="${mtg.staffId}">
+                                <input type="hidden" name="oldSubUserId" th:value="${mtg.subStaffId}">
+                                <input type="hidden" name="oldClientCompName" th:value="${mtg.clientCompName}">
+                                <input type="hidden" name="oldClientName" th:value="${mtg.clientName}">
+                                <input type="hidden" name="oldScheduledDate" th:value="${mtg.scheduledDate}">
+                                <input type="hidden" name="oldScheduledTime" th:value="${mtg.scheduledTime}">
+                                <input type="hidden" name="oldRoomId" th:value="${mtg.roomId}">
+                                <input type="hidden" name="oldMtgPlace" th:value="${mtg.mtgPlace}">
+                                <input type="hidden" name="oldMtgId" th:value="${mtg.mtgId}">
+                                <input type="hidden" name="oldComment" th:value="${mtg.comment}">
                                 <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
                             </form>
                             <!-- 削除 -->

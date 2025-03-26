@@ -99,11 +99,25 @@
                     </table>
                 </div>
 
+				<!-- 情報保持 -->
+            	<input type="hidden" name="scheduleId" th:value="${scheduleId}">
+                <input type="hidden" name="oldUserId" th:value="${oldUserId}">
+                <input type="hidden" name="oldSubUserId" th:value="${oldSubUserId}">
+                <input type="hidden" name="oldClientCompName" th:value="${oldClientCompName}">
+                <input type="hidden" name="oldClientName" th:value="${oldClientName}">
+                <input type="hidden" name="oldScheduledDate" th:value="${oldScheduledDate}">
+                <input type="hidden" name="oldScheduledTime" th:value="${oldScheduledTime}">
+                <input type="hidden" name="oldRoomId" th:value="${oldRoomId}">
+                <input type="hidden" name="oldMtgPlace" th:value="${oldMtgPlace}">
+                <input type="hidden" name="oldMtgId" th:value="${oldMtgId}">
+                <input type="hidden" name="oldComment" th:value="${oldComment}">
+                <input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
+	            	
                 <!-- ボタンエリア -->
                 <div style="text-align: center;">
                 	<input type="button" value="戻る" style="margin-top:20px;" onclick="location.href=' mtg_list'" >
                     <input type="button" value="クリア" style="margin-top:20px;" onclick="clearText()" />
-                    <input type="submit" value="検索" style="margin-top:20px;">
+                    <input type="submit" value="変更" style="margin-top:20px;">
                 </div>
             </form>
         </div>

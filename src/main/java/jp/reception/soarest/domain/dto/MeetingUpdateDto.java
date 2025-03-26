@@ -48,6 +48,18 @@ public class MeetingUpdateDto {
     
     // 変更者
     private String updatedUserId;
+
+    // 変更前データ
+    private String oldUserId;
+    private String oldSubUserId;
+    private String oldClientCompName;
+    private String oldClientName;
+    private String oldScheduledDate;
+    private String oldScheduledTime;
+    private int oldRoomId;
+    private String oldMtgPlace;
+    private int oldMtgId;
+    private String oldComment;
     
     // 最重アップデート日時
     private String lastUpdateDate;

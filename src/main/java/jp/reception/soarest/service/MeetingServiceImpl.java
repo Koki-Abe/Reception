@@ -94,6 +94,19 @@ public class MeetingServiceImpl implements MeetingService {
     // コメント
     private final String COMMENT = "comment";
     
+    // 変更前データ
+    private final String OLD_USER_ID = "oldUserId";
+    private final String OLD_SUB_USER_ID = "oldSubUserId";
+    private final String OLD_CLIENT_COMP_NAME = "oldClientCompName";
+    private final String OLD_CLIENT_NAME = "oldClientName";
+    private final String OLD_SCHEDULED_DATE = "oldScheduledDate";
+    private final String OLD_SCHEDULED_TIME = "oldScheduledTime";
+    private final String OLD_ROOM_ID = "oldRoomId";
+    private final String OLD_MTG_PLACE = "oldMtgPlace";
+    private final String OLD_MTG_ID = "oldMtgId";
+    private final String OLD_COMMENT = "oldComment";
+    
+     // その他
     private final String OTHERS = "その他";
     
     // 変更前アップデート日時
@@ -177,6 +190,40 @@ public class MeetingServiceImpl implements MeetingService {
     }
     
     /*
+     * 打ち合わせ情報変更 変更
+     * 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param updateDto 打ち合わせ情報変更 変更用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    public int updateMtg(MeetingUpdateForm form, 
+    		MeetingUpdateDto updateDto, Model model, String staffId) {
+    	
+    	int updatenum = 0;
+    	
+    	// beanの内容を詰め替え
+        BeanUtils.copyProperties(form, updateDto);
+        // プロパティ名が異なるものは別途設定
+        updateDto.setMtgId(form.getPurpose());
+        updateDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
+        updateDto.setUpdatedDate(CommonUtils.getSysdate());
+        updateDto.setUpdatedUserId(staffId);
+        if(updateDto.getLastUpdateDate() == "") updateDto.setLastUpdateDate(null);
+        
+        // 登録処理を実行
+        updatenum = meetingRepository.updateMtg(updateDto);
+        
+        // 登録件数が0件の場合
+        if (0 == updatenum) {
+            // エラーメッセージを画面に返却
+            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_003.getMsg(CharEnum.VALIDATION.getChar()));
+        }
+        
+        return updatenum;
+    }
+    
+    /*
      * 打ち合わせ情報登録 登録
      * 
      * @param form 打ち合わせ情報登録 フォームクラス 
@@ -256,8 +303,9 @@ public class MeetingServiceImpl implements MeetingService {
     	BeanUtils.copyProperties(form, updDto);
         // プロパティ名が異なるものは別途設定
     	updDto.setMtgId(form.getPurpose());
+    	updDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
     	
-    	// 変更対象の最重アップデート日時を取得	
+    	// 変更対象の最終アップデート日時を取得	
     	String lastDate = meetingRepository.getUpdateDate(updDto);
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
@@ -274,7 +322,7 @@ public class MeetingServiceImpl implements MeetingService {
         // プロパティ名が異なるものは別途設定
     	delDto.setMtgId(form.getPurpose());
     	
-    	// 削除対象の最重アップデート日時を取得
+    	// 削除対象の最終アップデート日時を取得
     	String lastDate = meetingRepository.getDeleteDate(delDto);
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
@@ -290,7 +338,8 @@ public class MeetingServiceImpl implements MeetingService {
     	MeetingUpdateDto updDto = new MeetingUpdateDto();
     	BeanUtils.copyProperties(form, updDto);
         // プロパティ名が異なるものは別途設定
-    	updDto.setMtgId(form.getPurpose());
+    	updDto.setOldMtgId(form.getOldMtgId());
+    	updDto.setOldRoomId(form.getOldRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
     	if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
         
     	// 完全一致するデータを数える
@@ -366,14 +415,16 @@ public class MeetingServiceImpl implements MeetingService {
 	    	LocalTime nowTime = LocalTime.now();
 	    	
 	    	// 予定日、予定時刻の取得
+	    	DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    	LocalDate date = LocalDate.parse(form.getScheduledDate(), dateFormat);
 	    	DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
 	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
 	    	
 	    	// 予定日、予定時刻が現在の日時より過去になっていた場合バリデーションエラー
-	    	if(form.getScheduledDate().isBefore(nowDate)){
+	    	if(date.isBefore(nowDate)){
 	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
  				is_error = true;
-	    	}else if(form.getScheduledDate().equals(nowDate)) {
+	    	}else if(date.equals(nowDate)) {
 	    		if(time.isBefore(nowTime)) {
 	    			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
     				is_error = true;
@@ -484,6 +535,55 @@ public class MeetingServiceImpl implements MeetingService {
     }
     
     /*
+     * 打ち合わせ情報変更 入力値保持
+     * 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param model モデル
+     */
+    @Override
+    public void saveWord(MeetingUpdateForm form, Model model) {
+        // 検索値を入力欄に保持
+    	model.addAttribute(SCHEDULE_ID, form.getScheduleId());
+        model.addAttribute(USER_ID, form.getUserId());
+        model.addAttribute(SUB_USER_ID, form.getSubUserId());
+        model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
+        model.addAttribute(CLIENT_NAME, form.getClientName());
+        String scheduleDate = ( form.getScheduledDate().replace("/", "-") ); // 成形
+        model.addAttribute(SCHEDULED_DATE, scheduleDate);
+        model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
+        model.addAttribute(ROOM_ID, form.getRoomId());
+        model.addAttribute(ROOM_LIST, form.getRoomList());
+        
+        // 会議室名が空文字でroomIdが「その他」以外の時roomListから該当する会議室名を割り当てる
+        if(StringUtils.isEmpty(form.getMtgPlace()) && form.getRoomList() != null) {
+        	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
+        		if(room.getRoomId() == form.getRoomId() && !room.getRoomName().equals(OTHERS) ) {
+        			model.addAttribute(MTG_PLACE, room.getRoomName());
+        		}
+        	}
+        }else {
+        	model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        }
+        
+        model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
+        model.addAttribute(COMMENT, form.getComment());
+        
+        // 変更前のデータを保持
+        model.addAttribute(OLD_USER_ID, form.getOldUserId());
+        model.addAttribute(OLD_SUB_USER_ID, form.getOldSubUserId());
+        model.addAttribute(OLD_CLIENT_COMP_NAME, form.getOldClientCompName());
+        model.addAttribute(OLD_CLIENT_NAME, form.getOldClientName());
+        model.addAttribute(OLD_SCHEDULED_DATE, form.getOldScheduledDate());
+        model.addAttribute(OLD_SCHEDULED_TIME, form.getOldScheduledTime());
+        model.addAttribute(OLD_ROOM_ID, form.getOldRoomId());
+        model.addAttribute(OLD_MTG_PLACE, form.getOldMtgPlace());
+        model.addAttribute(OLD_MTG_ID, form.getOldMtgId());
+        model.addAttribute(OLD_COMMENT, form.getOldComment());
+        // 最終変更日時を保持
+        model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
+    }
+    
+    /*
      * 打ち合わせ登録 入力値保持
      * 
      * @param form 打ち合わせ情報登録 フォームクラス 
@@ -500,28 +600,6 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());
         model.addAttribute(ROOM_LIST, form.getRoomList());
-        model.addAttribute(MTG_PLACE, form.getMtgPlace());
-        model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
-        model.addAttribute(COMMENT, form.getComment());
-    }
-    
-    /*
-     * 打ち合わせ情報変更 入力値保持
-     * 
-     * @param form 打ち合わせ情報変更 フォームクラス 
-     * @param model モデル
-     */
-    @Override
-    public void saveWord(MeetingUpdateForm form, Model model) {
-        // 検索値を入力欄に保持
-    	model.addAttribute(SCHEDULE_ID, form.getScheduleId());
-        model.addAttribute(USER_ID, form.getUserId());
-        model.addAttribute(SUB_USER_ID, form.getSubUserId());
-        model.addAttribute(CLIENT_COMP_NAME, form.getClientCompName());
-        model.addAttribute(CLIENT_NAME, form.getClientName());
-        model.addAttribute(SCHEDULED_DATE, form.getScheduledDate());
-        model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
-        model.addAttribute(ROOM_ID, form.getRoomId());
         model.addAttribute(MTG_PLACE, form.getMtgPlace());
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
@@ -547,6 +625,8 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(MTG_PLACE, form.getMtgPlace());
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
+        // 最終変更日時を保持
+        model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
         
     }
 }

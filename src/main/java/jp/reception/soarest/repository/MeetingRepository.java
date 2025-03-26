@@ -34,14 +34,29 @@ public interface MeetingRepository {
 	 */
 	String getScheduleId();
 	
+	/*
+	 * 打ち合わせ情報変更 変更
+	 * 
+	 * @param updDto 打ち合わせ情報変更用DTO
+	 * @return 打ち合わせ変更件数
+	 */
+	int updateMtg(MeetingUpdateDto updDto);
 	
 	/*
 	 * 打ち合わせ情報登録 登録
 	 * 
-	 * @param AccountRegisterDto 打ち合わせ情報登録用DTO
+	 * @param registerDto 打ち合わせ情報登録用DTO
 	 * @return 打ち合わせ登録件数
 	 */
 	int registerMtg(MeetingRegisterDto registerDto);
+	
+	/*
+	 * 打ち合わせ情報削除 削除
+	 * 
+	 * @param delDto 打ち合わせ情報登録用DTO
+	 * @return 打ち合わせ登録件数
+	 */
+	int deleteMtg(MeetingDeleteDto delDto);
 	
 	/*
 	 * 打ち合わせ情報変更 変更対象の最終アップデート時間を取得
@@ -75,11 +90,4 @@ public interface MeetingRepository {
 	 */
 	int checkDeleteData(MeetingDeleteDto delDto);
 	
-	/*
-	 * 打ち合わせ情報削除 削除
-	 * 
-	 * @param MeetingDeleteDto 打ち合わせ情報登録用DTO
-	 * @return 打ち合わせ登録件数
-	 */
-	int deleteMtg(MeetingDeleteDto delDto);
 }

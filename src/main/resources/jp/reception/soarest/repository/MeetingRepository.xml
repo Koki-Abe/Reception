@@ -82,7 +82,7 @@
         ORDER BY CAST(MTG.SCHEDULE_ID AS SIGNED) ASC
     </select>
     
-    <!-- 打ち合わせ情報削除 削除対象の最終アップデート時間を取得 -->
+    <!-- 打ち合わせ情報変更 変更対象の最終アップデート時間を取得 -->
     <select id="getUpdateDate"  parameterType="jp.reception.soarest.domain.dto.MeetingUpdateDto" resultType="String">
         SELECT
             UPDATED_DATE
@@ -90,16 +90,16 @@
             MTG_SCHEDULE
         WHERE
         	SCHEDULE_ID = #{scheduleId}
-            AND STAFF_ID = #{userId}
-            AND SUB_STAFF_ID = #{subUserId}
-            AND CLIENT_NAME = #{clientName}
-            AND CLIENT_COMP_NAME = #{clientCompName}
-            AND SCHEDULED_DATE = #{scheduledDate}
-            AND SCHEDULED_TIME = #{scheduledTime}
-            AND ROOM_ID = #{roomId}
-            AND MTG_PLACE = #{mtgPlace}
-            AND MTG_ID = #{mtgId}
-            AND COMMENT = #{comment};
+            AND STAFF_ID = #{oldUserId}
+            AND SUB_STAFF_ID = #{oldSubUserId}
+            AND CLIENT_NAME = #{oldClientName}
+            AND CLIENT_COMP_NAME = #{oldClientCompName}
+            AND SCHEDULED_DATE = #{oldScheduledDate}
+            AND SCHEDULED_TIME = #{oldScheduledTime}
+            AND ROOM_ID = #{oldRoomId}
+            AND MTG_PLACE = #{oldMtgPlace}
+            AND MTG_ID = #{oldMtgId}
+            AND COMMENT = #{oldComment};
         
     </select>
     
@@ -111,19 +111,53 @@
             MTG_SCHEDULE
         WHERE
             SCHEDULE_ID = #{scheduleId}
-            AND STAFF_ID = #{userId}
-            AND SUB_STAFF_ID = #{subUserId}
-            AND CLIENT_NAME = #{clientName}
-            AND CLIENT_COMP_NAME = #{clientCompName}
-            AND SCHEDULED_DATE = #{scheduledDate}
-            AND SCHEDULED_TIME = #{scheduledTime}
-            AND ROOM_ID = #{roomId}
-            AND MTG_PLACE = #{mtgPlace}
-            AND MTG_ID = #{mtgId}
-            AND COMMENT = #{comment}
-            AND UPDATED_DATE = #{lastUpdateDate};
+            AND STAFF_ID = #{oldUserId}
+            AND SUB_STAFF_ID = #{oldSubUserId}
+            AND CLIENT_NAME = #{oldClientName}
+            AND CLIENT_COMP_NAME = #{oldClientCompName}
+            AND SCHEDULED_DATE = #{oldScheduledDate}
+            AND SCHEDULED_TIME = #{oldScheduledTime}
+            AND ROOM_ID = #{oldRoomId}
+            AND MTG_PLACE = #{oldMtgPlace}
+            AND MTG_ID = #{oldMtgId}
+            AND COMMENT = #{oldComment}
+            AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
         
     </select>
+    
+    <!-- 打ち合わせ情報変更 -->
+    <update id="updateMtg"  parameterType="jp.reception.soarest.domain.dto.MeetingUpdateDto" >
+        UPDATE
+        	MTG_SCHEDULE
+        SET
+			SCHEDULE_ID = #{scheduleId},
+			STAFF_ID = #{userId},
+			SUB_STAFF_ID = #{subUserId},
+			CLIENT_NAME = #{clientName},
+			CLIENT_COMP_NAME = #{clientCompName},
+			MTG_ID = #{mtgId},
+			ROOM_ID  = #{roomId},
+			MTG_PLACE  = #{mtgPlace},
+			SCHEDULED_DATE = #{scheduledDate},
+			SCHEDULED_TIME  = #{scheduledTime},
+			COMMENT  = #{comment},
+			UPDATED_DATE = #{updatedDate} ,
+			UPDATED_USER = #{updatedUserId}  
+       	WHERE
+       		SCHEDULE_ID = #{scheduleId}
+            AND STAFF_ID = #{oldUserId}
+            AND SUB_STAFF_ID = #{oldSubUserId}
+            AND CLIENT_NAME = #{oldClientName}
+            AND CLIENT_COMP_NAME = #{oldClientCompName}
+            AND SCHEDULED_DATE = #{oldScheduledDate}
+            AND SCHEDULED_TIME = #{oldScheduledTime}
+            AND ROOM_ID = #{oldRoomId}
+            AND MTG_PLACE = #{oldMtgPlace}
+            AND MTG_ID = #{oldMtgId}
+            AND COMMENT = #{oldComment}
+            AND (UPDATED_DATE IS NULL OR UPDATED_DATE = #{lastUpdateDate} );
+		
+    </update>
     
     <!-- 打ち合わせ情報登録 -->
     <select id="getScheduleId" resultType = "String">

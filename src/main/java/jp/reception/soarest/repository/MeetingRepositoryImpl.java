@@ -33,12 +33,22 @@ public class MeetingRepositoryImpl implements MeetingRepository{
 	}
 
 	/*
+	 * 打ち合わせ情報変更 変更
+	 * 
+	 * @param updDto 打ち合わせ情報変更用DTO
+	 * @return 打ち合わせ変更件数
+	 */
+	public int updateMtg(MeetingUpdateDto updDto) {
+		return meetingRepository.updateMtg(updDto);
+	}
+	
+	/*
 	 * 打ち合わせ情報登録 打ち合わせIDの取得
 	 * 
 	 * @return 最大の打ち合わせID
 	 */
 	public String getScheduleId() {
-		return getScheduleId();
+		return meetingRepository.getScheduleId();
 	}
 	
 	/*
@@ -48,7 +58,7 @@ public class MeetingRepositoryImpl implements MeetingRepository{
 	 * @return 打ち合わせ登録件数
 	 */
 	public int registerMtg(MeetingRegisterDto registerDto) {
-		return registerMtg(registerDto);
+		return meetingRepository.registerMtg(registerDto);
 	}
 	
 	/*

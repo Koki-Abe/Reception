@@ -10,6 +10,7 @@ import jp.reception.soarest.domain.dto.MeetingDeleteDto;
 import jp.reception.soarest.domain.dto.MeetingRegisterDto;
 import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingSearchResultDto;
+import jp.reception.soarest.domain.dto.MeetingUpdateDto;
 import jp.reception.soarest.form.MeetingDeleteForm;
 import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
@@ -41,6 +42,17 @@ public interface MeetingService {
      */
     List<MeetingSearchResultDto> searchMtgList(MeetingSearchForm form, 
         MeetingSearchDto searchDto, Model model);
+    
+    /*
+     * 打ち合わせ情報変更 変更
+     * 
+     * @param form 打ち合わせ情報変更 フォームクラス 
+     * @param updateDto 打ち合わせ情報変更 変更用DTO
+     * @param model モデル
+     * @return 検索結果
+     */
+    int updateMtg(MeetingUpdateForm form, 
+    		MeetingUpdateDto updateDto, Model model, String staffId);
     
     /*
      * 打ち合わせ情報登録 登録

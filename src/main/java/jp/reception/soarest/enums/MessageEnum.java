@@ -91,6 +91,7 @@ public enum MessageEnum {
     MSG_D04_I_001,
     MSG_D05_I_001,
     MSG_D05_W_001,
+    MSG_D05_E_001,
     MSG_D05_W_002,
     MSG_D05_W_003,
     MSG_D05_W_004,
@@ -105,8 +106,10 @@ public enum MessageEnum {
     MSG_D05_W_013,
     MSG_D05_W_014,
     MSG_D06_I_001,
+    MSG_D06_E_001,
     MSG_D07_I_001,
     MSG_D08_I_001,
+    MSG_D08_E_001,
     MSG_D09_I_001,
     MSG_E01_I_001,
 	MSG_E01_I_002;
