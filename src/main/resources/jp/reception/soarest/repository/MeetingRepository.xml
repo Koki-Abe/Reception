@@ -30,7 +30,7 @@
                 , MSC.CLIENT_NAME AS CLIENT_NAME
                 , MSC.SCHEDULED_DATE AS SCHEDULED_DATE
                 , MSC.SCHEDULED_TIME AS SCHEDULED_TIME
-                , MMR.ROOM_ID AS ROOM_ID
+                , MSC.ROOM_ID AS ROOM_ID
                 , CASE WHEN MSC.ROOM_ID != '' AND MSC.ROOM_ID IS NOT NULL AND MSC.ROOM_ID != 999 AND MSC.ROOM_ID != 9999
                       THEN MMR.ROOM_NAME
                       ELSE MSC.MTG_PLACE
