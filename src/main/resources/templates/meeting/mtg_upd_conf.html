@@ -33,7 +33,9 @@
                     <tr><th>その他打ち合わせ場所</th>
                     	<td><p th:text="${mtgPlace}"></td></tr>
                    	<tr><th>目的</th>
-                    	<td><p th:text="${mtgId}"></td></tr>
+                    	<td><th:block th:each="purpose : ${purposeList}" th:if="${purpose.mtgId == mtgId}">
+							<p th:text="${purpose.mtgName}">
+						</th:block></td>
                     <tr><th>コメント</th>
                     	<td><p th:text="${comment}"></td></tr>
                 </table>
