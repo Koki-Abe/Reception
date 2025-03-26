@@ -19,9 +19,17 @@
            <div class="contact-form" id="clearForm">
             <!-- 変更フォーム -->
                 <table>
-                    <tr><th>ユーザーID</th><td><input type="text" id="userId" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td></tr>
-                    <tr><th>ユーザー名</th><td><input type="text" name="userName" th:value="${userName}"></td></tr>
-                    <tr><th>部署</th><td>
+                    <tr>
+                    	<th style="width:150px;">ユーザーID<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                   		<td><input type="text" id="userId" name="userId" th:value="${userId}" pattern="^[0-9A-Za-z]+$" title="半角英数字で入力して下さい。"></td>
+                   	</tr>
+                    <tr>
+                    	<th>ユーザー名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                   		<td><input type="text" name="userName" th:value="${userName}"></td>
+                    </tr>
+                    <tr>
+                    	<th>部署<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                    	<td>
                         <select name="department" th:value="${department}">
                             <option
                             	id="department"
@@ -32,7 +40,9 @@
                            </option>
                         </select>
                     </td></tr>
-                    <tr><th>ロール</th><td>
+                    <tr>
+                    	<th>ロール<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                    	<td>
                         <select id="role" name="role">
                             <option
                                 th:each="auth : ${authList}"

@@ -16,19 +16,29 @@
            <div class="contact-form">
             <!-- 入力内容表示 -->
                 <table>
-                    <tr><th>ユーザーID</th>
-                    	<td style="width:200px;"><p th:text="${userId}"></td></tr>
-                    <tr><th>ユーザー名</th>
-                    	<td><p th:text="${userName}"></td></tr>
-                    <tr><th>部署</th>
-                    	<td><th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
-            				<p th:text="${dep.depName}">
-            			</th:block></td></tr>
-                    <tr><th>ロール</th>
+                    <tr>
+                    	<th>ユーザーID</th>
+                   		<td style="width:200px;"><p th:text="${userId}"></td>
+               		</tr>
+                    <tr>
+                    	<th>ユーザー名</th>
+                   		<td><p th:text="${userName}"></td>
+               		</tr>
+                   <tr>	
+                   		<th>部署</th>
+                   		<td><th:block th:each="dep : ${depList}" th:if="${dep.depId == department}">
+           					<p th:text="${dep.depName}">
+           				</th:block></td>
+       				</tr>
+                    <tr>
+                    	<th>ロール</th>
                     	<td><th:block th:each="auth : ${authList}" th:if="${auth.authId == role}">
             				<p th:text="${auth.authName}">
-            			</th:block></td></tr>
-                    <tr><th>パスワード</th><td>
+            			</th:block></td>
+           			</tr>
+                    <tr>
+                    	<th>パスワード</th>
+                    	<td>
                     	<input type="password"id="password" name="password"autocomplete="new-password" th:value="${password}" disabled >
                     </tr>
                 </table>
