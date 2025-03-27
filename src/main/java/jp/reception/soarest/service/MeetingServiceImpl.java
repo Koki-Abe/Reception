@@ -437,14 +437,11 @@ public class MeetingServiceImpl implements MeetingService {
             	result.getFieldError();
                 errorList.add(error.getDefaultMessage());
             }
-            // ※リダイレクトにしないとURLが変わってしまうため
             model.addAttribute(ERR_MSG, errorList);
-
             is_error = true;
         }
         
-        if(is_error == true) return false;
-        else					return true;
+        return !is_error;
 	}
 
     /*
@@ -503,14 +500,11 @@ public class MeetingServiceImpl implements MeetingService {
             	result.getFieldError();
                 errorList.add(error.getDefaultMessage());
             }
-            // ※リダイレクトにしないとURLが変わってしまうため
             model.addAttribute(ERR_MSG, errorList);
-
             is_error = true;
         }
         
-        if(is_error == true) return false;
-        else					return true;
+        return !is_error;
 	}
     
     /*

@@ -219,9 +219,9 @@ public class AccountController {
     	accountService.saveWord(form, model);
     	
     	// エラーメッセージ
-        errMsg = MessageEnum.MSG_E01_I_002.getMsg(null);
+        errMsg = MessageEnum.MSG_E01_I_001.getMsg(null);
         
-    	// 変更対象のデータを保持
+    	// 変更対象の最終アップデート時間を取得
         accountService.getLastDate(form, model);
         
         // エラーメッセージリセット
@@ -258,13 +258,11 @@ public class AccountController {
 
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
-    	// エラー格納用リスト
-    	List<String> errorList = new ArrayList<String>();
-
+    	
     	// 変更内容を入力欄に保持
 		accountService.saveWord(form, model);
 		
-		// 変更対象のデータをチェック
+		// 削除対象のデータを排他チェック
 		int count = accountService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
@@ -273,6 +271,9 @@ public class AccountController {
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
+		// エラー格納用リスト
+    	List<String> errorList = new ArrayList<String>();
+    	
     	// 入力チェック
     	if(accountService.inputCheck(form, result, model, errorList)) {
     		// エラーメッセージ
@@ -330,7 +331,7 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-		// 変更対象のデータをチェック
+    	// 削除対象のデータを排他チェック
 		int count = accountService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
@@ -445,11 +446,12 @@ public class AccountController {
     	}
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
-    	// エラー格納用リスト
-    	List<String> errorList = new ArrayList<String>();
-
+    	
     	// 登録内容を入力欄に保持
     	accountService.saveWord(form, model);
+    	
+    	// エラー格納用リスト
+    	List<String> errorList = new ArrayList<String>();
     	
     	// 入力チェック
     	if(accountService.inputCheck(form, result, model, errorList)) {
@@ -561,17 +563,22 @@ public class AccountController {
         // 初期処理
         accountService.init(model);
         
-        // エラーメッセージリセット
-  		errMsg = "";
-        
 		// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_C08_I_001.getMsg(null));
 		
 		// 対象アカウント情報を保持
 		accountService.saveWord(form, model);
 		
-		// 削除対象のデータを保持
+		// エラーメッセージ
+        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        
+    	// 変更対象の最終アップデート時間を取得
         accountService.getLastDate(form, model);
+        
+        // エラーメッセージリセット
+  		errMsg = "";
+        
+		// 削除対象のデータを排他チェック
 		int count = accountService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
@@ -613,7 +620,7 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
-    	// 削除対象のデータをチェック
+    	// 削除対象のデータを排他チェック
     	int count = accountService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
