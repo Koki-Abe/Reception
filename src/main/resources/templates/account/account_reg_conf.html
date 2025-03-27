@@ -59,6 +59,7 @@
 		      			<input type="hidden" name="role" th:value="${auth.authId}">
 		      		</th:block>
 		      		<input type="hidden"id="password" name="password"autocomplete="new-password" th:value="${password}" >
+		      		<!-- 戻るボタン -->
 	            	<input type="submit" value="戻る">
 	            </form>
 	            
@@ -73,6 +74,7 @@
 		      			<input type="hidden" name="role" th:value="${auth.authId}">
 		      		</th:block>
 		      		<input type="hidden"id="password" name="password"autocomplete="new-password" th:value="${password}" >
+		      		<!-- 登録確定ボタン -->
                 	<input type="submit" value="確定" style="margin-top:20px;">
                	</form>
             </div>

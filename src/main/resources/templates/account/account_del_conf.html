@@ -33,6 +33,7 @@
             <div style="text-align: center;">
             	<form th:action="@{/account_delete_comp}" method="post">
             
+            		<!-- 戻るボタン -->
 	            	<input type="button" value="戻る" onclick="location.href='/account_list'">
 	            
 	            
@@ -46,6 +47,7 @@
 		      			<input type="hidden" name="role" th:value="${auth.authId}">
 		      		</th:block>
 		      		<input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
+		      		<!-- 削除確定ボタン -->
                 	<input type="submit" value="確定" style="margin-top:20px;">
                	</form>
             </div>
