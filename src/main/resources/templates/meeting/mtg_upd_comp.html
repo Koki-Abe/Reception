@@ -11,7 +11,37 @@
     	<h2 align="center" th:text="${message}"></h2>
     	
     	<div style="text-align: center;">
-    	<input type="button" value="打ち合わせ一覧画面へ戻る" onclick="location.href='/mtg_list'">
+    	<form th:action="@{/mtg_update}" method="post">
+       	<!-- 情報保持 -->
+       	<input type="hidden" name="scheduleId" th:value="${scheduleId}">
+	        <input type="hidden" name="userId" th:value="${userId}">
+	        <input type="hidden" name="subUserId" th:value="${subUserId}">
+	        <input type="hidden" name="clientCompName" th:value="${clientCompName}">
+	        <input type="hidden" name="clientName" th:value="${clientName}">
+	        <input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
+	        <input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
+	        <input type="hidden" name="roomId" th:value="${roomId}">
+	        <th:block th:each="room,stat : ${roomList}">
+            	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
+            	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
+           	</th:block>
+	        <input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
+	        <input type="hidden" name="purpose" th:value="${mtgId}">
+	        <input type="hidden" name="comment" th:value="${comment}">
+	        <!-- 変更前情報保持 -->
+	        <input type="hidden" name="oldUserId" th:value="${userId}">
+	        <input type="hidden" name="oldSubUserId" th:value="${subUserId}">
+	        <input type="hidden" name="oldClientCompName" th:value="${clientCompName}">
+	        <input type="hidden" name="oldClientName" th:value="${clientName}">
+	        <input type="hidden" name="oldScheduledDate" th:value="${scheduledDate}">
+	        <input type="hidden" name="oldScheduledTime" th:value="${scheduledTime}">
+	        <input type="hidden" name="oldRoomId" th:value="${roomId}">
+	        <input type="hidden" name="oldMtgPlace" th:value="${mtgPlace}">
+	        <input type="hidden" name="oldMtgId" th:value="${mtgId}">
+	        <input type="hidden" name="oldComment" th:value="${comment}">
+	        <!-- 戻るボタン -->
+	       	<input type="submit" value="戻る"  style="margin-top:20px;">
+      	</form>
     	</div>
 	 	<!-- フッター読み込み -->
         <div th:include="common/footer"></div>

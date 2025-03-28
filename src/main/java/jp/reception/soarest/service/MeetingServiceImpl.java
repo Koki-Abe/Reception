@@ -195,31 +195,26 @@ public class MeetingServiceImpl implements MeetingService {
      * @param form 打ち合わせ情報変更 フォームクラス 
      * @param updateDto 打ち合わせ情報変更 変更用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     public int updateMtg(MeetingUpdateForm form, 
     		MeetingUpdateDto updateDto, Model model, String staffId) {
     	
-    	int updatenum = 0;
-    	
     	// beanの内容を詰め替え
         BeanUtils.copyProperties(form, updateDto);
+        
         // プロパティ名が異なるものは別途設定
         updateDto.setMtgId(form.getPurpose());
         updateDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
         updateDto.setUpdatedDate(CommonUtils.getSysdate());
         updateDto.setUpdatedUserId(staffId);
+        
+     // 最終アップデート日時が空文字の時nullにする
         if(updateDto.getLastUpdateDate() == "") updateDto.setLastUpdateDate(null);
         
         // 登録処理を実行
-        updatenum = meetingRepository.updateMtg(updateDto);
-        
-        // 登録件数が0件の場合
-        if (0 == updatenum) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_003.getMsg(CharEnum.VALIDATION.getChar()));
-        }
-        
+        int updatenum = meetingRepository.updateMtg(updateDto);
         return updatenum;
     }
     
@@ -229,17 +224,21 @@ public class MeetingServiceImpl implements MeetingService {
      * @param form 打ち合わせ情報登録 フォームクラス 
      * @param registerDto 打ち合わせ情報登録 検索用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     public int registerMtg(MeetingRegisterForm form, 
     		MeetingRegisterDto registerDto, Model model, String staffID){
     	
-    	int registernum = 0;
+    	// データベースからスケジュールIDの最大値を取得
     	String maxScheduleId = meetingRepository.getScheduleId();
+    	// スケジュールIDの生成
     	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
     	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
+    	
     	// beanの内容を詰め替え
         BeanUtils.copyProperties(form, registerDto);
+        
         // プロパティ名が異なるものは別途設定
         registerDto.setScheduleId(newScheduleId);
         registerDto.setMtgId(form.getPurpose());
@@ -260,13 +259,7 @@ public class MeetingServiceImpl implements MeetingService {
         registerDto.setCreatedUserId(staffID);
         
         // 登録処理を実行
-        registernum = meetingRepository.registerMtg(registerDto);
-
-        // 登録件数が0件の場合
-        if (0 == registernum) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
-        }
+        int registernum = meetingRepository.registerMtg(registerDto);
         
         return registernum;
     }
@@ -285,6 +278,8 @@ public class MeetingServiceImpl implements MeetingService {
         
         // プロパティ名が異なるものは別途設定
         deleteDto.setMtgId(form.getPurpose());
+        
+     // 最終アップデート日時が空文字の時nullにする
     	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
     	
         // 削除処理を実行
@@ -300,13 +295,18 @@ public class MeetingServiceImpl implements MeetingService {
      */
     public void getLastDate(MeetingUpdateForm form, Model model){
     	MeetingUpdateDto updDto = new MeetingUpdateDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, updDto);
+    	
         // プロパティ名が異なるものは別途設定
     	updDto.setMtgId(form.getPurpose());
     	updDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
     	
     	// 変更対象の最終アップデート日時を取得	
     	String lastDate = meetingRepository.getUpdateDate(updDto);
+    	
+    	// 取得したデータを格納
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
     }
@@ -318,12 +318,17 @@ public class MeetingServiceImpl implements MeetingService {
      */
     public void getLastDate(MeetingDeleteForm form, Model model){
     	MeetingDeleteDto delDto = new MeetingDeleteDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, delDto);
+    	
         // プロパティ名が異なるものは別途設定
     	delDto.setMtgId(form.getPurpose());
     	
     	// 削除対象の最終アップデート日時を取得
     	String lastDate = meetingRepository.getDeleteDate(delDto);
+    	
+    	// 取得したデータを格納
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
     }
@@ -336,10 +341,15 @@ public class MeetingServiceImpl implements MeetingService {
      */
     public int checkData(MeetingUpdateForm form, Model model){
     	MeetingUpdateDto updDto = new MeetingUpdateDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, updDto);
+    	
         // プロパティ名が異なるものは別途設定
     	updDto.setOldMtgId(form.getOldMtgId());
     	updDto.setOldRoomId(form.getOldRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
+    	
+    	// 最終アップデート日時が空文字の時nullにする
     	if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
         
     	// 完全一致するデータを数える
@@ -355,9 +365,14 @@ public class MeetingServiceImpl implements MeetingService {
      */
     public int checkData(MeetingDeleteForm form, Model model){
     	MeetingDeleteDto delDto = new MeetingDeleteDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, delDto);
+    	
         // プロパティ名が異なるものは別途設定
     	delDto.setMtgId(form.getPurpose());
+    	
+    	// 最終アップデート日時が空文字の時nullにする
     	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
         
     	int count = meetingRepository.checkDeleteData(delDto);

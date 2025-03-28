@@ -49,6 +49,7 @@ public interface MeetingService {
      * @param form 打ち合わせ情報変更 フォームクラス 
      * @param updateDto 打ち合わせ情報変更 変更用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     int updateMtg(MeetingUpdateForm form, 
@@ -60,6 +61,7 @@ public interface MeetingService {
      * @param form 打ち合わせ情報登録 フォームクラス 
      * @param registerDto 打ち合わせ情報登録 登録用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     int registerMtg(MeetingRegisterForm form, 

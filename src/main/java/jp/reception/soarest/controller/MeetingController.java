@@ -294,7 +294,7 @@ public class MeetingController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
@@ -355,12 +355,15 @@ public class MeetingController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// 変更内容を入力欄に保持
+    	meetingService.saveWord(form, model);
+    	
 		// 変更対象のデータをチェック
 		int count = meetingService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -372,6 +375,7 @@ public class MeetingController {
 		if(updAccountCount == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_D06_E_001.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -414,7 +418,7 @@ public class MeetingController {
         meetingService.saveWord(form , model);
 
         // エラーメッセージ
-    	errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+    	errMsg = MessageEnum.MSG_D02_E_001.getMsg(null);
     	
         // 初期処理
         meetingService.init(model);
@@ -524,6 +528,7 @@ public class MeetingController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_D03_E_002.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
@@ -568,22 +573,26 @@ public class MeetingController {
 		// 初期処理
     	meetingService.init(model);
     	
-    	// エラーメッセージリセット
-  		errMsg = "";
-    	
 		// 画面上部メッセージ部分
 		model.addAttribute(MESSAGE, MessageEnum.MSG_D08_I_001.getMsg(null));
 		
 		// 対象アカウント情報を保持
 		meetingService.saveWord(form, model);
 		
+		// エラーメッセージ
+    	errMsg = MessageEnum.MSG_D01_E_001.getMsg(null);
+    	
 		// 削除対象のデータを保持
     	meetingService.getLastDate(form, model);
+    	
+    	// エラーメッセージリセット
+  		errMsg = "";
+    	
 		int count = meetingService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -625,7 +634,7 @@ public class MeetingController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -635,6 +644,7 @@ public class MeetingController {
 		if(deleteAccountCount == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_D08_E_001.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -659,7 +669,7 @@ public class MeetingController {
     public String exceptionHandler(Exception e, Model model) {
     	
     	if (e.getCause() instanceof SQLException) {
-    		model.addAttribute("errMsg", errMsg);
+    		model.addAttribute("errMsg", MessageEnum.MSG_E01_I_001.getMsg(null));
     	}else if(e.getCause() instanceof NoSuchAlgorithmException) {
     		model.addAttribute("errMsg", MessageEnum.MSG_E_002.getMsg(null));
         }else {

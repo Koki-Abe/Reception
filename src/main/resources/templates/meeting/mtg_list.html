@@ -42,12 +42,22 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr><th>相手会社名</th><td><input type="text" name="clientCompName" th:value="${clientCompName}"></td></tr>
-                        <tr><th>相手氏名</th><td><input type="text" name="clientName" th:value="${clientName}"></td></tr>
-                        <tr><th>予定日</th><td><input type="date" name="scheduledDate" th:value="${scheduledDate}"></td></tr>
-                        <tr><th>予定時刻</th><td>
-                            <input type="time" name="scheduledTime" th:value="${scheduledTime}">
-                        </td></tr>
+                        <tr>
+                        	<th>相手会社名</th>
+                        	<td><input type="text" name="clientCompName" th:value="${clientCompName}"></td>
+                       	</tr>
+                        <tr>
+                        	<th>相手氏名</th>
+                        	<td><input type="text" name="clientName" th:value="${clientName}"></td>
+                       	</tr>
+                        <tr>
+                        	<th>予定日</th>
+                        	<td><input type="date" name="scheduledDate" th:value="${scheduledDate}"></td>
+                       	</tr>
+                        <tr>
+                        	<th>予定時刻</th>
+                            <td><input type="time" name="scheduledTime" th:value="${scheduledTime}"></td>
+                       	</tr>
                         <tr>
                             <th>会議室名</th>
                             <td>
@@ -63,7 +73,8 @@
                                 <input type="text" id="mtgPlace" name="mtgPlace" th:value="${mtgPlace}" disabled="disabled">
                             </td>
                         </tr>
-                        <tr><th>目的</th>
+                        <tr>
+                        	<th>目的</th>
                             <td>
                                 <select id="purpose" name="purpose" th:value="${purpose}">
                                    <option
@@ -75,7 +86,10 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr><th>コメント</th><td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td></tr>
+                        <tr>
+                        	<th>コメント</th>
+                       		<td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td>
+                   		</tr>
                     </table>
                 </div>
 
@@ -130,6 +144,7 @@
                         <th:block th:if="${loginUser.authId == 100}">
                             <!-- 変更 -->
                             <form th:action="@{/mtg_update}" method="post">
+                            	<!-- 情報保持 -->
                                 <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
                                 <input type="hidden" name="userId" th:value="${mtg.staffId}">
                                 <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
@@ -145,8 +160,7 @@
                                 <input type="hidden" name="mtgPlace" th:value="${mtg.mtgPlace}">
                                 <input type="hidden" name="purpose" th:value="${mtg.mtgId}">
                                 <input type="hidden" name="comment" th:value="${mtg.comment}">
-                                
-                                <!-- 情報保持 -->
+                                <!-- 変更前情報保持 -->
                                 <input type="hidden" name="oldUserId" th:value="${mtg.staffId}">
                                 <input type="hidden" name="oldSubUserId" th:value="${mtg.subStaffId}">
                                 <input type="hidden" name="oldClientCompName" th:value="${mtg.clientCompName}">
@@ -157,10 +171,12 @@
                                 <input type="hidden" name="oldMtgPlace" th:value="${mtg.mtgPlace}">
                                 <input type="hidden" name="oldMtgId" th:value="${mtg.mtgId}">
                                 <input type="hidden" name="oldComment" th:value="${mtg.comment}">
+                                <!-- 変更ボタン -->
                                 <input type="submit" value="変更" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
                             </form>
                             <!-- 削除 -->
                             <form th:action="@{/mtg_delete_conf}" method="post">
+                            	<!-- 情報保持 -->
                                 <input type="hidden" name="scheduleId" th:value="${mtg.scheduleId}">
                                 <input type="hidden" name="userId" th:value="${mtg.staffId}">
                                 <input type="hidden" name="subUserId" th:value="${mtg.subStaffId}">
@@ -172,6 +188,7 @@
                                 <input type="hidden" name="mtgPlace" th:value="${mtg.mtgPlace}">
                                 <input type="hidden" name="purpose" th:value="${mtg.mtgId}">
                                 <input type="hidden" name="comment" th:value="${mtg.comment}">
+                                <!-- 削除ボタン -->
                                 <input type="submit" value="削除" style="padding-top:0px;padding-bottom:0px;border:none;background-color:transparent;color:blue;">
                             </form>
                         </th:block>

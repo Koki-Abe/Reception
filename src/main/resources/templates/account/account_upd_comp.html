@@ -12,7 +12,20 @@
         <h2 align="center" th:text="${message}"></h2>
 		
         <div style="text-align: center;">
-    	<input type="button" value="アカウント一覧画面へ戻る" onclick="location.href='/account_list'">
+        <form th:action="@{/account_update}" method="post">
+           	<!-- 情報保持 -->
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="userName" th:value="${userName}">
+            <input type="hidden" name="department" th:value="${department}">
+            <input type="hidden" name="role" th:value="${role}">
+      		<!-- 変更前情報保持 -->
+      		<input type="hidden" name="oldUserId" th:value="${userId}">
+            <input type="hidden" name="oldUserName" th:value="${userName}">
+            <input type="hidden" name="oldDepartment" th:value="${department}">
+            <input type="hidden" name="oldRole" th:value="${role}">
+      		<!-- 戻るボタン -->
+           	<input type="submit" value="アカウント情報変更に戻る">
+        </form>
     	</div>
         <!-- フッター読み込み -->
         <div th:include="common/footer"></div>

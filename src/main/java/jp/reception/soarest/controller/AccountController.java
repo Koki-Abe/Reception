@@ -267,7 +267,7 @@ public class AccountController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
@@ -331,12 +331,15 @@ public class AccountController {
     	// セッションから表示情報を取得
     	model.addAttribute(LOGIN_USER, session.getAttribute(LOGIN_USER));
     	
+    	// 変更内容を入力欄に保持
+		accountService.saveWord(form, model);
+    			
     	// 削除対象のデータを排他チェック
 		int count = accountService.checkData(form, model);
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -348,6 +351,7 @@ public class AccountController {
 		if(updAccountCount == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_C06_E_001.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -359,10 +363,13 @@ public class AccountController {
     		// 格納用DTO
             LoginUserSearchResultDto loginUser = (LoginUserSearchResultDto)session.getAttribute(LOGIN_USER);
     		String sysDate = (String)session.getAttribute(UPD_LAST_LOGIN_DATE);
+    		
 			// セッションを破棄
             session.invalidate();
+            
             // セッション情報の作り直し
             session = request.getSession();
+            
             // 変更箇所を更新する
             loginUser = accountService.setNewSessionData(form, loginUser);
             session.setAttribute(LOGIN_USER, loginUser);
@@ -373,9 +380,6 @@ public class AccountController {
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// アカウント情報変更完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.ACCOUNT_UPDATE_COMPLETE.getPass();
     }
     
@@ -408,7 +412,7 @@ public class AccountController {
     	accountService.saveWord(form, model);
 
     	// エラーメッセージ
-        errMsg = MessageEnum.MSG_C05_E_001.getMsg(null);
+        errMsg = MessageEnum.MSG_C02_E_001.getMsg(null);
         
         // 初期処理
         accountService.init(model);
@@ -517,6 +521,7 @@ public class AccountController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_C03_E_001.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
 		
@@ -527,9 +532,6 @@ public class AccountController {
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// アカウント情報登録完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.ACCOUNT_REGISTER_COMPLETE.getPass();
     }
     
@@ -583,7 +585,7 @@ public class AccountController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -625,7 +627,7 @@ public class AccountController {
 		if(count == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_E01_I_002.getMsg(null));
-			// 変更予定のデータに操作が加えられていた場合
+			// 変更予定のデータに操作が加えられていた場合エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -636,6 +638,7 @@ public class AccountController {
 		if(deleteAccountCount == 0) {
 			// エラーメッセージ
 			model.addAttribute("errMsg", MessageEnum.MSG_C08_E_001.getMsg(null));
+			// エラー画面へ遷移
 			return UrlEnum.SYSTEM_ERROR.getPass();
 		}
     	
@@ -646,9 +649,6 @@ public class AccountController {
     	logger.info(new Object(){}.getClass().getEnclosingMethod().getName() + CharEnum.END.getChar());
 
     	// アカウント情報削除完了画面へ遷移
-    	// ※forwardがないとプルダウンが表示されない。また、リダイレクトだとURLがaccount_listの
-    	// ままになるが、URLにパラメータが表示されないことに加え、検索結果も表示されない。
-    	// (redirectの場合、redirectAttributesにsetしないと連携できない)
     	return UrlEnum.ACCOUNT_DELETE_COMPLETE.getPass();
     }
     
@@ -663,7 +663,7 @@ public class AccountController {
     public String exceptionHandler(Exception e, Model model) {
     	
     	if (e.getCause() instanceof SQLException) {
-    		model.addAttribute("errMsg", errMsg);
+    		model.addAttribute("errMsg", MessageEnum.MSG_E01_I_001.getMsg(null));
     	}else if(e.getCause() instanceof NoSuchAlgorithmException) {
     		model.addAttribute("errMsg", MessageEnum.MSG_E_002.getMsg(null));
         }else {

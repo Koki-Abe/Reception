@@ -124,6 +124,7 @@ public interface AccountService {
      * @param form アカウント情報変更 フォームクラス 
      * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     boolean inputCheck(AccountUpdateForm form, BindingResult result, 
@@ -135,6 +136,7 @@ public interface AccountService {
      * @param form アカウント情報登録 フォームクラス 
      * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     boolean inputCheck(AccountRegisterForm form, BindingResult result, 

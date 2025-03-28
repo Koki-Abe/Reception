@@ -16,28 +16,48 @@
            <div class="contact-form">
             <!-- 入力内容表示 -->
                 <table>
-                    <tr><th>打ち合わせ担当者名(主担当)</th>
-                    	<td style="width:200px;"><p th:text="${userId}"></td></tr>
-                    <tr><th>打ち合わせ担当者名(副担当)</th>
-                    	<td><p th:text="${subUserId}"></td></tr>
-                   	<tr><th>相手会社名</th>
-                    	<td><p th:text="${clientCompName}"></td></tr>
-                    <tr><th>相手氏名</th>
-                    	<td><p th:text="${clientName}"></td></tr>
-                   	<tr><th>予定日</th>
-                    	<td><p th:text="${scheduledDate}"></td></tr>
-                    <tr><th>予定時刻</th>
-                    	<td><p th:text="${scheduledTime}"></td></tr>
-                   	<tr><th>会議室番号</th>
-                    	<td><p th:text="${roomId}"></td></tr>
-                    <tr><th>その他打ち合わせ場所</th>
-                    	<td><p th:text="${mtgPlace}"></td></tr>
-                   	<tr><th>目的</th>
+                    <tr>
+                    	<th>打ち合わせ担当者名(主担当)</th>
+                    	<td style="width:200px;"><p th:text="${userId}"></td>
+                   	</tr>
+                    <tr>
+                    	<th>打ち合わせ担当者名(副担当)</th>
+                    	<td><p th:text="${subUserId}"></td>
+                   	</tr>
+                   	<tr>
+                   		<th>相手会社名</th>
+                    	<td><p th:text="${clientCompName}"></td>
+                   	</tr>
+                    <tr>
+                    	<th>相手氏名</th>
+                    	<td><p th:text="${clientName}"></td>
+                   	</tr>
+                   	<tr>
+                   		<th>予定日</th>
+                    	<td><p th:text="${scheduledDate}"></td>
+                   	</tr>
+                    <tr>
+                   		<th>予定時刻</th>
+                    	<td><p th:text="${scheduledTime}"></td>
+                   	</tr>
+                   	<tr>
+                   		<th>会議室番号</th>
+                    	<td><p th:text="${roomId}"></td>
+                   	</tr>
+                    <tr>
+                    	<th>その他打ち合わせ場所</th>
+                    	<td><p th:text="${mtgPlace}"></td>
+                   	</tr>
+                   	<tr>
+                   		<th>目的</th>
                     	<td><th:block th:each="purpose : ${purposeList}" th:if="${purpose.mtgId == mtgId}">
-							<p th:text="${purpose.mtgName}">
-						</th:block></td>
-                    <tr><th>コメント</th>
-                    	<td><p th:text="${comment}"></td></tr>
+						<p th:text="${purpose.mtgName}">
+						</th:block>
+					</td>
+                    <tr>
+                    	<th>コメント</th>
+                    	<td><p th:text="${comment}"></td>
+                   	</tr>
                 </table>
             </div>
       	</form>
@@ -54,6 +74,10 @@
                     <input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
                     <input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
                     <input type="hidden" name="roomId" th:value="${roomId}">
+                    <th:block th:each="room,stat : ${roomList}">
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
+                   	</th:block>
                     <input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
                     <input type="hidden" name="purpose" th:value="${mtgId}">
                     <input type="hidden" name="comment" th:value="${comment}">
@@ -69,7 +93,7 @@
 	                <input type="hidden" name="oldMtgId" th:value="${oldMtgId}">
 	                <input type="hidden" name="oldComment" th:value="${oldComment}">
 	                <input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
-	                <!-- ボタン -->
+	                <!-- 戻るボタン -->
 	            	<input type="submit" value="戻る"  style="margin-top:20px;">
             	</form>
             	
@@ -83,6 +107,10 @@
                     <input type="hidden" name="scheduledDate" th:value="${scheduledDate}">
                     <input type="hidden" name="scheduledTime" th:value="${scheduledTime}">
                     <input type="hidden" name="roomId" th:value="${roomId}">
+                    <th:block th:each="room,stat : ${roomList}">
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomId'" th:value="${room.roomId}" />
+                    	<input type="hidden" th:attr="name='roomList[' + __${stat.index}__ + '].roomName'" th:value="${room.roomName}" />
+                   	</th:block>
                     <input type="hidden" name="mtgPlace" th:value="${mtgPlace}">
                     <input type="hidden" name="purpose" th:value="${mtgId}">
                     <input type="hidden" name="comment" th:value="${comment}">
@@ -98,7 +126,7 @@
 	                <input type="hidden" name="oldMtgId" th:value="${oldMtgId}">
 	                <input type="hidden" name="oldComment" th:value="${oldComment}">
 	                <input type="hidden" name="lastUpdateDate" th:value="${lastUpdateDate}">
-                    <!-- ボタン -->
+                    <!-- 変更確定ボタン -->
                     <input type="submit" value="確定" style="margin-top:20px;">
                	</form>
             </div>

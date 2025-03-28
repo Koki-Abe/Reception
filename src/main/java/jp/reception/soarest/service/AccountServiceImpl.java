@@ -154,16 +154,16 @@ public class AccountServiceImpl implements AccountService {
      * @param form アカウント情報変更 フォームクラス 
      * @param updDto アカウント情報変更 検索用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     @Override
     public int updateAccount(AccountUpdateForm form, 
     		AccountUpdateDto updDto, Model model, String staffId){
     	
-    	int updatenum = 0;
-    	
     	// beanの内容を詰め替え
         BeanUtils.copyProperties(form, updDto);
+        
         // プロパティ名が異なるものは別途設定
         updDto.setDepId(form.getDepartment());
         updDto.setAuthId(form.getRole());
@@ -171,16 +171,12 @@ public class AccountServiceImpl implements AccountService {
         updDto.setUpdatedUserId(staffId);
         updDto.setOldDepId(form.getOldDepartment());
         updDto.setOldAuthId(form.getOldRole());
+        
+        // 最終アップデート日時が空文字の時nullにする
         if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
         
         // 登録処理を実行
-        updatenum = accountRepository.updateAccount(updDto);
-        
-        // 登録件数が0件の場合
-        if (0 == updatenum) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_003.getMsg(CharEnum.VALIDATION.getChar()));
-        }
+        int updatenum = accountRepository.updateAccount(updDto);
         
         return updatenum;
     }
@@ -191,36 +187,33 @@ public class AccountServiceImpl implements AccountService {
      * @param form アカウント情報登録 フォームクラス 
      * @param registerDto アカウント情報登録 検索用DTO
      * @param model モデル
+     * @param staffId 変更したユーザーID
      * @return 検索結果
      */
     @Override
     public int registerAccount(AccountRegisterForm form, 
     		AccountRegisterDto registerDto, Model model, String staffId){
         
-    	int registernum = 0;
-    	
     	// beanの内容を詰め替え
         BeanUtils.copyProperties(form, registerDto);
+        
         // プロパティ名が異なるものは別途設定
         registerDto.setDepId(form.getDepartment());
         registerDto.setAuthId(form.getRole());
         registerDto.setCreatedUserId(staffId);
+        
+        // パスワードをハッシュ化
         try {
         	String pass = CommonUtils.makeHash(form.getPassword());
         	registerDto.setPassword(pass);
         } catch (Exception e) {
         }
+        
         registerDto.setCreatedDate(CommonUtils.getSysdate());
         registerDto.setCreatedUserId(staffId);
         
         // 登録処理を実行
-        registernum = accountRepository.registerAccount(registerDto);
-
-        // 登録件数が0件の場合
-        if (0 == registernum) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C01_W_002.getMsg(CharEnum.VALIDATION.getChar()));
-        }
+        int registernum = accountRepository.registerAccount(registerDto);
         
         return registernum;
     }
@@ -237,21 +230,19 @@ public class AccountServiceImpl implements AccountService {
     public int deleteAccount(AccountDeleteForm form, 
     		AccountDeleteDto delDto, Model model){
         
-    	int deletenum = 0 ;
     	// beanの内容を詰め替え
         BeanUtils.copyProperties(form, delDto);
+        
         // プロパティ名が異なるものは別途設定
         delDto.setDepId(form.getDepartment());
         delDto.setAuthId(form.getRole());
         
+     	// 最終アップデート日時が空文字の時nullにする
+        if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
+        
         // 削除処理を実行
-        deletenum = accountRepository.deleteAccount(delDto);
-
-        // 登録件数が0件の場合
-        if (0 == deletenum) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_C08_W_001.getMsg(CharEnum.VALIDATION.getChar()));
-        }
+        int deletenum = accountRepository.deleteAccount(delDto);
+        
         return  deletenum;
     }
     
@@ -263,7 +254,10 @@ public class AccountServiceImpl implements AccountService {
      */
     public void getLastDate(AccountUpdateForm form, Model model) {
     	AccountUpdateDto updDto = new AccountUpdateDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, updDto);
+    	
         // プロパティ名が異なるものは別途設定
         updDto.setOldDepId(form.getOldDepartment());
         updDto.setOldAuthId(form.getOldRole());
@@ -271,7 +265,7 @@ public class AccountServiceImpl implements AccountService {
         // 変更対象の最重アップデート日時を取得
         String lastDate = accountRepository.getUpdateDate(updDto);
         
-        // checkDataメソッドで使用するためにformに記憶
+        // 取得したデータを格納
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
     }
@@ -283,13 +277,18 @@ public class AccountServiceImpl implements AccountService {
      */
     public void getLastDate(AccountDeleteForm form, Model model){
     	AccountDeleteDto delDto = new AccountDeleteDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, delDto);
+    	
         // プロパティ名が異なるものは別途設定
     	delDto.setDepId(form.getDepartment());
     	delDto.setAuthId(form.getRole());
     	
     	// 変更対象の最重アップデート日時を取得
     	String lastDate = accountRepository.getDeleteDate(delDto);
+    	
+    	// 取得したデータを格納
     	form.setLastUpdateDate(lastDate);
     	model.addAttribute(LAST_UPDATE_DATE, lastDate);
     }
@@ -302,18 +301,19 @@ public class AccountServiceImpl implements AccountService {
      */
     public int checkData(AccountUpdateForm form, Model model){
     	AccountUpdateDto updDto = new AccountUpdateDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, updDto);
+    	
         // プロパティ名が異なるものは別途設定
         updDto.setOldDepId(form.getOldDepartment());
         updDto.setOldAuthId(form.getOldRole());
+        
+        // 最終アップデート日時が空文字の時nullにする
         if(updDto.getLastUpdateDate() == "") updDto.setLastUpdateDate(null);
         
         // 完全一致するデータを数える
     	int count = accountRepository.checkUpdateData(updDto);
-        if (0 == count) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
-        }
         return count;
     }
     
@@ -325,18 +325,19 @@ public class AccountServiceImpl implements AccountService {
      */
     public int checkData(AccountDeleteForm form, Model model){
     	AccountDeleteDto delDto = new AccountDeleteDto();
+    	
+    	// beanの内容を詰め替え
     	BeanUtils.copyProperties(form, delDto);
+    	
         // プロパティ名が異なるものは別途設定
     	delDto.setDepId(form.getDepartment());
     	delDto.setAuthId(form.getRole());
+    	
+    	// 最終アップデート日時が空文字の時nullにする
     	if(delDto.getLastUpdateDate() == "") delDto.setLastUpdateDate(null);
         
     	// 完全一致するデータを数える
     	int count = accountRepository.checkDeleteData(delDto);
-        if (0 == count) {
-            // エラーメッセージを画面に返却
-            model.addAttribute(ERR_MSG, MessageEnum.MSG_E01_I_002.getMsg(CharEnum.VALIDATION.getChar()));
-        }
         return count;
     }
     
@@ -370,6 +371,7 @@ public class AccountServiceImpl implements AccountService {
      * @param form アカウント情報変更 フォームクラス 
      * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     @Override
@@ -381,7 +383,6 @@ public class AccountServiceImpl implements AccountService {
             	result.getFieldError();
                 errorList.add(error.getDefaultMessage());
             }
-            // ※リダイレクトにしないとURLが変わってしまうため
             model.addAttribute(ERR_MSG, errorList);
 
             return false;
@@ -395,17 +396,12 @@ public class AccountServiceImpl implements AccountService {
      * @param form アカウント情報登録 フォームクラス 
      * @param result フォームのバリデーションチェック
      * @param model モデル
+     * @param errorList エラーリスト
      * @return 入力チェック結果
      */
     @Override
     public boolean inputCheck(AccountRegisterForm form, BindingResult result, 
     		Model model, List<String> errorList) {
-    	
-    	// 初期状態のt機入力チェックはスルー
-    	if(form.getUserId() == null && form.getUserName() == null && form.getDepartment() == 0 &&
-    			form.getRole() == 0 && form.getPassword() == null){
-    		return false;
-    	}
     	
     	// 入力チェックに該当する場合
         if (result.hasErrors()) {
@@ -413,7 +409,6 @@ public class AccountServiceImpl implements AccountService {
             	result.getFieldError();
                 errorList.add(error.getDefaultMessage());
             }
-            // ※リダイレクトにしないとURLが変わってしまうため
             model.addAttribute(ERR_MSG, errorList);
 
             return false;
@@ -457,6 +452,7 @@ public class AccountServiceImpl implements AccountService {
         model.addAttribute(OLD_USER_NAME, form.getOldUserName());
         model.addAttribute(OLD_DEPARTMENT, form.getOldDepartment());
         model.addAttribute(OLD_ROLE, form.getOldRole());
+     // 最終変更日時を保持
         model.addAttribute(LAST_UPDATE_DATE, form.getLastUpdateDate());
     }
     

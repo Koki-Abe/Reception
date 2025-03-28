@@ -47,16 +47,16 @@
                         		<td><input type="text" name="clientCompName" th:value="${clientCompName}"></td>
                         </tr>
                         <tr>
-                        	<th>相手氏名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
-                        		<input type="text" name="clientName" th:value="${clientName}"></td>
+                        	<th>相手氏名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                        	<td><input type="text" name="clientName" th:value="${clientName}"></td>
                         </tr>
                         <tr>
-                        	<th>予定日<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
-                        		<input type="date" name="scheduledDate" th:value="${scheduledDate}"></td>
+                        	<th>予定日<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                        	<td><input type="date" name="scheduledDate" th:value="${scheduledDate}"></td>
                         </tr>
                         <tr>
-                        	<th>予定時刻<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none  solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th><td>
-                            	<input type="time" name="scheduledTime" th:value="${scheduledTime}"></td>
+                        	<th>予定時刻<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none  solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
+                        	<td><input type="time" name="scheduledTime" th:value="${scheduledTime}"></td>
                         </tr>
                         <tr>
                             <th>会議室名<span class="m_label m_label__required"></span><span style="padding:0px 10px; margin-bottom: 1px; border-style: none solid #333333; background-color: #ff0000;"><font color="FFFFFF">必須</font></span></th>
@@ -94,12 +94,12 @@
                         </tr>
                         <tr>
                         	<th>コメント</th>
-                        		<td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td>
+                       		<td><textarea name="comment" rows="10" cols="52" maxlength="200" th:text="${comment}"></textarea></td>
                    		</tr>
                     </table>
                 </div>
 
-				<!-- 情報保持 -->
+				<!-- 変更前情報保持 -->
             	<input type="hidden" name="scheduleId" th:value="${scheduleId}">
                 <input type="hidden" name="oldUserId" th:value="${oldUserId}">
                 <input type="hidden" name="oldSubUserId" th:value="${oldSubUserId}">
