@@ -207,11 +207,12 @@
         <div th:include="common/footer"></div>
 
         <!-- JS -->
-        <script>
+        <script th:inline="javascript"> // 変数を使うためインラインにjavascriptを設定する
             $('#roomId').change(function() {
-                let rmId = $('#roomId').val();
+            	let rmId = $('#roomId').val();
+                const other = /*[[${othersStatus}]]*/ 9999; // othersStatusパラメータがなかった時9999が初期値となる
                 // その他を選択した場合、非活性を解除する
-                if(rmId === '9999') {
+                if(rmId == other) {
                     $('#mtgPlace').prop("disabled", false);
                 } else {
                     $('#mtgPlace').prop("disabled", true);
@@ -219,7 +220,8 @@
             });
             $(document).ready(function() {
                 let rmId = $('#roomId').val();
-                if(rmId === '9999') {
+                const other = /*[[${othersStatus}]]*/ 9999; // othersStatusパラメータがなかった時9999が初期値となる
+                if(rmId == other) {
                     $('#mtgPlace').prop("disabled", false);
                 } else {
                     $('#mtgPlace').prop("disabled", true);

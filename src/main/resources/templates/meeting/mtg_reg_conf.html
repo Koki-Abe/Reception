@@ -112,44 +112,4 @@
 		<!-- フッター読み込み -->
 		<div th:include="common/footer"></div>
 	</body>
-
-
-
-<!-- JS -->
-<script>
-        // 戻るボタン押下字のスクリプト
-	        $(function prev(){
-	        	
-	        })
-            $('#roomId').change(function() {
-                let rmId = $('#roomId').val();
-                // その他を選択した場合、非活性を解除する
-                if(rmId === '9999') {
-                    $('#mtgPlace').prop("disabled", false);
-                } else {
-                    $('#mtgPlace').prop("disabled", true);
-                }
-            });
-            $(document).ready(function() {
-                let rmId = $('#roomId').val();
-                if(rmId === '9999') {
-                    $('#mtgPlace').prop("disabled", false);
-                } else {
-                    $('#mtgPlace').prop("disabled", true);
-                }
-                // ページング付与
-                $(".search-result").paginate({
-                    jqueryui: false,
-                    position: "bottom",
-                });
-            });
-            // コメント表示
-            function showComment(comment) {
-                // let comment = $('input[name="comment"]').val();
-                console.log(comment);
-                let url =  encodeURI("/comment?comment=" + comment)
-                window.open(url, null, 'width=500 ,height=500, toolbar=yes, menubar=yes, scrollbars=yes');
-            }
-            
-        </script>
 </html>

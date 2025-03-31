@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,7 @@ import jp.reception.soarest.domain.dto.MeetingSearchDto;
 import jp.reception.soarest.domain.dto.MeetingUpdateDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.enums.NumEnum;
 import jp.reception.soarest.enums.UrlEnum;
 import jp.reception.soarest.form.MeetingDeleteForm;
 import jp.reception.soarest.form.MeetingRegisterForm;
@@ -102,6 +104,12 @@ public class MeetingController {
     
     // エラーメッセージ
     static private String errMsg = "";
+    
+    // 各メソッドの前に呼び出される
+    @ModelAttribute("othersStatus")
+    public int active() {
+         return NumEnum.PULLDOWN_OTHERS.getNum();
+    }
     
     /*
      * 打ち合わせ情報一覧 初期表示
