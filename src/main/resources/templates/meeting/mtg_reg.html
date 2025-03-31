@@ -119,7 +119,8 @@
         <script th:inline="javascript"> // 変数を使うためインラインにjavascriptを設定する
             $('#roomId').change(function() {
                 let rmId = $('#roomId').val();
-                const other = /*[[${othersStatus}]]*/ 9999; // othersStatusパラメータがなかった時9999が初期値となる
+             // ↓コメントアウトではなくサーバーサイドの変数を取得している、取得できなかったとき初期値9999となる
+                const other = /*[[${othersStatus}]]*/ 9999;
                 // その他を選択した場合、非活性を解除する
                 if(rmId == other) {
                     $('#mtgPlace').prop("disabled", false);
@@ -129,7 +130,8 @@
             });
             $(document).ready(function() {
                 let rmId = $('#roomId').val();
-                const other = /*[[${othersStatus}]]*/ 9999; // othersStatusパラメータがなかった時9999が初期値となる
+             	// ↓コメントアウトではなくサーバーサイドの変数を取得している、取得できなかったとき初期値9999となる
+                const other = /*[[${othersStatus}]]*/ 9999;
                 if(rmId == other) {
                     $('#mtgPlace').prop("disabled", false);
                 } else {
