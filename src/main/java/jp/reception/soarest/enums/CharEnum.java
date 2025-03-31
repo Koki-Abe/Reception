@@ -11,6 +11,7 @@ package jp.reception.soarest.enums;
 public enum CharEnum {
     /* 文字列 */
     BLANK(""),
+    OTHERS("その他"),
     SLASH("/"),
     HYPHEN("-"),
     VALIDATION("validation"),

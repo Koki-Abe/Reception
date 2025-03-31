@@ -25,6 +25,7 @@ import jp.reception.soarest.domain.dto.PurposeSearchResultDto;
 import jp.reception.soarest.domain.dto.StaffSearchResultDto;
 import jp.reception.soarest.enums.CharEnum;
 import jp.reception.soarest.enums.MessageEnum;
+import jp.reception.soarest.enums.NumEnum;
 import jp.reception.soarest.form.MeetingDeleteForm;
 import jp.reception.soarest.form.MeetingRegisterForm;
 import jp.reception.soarest.form.MeetingSearchForm;
@@ -105,9 +106,6 @@ public class MeetingServiceImpl implements MeetingService {
     private final String OLD_MTG_PLACE = "oldMtgPlace";
     private final String OLD_MTG_ID = "oldMtgId";
     private final String OLD_COMMENT = "oldComment";
-    
-     // その他
-    private final String OTHERS = "その他";
     
     // 変更前アップデート日時
     private String LAST_UPDATE_DATE = "lastUpdateDate";
@@ -210,7 +208,7 @@ public class MeetingServiceImpl implements MeetingService {
         updateDto.setUpdatedDate(CommonUtils.getSysdate());
         updateDto.setUpdatedUserId(staffId);
         
-     // 最終アップデート日時が空文字の時nullにする
+        // 最終アップデート日時が空文字の時nullにする
         if(updateDto.getLastUpdateDate() == "") updateDto.setLastUpdateDate(null);
         
         // 登録処理を実行
@@ -232,6 +230,7 @@ public class MeetingServiceImpl implements MeetingService {
     	
     	// データベースからスケジュールIDの最大値を取得
     	String maxScheduleId = meetingRepository.getScheduleId();
+    	
     	// スケジュールIDの生成
     	int scheduleId = Integer.parseInt(maxScheduleId.substring(3, 7)) + 1;
     	String newScheduleId = maxScheduleId.substring(0, 3) + scheduleId;
@@ -243,18 +242,6 @@ public class MeetingServiceImpl implements MeetingService {
         registerDto.setScheduleId(newScheduleId);
         registerDto.setMtgId(form.getPurpose());
         registerDto.setRoomId(form.getRoomId()); // プロパティ名は同じだと思われるが詰め替えされない
-        
-        // その他以外のルームIDの場合はROOM_NAMEをmtgPlaceに設定する
-        if(form.getRoomId() != 0 && form.getRoomId() != 9999) {
-        	if(form.getRoomList() != null) {
-    	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
-    	    		if(room.getRoomId() == form.getRoomId()) {
-    	    			registerDto.setMtgPlace(room.getRoomName());
-    	    		}
-    	    	}
-        	}
-        }
-        registerDto.setMtgId(form.getPurpose());
         registerDto.setCreatedDate(CommonUtils.getSysdate());
         registerDto.setCreatedUserId(staffID);
         
@@ -279,7 +266,7 @@ public class MeetingServiceImpl implements MeetingService {
         // プロパティ名が異なるものは別途設定
         deleteDto.setMtgId(form.getPurpose());
         
-     // 最終アップデート日時が空文字の時nullにする
+        // 最終アップデート日時が空文字の時nullにする
     	if(deleteDto.getLastUpdateDate() == "") deleteDto.setLastUpdateDate(null);
     	
         // 削除処理を実行
@@ -388,7 +375,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public boolean inputCheck(MeetingSearchForm form, Model model) {
         // 会議室名がその他、かつ打ち合わせ場所がNULLまたは空文字の場合
-        if (form.getRoomId() == 9999 && (null == form.getMtgPlace() || "" == form.getMtgPlace())) {
+        if (form.getRoomId() == NumEnum.PULLDOWN_OTHERS.getNum() && StringUtils.isEmpty(form.getMtgPlace()) ) {
             model.addAttribute(ERR_MSG, MessageEnum.MSG_D01_W_004.getMsg(CharEnum.VALIDATION.getChar()));
             return false;
         }
@@ -412,15 +399,9 @@ public class MeetingServiceImpl implements MeetingService {
     	Boolean is_error = false;
     	
     	// 会議室が「その他」の場合、mtgPlaceがnullの時バリデーションエラー
-    	if(form.getRoomList() != null) {
-	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
-	    		if(room.getRoomId() == form.getRoomId()) {
-	    			if( room.getRoomName().equals(OTHERS) && StringUtils.isEmpty(form.getMtgPlace()) ) {
-	    				model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
-	    				is_error = true;
-	    			}
-	    		}
-	    	}
+    	if (form.getRoomId() == NumEnum.PULLDOWN_OTHERS.getNum() && StringUtils.isEmpty(form.getMtgPlace()) ) {
+			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
+			is_error = true;
     	}
     	
     	// 打ち合わせ予定日、予定時刻のバリデーションチェック
@@ -436,14 +417,9 @@ public class MeetingServiceImpl implements MeetingService {
 	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
 	    	
 	    	// 予定日、予定時刻が現在の日時より過去になっていた場合バリデーションエラー
-	    	if(date.isBefore(nowDate)){
+	    	if(date.isBefore(nowDate) || (date.equals(nowDate) && time.isBefore(nowTime)) ){
 	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
  				is_error = true;
-	    	}else if(date.equals(nowDate)) {
-	    		if(time.isBefore(nowTime)) {
-	    			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
-    				is_error = true;
-	    		}
 	    	}
     	}
     	
@@ -475,15 +451,9 @@ public class MeetingServiceImpl implements MeetingService {
     	Boolean is_error = false;
     	
     	// 会議室が「その他」の場合、mtgPlaceがnullの時バリデーションエラー
-    	if(form.getRoomList() != null) {
-	    	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
-	    		if(room.getRoomId() == form.getRoomId()) {
-	    			if( room.getRoomName().equals(OTHERS) && StringUtils.isEmpty(form.getMtgPlace()) ) {
-	    				model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
-	    				is_error = true;
-	    			}
-	    		}
-	    	}
+    	if (form.getRoomId() == NumEnum.PULLDOWN_OTHERS.getNum() && StringUtils.isEmpty(form.getMtgPlace()) ) {
+			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_014.getMsg(CharEnum.VALIDATION.getChar()));
+			is_error = true;
     	}
     	
     	// 打ち合わせ予定日、予定時刻のバリデーションチェック
@@ -499,14 +469,9 @@ public class MeetingServiceImpl implements MeetingService {
 	    	LocalTime time = LocalTime.parse(form.getScheduledTime(), timeFormat);
 	    	
 	    	// 予定日、予定時刻が現在の日時より過去になっていた場合バリデーションエラー
-	    	if(date.isBefore(nowDate)){
+	    	if(date.isBefore(nowDate) || (date.equals(nowDate) && time.isBefore(nowTime)) ){
 	    		 model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
  				is_error = true;
-	    	}else if(date.equals(nowDate)) {
-	    		if(time.isBefore(nowTime)) {
-	    			model.addAttribute(ERR_MSG, MessageEnum.MSG_D02_W_011.getMsg(CharEnum.VALIDATION.getChar()));
-    				is_error = true;
-	    		}
 	    	}
     	}
     	
@@ -566,7 +531,7 @@ public class MeetingServiceImpl implements MeetingService {
         // 会議室名が空文字でroomIdが「その他」以外の時roomListから該当する会議室名を割り当てる
         if(StringUtils.isEmpty(form.getMtgPlace()) && form.getRoomList() != null) {
         	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
-        		if(room.getRoomId() == form.getRoomId() && !room.getRoomName().equals(OTHERS) ) {
+        		if(room.getRoomId() == form.getRoomId() && !room.getRoomName().equals(CharEnum.OTHERS.getChar()) ) {
         			model.addAttribute(MTG_PLACE, room.getRoomName());
         		}
         	}
@@ -609,7 +574,18 @@ public class MeetingServiceImpl implements MeetingService {
         model.addAttribute(SCHEDULED_TIME, form.getScheduledTime());
         model.addAttribute(ROOM_ID, form.getRoomId());
         model.addAttribute(ROOM_LIST, form.getRoomList());
-        model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        
+        // 会議室名が空文字でroomIdが「その他」以外の時roomListから該当する会議室名を割り当てる
+        if(StringUtils.isEmpty(form.getMtgPlace()) && form.getRoomList() != null) {
+        	for(MeetingRoomSearchResultDto room : form.getRoomList()) {
+        		if(room.getRoomId() == form.getRoomId() && !room.getRoomName().equals(CharEnum.OTHERS.getChar()) ) {
+        			model.addAttribute(MTG_PLACE, room.getRoomName());
+        		}
+        	}
+        }else {
+        	model.addAttribute(MTG_PLACE, form.getMtgPlace());
+        }
+        
         model.addAttribute(MTG_ID, form.getPurpose()); // 何か知らんが、"purpose"にすると値が保持されん
         model.addAttribute(COMMENT, form.getComment());
     }

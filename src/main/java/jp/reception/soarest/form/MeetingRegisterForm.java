@@ -2,16 +2,15 @@ package jp.reception.soarest.form;
 
 import java.util.List;
 
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.thymeleaf.util.StringUtils;
-
 import jp.reception.soarest.domain.dto.MeetingRoomSearchResultDto;
-import jp.reception.soarest.enums.NumEnum;
+import jp.reception.soarest.validator.CanEmptyPattern;
+import jp.reception.soarest.validator.CanEmptySize;
+import jp.reception.soarest.validator.NotBlankPullDown;
 import lombok.Data;
 
 /* 
@@ -30,35 +29,14 @@ public class MeetingRegisterForm {
     private String userId;
 
     // サブユーザーID
+	@CanEmptySize(min = 6, max = 10, message = "{MSG-D02-W-005}") // 独自アノテーション Empty許可の文字数制限
+	@CanEmptyPattern(regexp = "^(?=.*[a-z])(?=.*[0-9])..*|(?=.*[A-Z])(?=.*[0-9])..*$", message="{MSG-D02-W-004}")// 独自アノテーション Empty許可の文字列パターン制限
     private String subUserId;
 	
-	@AssertTrue(message="{MSG-D02-W-005}")
-    public boolean isSubUserIdSize() {
-		if(!StringUtils.isEmpty(subUserId) && (subUserId.length() < 6 || subUserId.length() >10)) {
-			return false;
-		}
-        return true;
-    }
-	
-	@AssertTrue(message="{MSG-D02-W-004}")
-    public boolean isSubUserIdPattern() {
-		if(!StringUtils.isEmpty(subUserId) && !subUserId.matches("^(?=.*[a-z])(?=.*[0-9])..*|(?=.*[A-Z])(?=.*[0-9])..*$") ) {
-			return false;
-		}
-        return true;
-    }
-
     // 相手会社名
+	@CanEmptySize(min = 1, max = 100, message = "{MSG-D02-W-006}") // 独自アノテーション Empty許可の文字数制限
     private String clientCompName;
     
-    @AssertTrue(message="{MSG-D02-W-006}")
-    public boolean isClientCopNameSize() {
-    	if(!StringUtils.isEmpty(clientCompName)  && (clientCompName.length() < 1 || clientCompName.length() >100)) {
-			return false;
-		}
-    	return true;
-    }
-
     // 相手氏名
     @NotBlank(message = "{MSG-D02-W-007}")
 	@Size(min=1, max=50, message="{MSG-D02-W-008}")
@@ -73,40 +51,23 @@ public class MeetingRegisterForm {
     private String scheduledTime;
 
     // 会議室番号
+    @NotBlankPullDown(message="{MSG-D02-W-012}") // 独自アノテーション プルダウンの選択を確認
     private int roomId;
-    @AssertTrue(message="{MSG-D02-W-012}")
-    public boolean isRoomId() {
-    	return roomId != NumEnum.PULLDOWN.getNum();
-    }
 
     // 会議室名
     private List<MeetingRoomSearchResultDto> roomList;
     
     // その他打ち合わせ場所
+    @CanEmptySize(min = 1, max = 50, message = "{MSG-D02-W-013}") // 独自アノテーション Empty許可の文字数制限
     private String mtgPlace;
-    @AssertTrue(message="{MSG-D02-W-013}")
-    public boolean isMtgPlaceSize() {
-    	if(!StringUtils.isEmpty(clientCompName)  && (clientCompName.length() < 1 || clientCompName.length() >50)) {
-			return false;
-		}
-    	return true;
-    }
     
     // 目的
     @Max(value = 998, message="{MSG-D02-W-015}")
     private int purpose;
     
     // コメント
+    @CanEmptySize(min = 1, max = 200, message = "{MSG-D02-W-016}") // 独自アノテーション Empty許可の文字数制限
     private String comment;
-    
-    @AssertTrue(message="{MSG-D02-W-016}")
-    public boolean isCommentSize() {
-		if(!StringUtils.isEmpty(comment) && (comment.length() < 1 || comment.length() >200)) {
-			return false;
-		}
-        return true;
-    }
-    
 }
 
 

@@ -205,8 +205,8 @@ public class CommonUtils {
             
             // 会議室プルダウンの最後にその他(9999)を設定
             room = new MeetingRoomSearchResultDto();
-            room.setRoomId(9999);
-            room.setRoomName("その他");
+            room.setRoomId(NumEnum.PULLDOWN_OTHERS.getNum());
+            room.setRoomName(CharEnum.OTHERS.getChar());
             roomList.add(roomList.size(), (E)room);
             
             model.addAttribute(ROOM_LIST, roomList);

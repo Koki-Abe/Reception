@@ -45,15 +45,12 @@
 						<td style="width: 200px;"><p th:text="${scheduledTime}"></td>
 					</tr>
 					<tr>
-						<th>会議室名</th>
-						<td style="width: 200px;">
-							<th:block th:each="room : ${roomList}" th:if="${room.roomId == roomId}">
-								<p th:text="${room.roomName}">
-							</th:block></td>
+						<th>会議室番号</th>
+						<td><p th:text="${roomId}"></td>
 					</tr>
 					<tr>
 						<th>その他打合せ場所</th>
-						<td style="width: 200px;"><p th:text="${mtgPlace}"></td>
+						<td><p th:text="${mtgPlace}"></td>
 					</tr>
 					<tr>
 						<th>目的</th>

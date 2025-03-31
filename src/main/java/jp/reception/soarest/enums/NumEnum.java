@@ -10,7 +10,8 @@ package jp.reception.soarest.enums;
 public enum NumEnum {
     /* 数値 */
     ZERO(0),
-    PULLDOWN(999);
+    PULLDOWN(999),
+	PULLDOWN_OTHERS(9999);
 
     NumEnum(int commonNum) {
         this.commonNum = commonNum;
